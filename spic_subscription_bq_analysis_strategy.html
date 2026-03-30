@@ -1,0 +1,405 @@
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+.root { padding: 1rem 0; font-size: 14px; color: var(--color-text-primary); }
+.tabs { display: flex; gap: 4px; border-bottom: 0.5px solid var(--color-border-tertiary); margin-bottom: 1.5rem; overflow-x: auto; flex-wrap: nowrap; }
+.tab { padding: 8px 12px; font-size: 12px; cursor: pointer; border-bottom: 2px solid transparent; color: var(--color-text-secondary); white-space: nowrap; transition: all .15s; }
+.tab.active { color: var(--color-text-primary); border-bottom-color: var(--color-text-primary); font-weight: 500; }
+.section { display: none; }
+.section.active { display: block; }
+
+/* Metric cards */
+.metrics { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; margin-bottom: 1.25rem; }
+.m { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 10px 12px; }
+.m-label { font-size: 11px; color: var(--color-text-secondary); margin-bottom: 4px; line-height: 1.3; }
+.m-val { font-size: 22px; font-weight: 500; line-height: 1; }
+.m-sub { font-size: 11px; color: var(--color-text-secondary); margin-top: 3px; }
+.up { color: #1D9E75; } .dn { color: #E24B4A; } .warn { color: #EF9F27; } .info { color: #378ADD; }
+
+/* Table */
+.tbl { width: 100%; border-collapse: collapse; font-size: 12px; }
+.tbl th { text-align: left; color: var(--color-text-secondary); font-weight: 500; padding: 6px 8px; border-bottom: 0.5px solid var(--color-border-tertiary); font-size: 11px; }
+.tbl td { padding: 7px 8px; border-bottom: 0.5px solid var(--color-border-tertiary); }
+.tbl tr:last-child td { border-bottom: none; }
+
+/* Progress bar */
+.pb { display: flex; height: 10px; border-radius: 5px; overflow: hidden; gap: 1px; }
+.pb-a { background: #1D9E75; }
+.pb-p { background: #EF9F27; }
+.pb-c { background: #E24B4A; }
+
+/* Alert boxes */
+.alert { border-radius: var(--border-radius-md); padding: 10px 14px; font-size: 13px; margin-bottom: 10px; }
+.alert-warn { background: var(--color-background-warning); border: 0.5px solid var(--color-border-warning); color: var(--color-text-warning); }
+.alert-info { background: var(--color-background-info); border: 0.5px solid var(--color-border-info); color: var(--color-text-info); }
+.alert-success { background: var(--color-background-success); border: 0.5px solid var(--color-border-success); color: var(--color-text-success); }
+
+/* Strategy cards */
+.strat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 10px; margin-top: 1rem; }
+.strat-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 14px 16px; }
+.strat-q { font-size: 11px; font-weight: 500; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+.strat-title { font-size: 14px; font-weight: 500; margin-bottom: 8px; }
+.strat-actions { font-size: 12px; color: var(--color-text-secondary); line-height: 1.8; }
+.strat-actions span { display: block; padding-left: 12px; position: relative; }
+.strat-actions span::before { content: "·"; position: absolute; left: 3px; color: var(--color-text-primary); }
+
+.seclabel { font-size: 12px; color: var(--color-text-secondary); font-weight: 500; margin: 1rem 0 0.5rem; }
+.badge { display: inline-block; font-size: 11px; padding: 2px 7px; border-radius: 10px; }
+.badge-a { background: var(--color-background-success); color: var(--color-text-success); }
+.badge-p { background: var(--color-background-warning); color: var(--color-text-warning); }
+.badge-c { background: var(--color-background-danger); color: var(--color-text-danger); }
+
+.tier-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; font-size: 12px; }
+.tier-label { width: 80px; color: var(--color-text-secondary); flex-shrink: 0; }
+.tier-bar { flex: 1; background: var(--color-background-secondary); height: 20px; border-radius: 4px; position: relative; overflow: hidden; }
+.tier-fill { height: 100%; background: #1D9E75; display: flex; align-items: center; justify-content: flex-end; padding-right: 4px; font-size: 10px; color: #fff; border-radius: 4px; }
+.tier-cnt { width: 50px; text-align: right; color: var(--color-text-secondary); }
+</style>
+
+<div class="root">
+<div class="tabs">
+  <div class="tab active" onclick="sw('overview',this)">定期全体概況</div>
+  <div class="tab" onclick="sw('brand',this)">ブランド別比較</div>
+  <div class="tab" onclick="sw('depth',this)">ロイヤルティ深度</div>
+  <div class="tab" onclick="sw('paused',this)">停止分析</div>
+  <div class="tab" onclick="sw('revenue',this)">課金トレンド</div>
+  <div class="tab" onclick="sw('strategy',this)">新年度戦略</div>
+</div>
+
+<!-- ===== TAB 1: 全体概況 ===== -->
+<div id="s-overview" class="section active">
+  <div class="alert alert-info">BigQuery実データ（shopify_subscription_contracts / 49,272件）による分析。2026年3月30日時点。</div>
+  <div class="metrics">
+    <div class="m"><div class="m-label">全契約（テスト除く）</div><div class="m-val">49,272</div><div class="m-sub">ACTIVE+PAUSED+CANCELLED</div></div>
+    <div class="m"><div class="m-label">ACTIVE（稼働中）</div><div class="m-val info">22,064</div><div class="m-sub">稼働率 44.8%</div></div>
+    <div class="m"><div class="m-label">PAUSED（停止中）</div><div class="m-val warn">15,208</div><div class="m-sub">停止率 30.9%</div></div>
+    <div class="m"><div class="m-label">CANCELLED（解約済）</div><div class="m-val dn">12,000</div><div class="m-sub">解約率 24.4%</div></div>
+    <div class="m"><div class="m-label">定期月次売上（2月）</div><div class="m-val">154M円</div><div class="m-sub">前年同月比 +2%</div></div>
+    <div class="m"><div class="m-label">平均課金単価</div><div class="m-val">12,669円</div><div class="m-sub">1回あたり（2月）</div></div>
+  </div>
+
+  <div class="seclabel">全体ステータス構成（ACTIVE / PAUSED / CANCELLED）</div>
+  <div class="pb" style="height:24px; border-radius:6px; margin-bottom:0.5rem;">
+    <div class="pb-a" style="flex: 22064;"></div>
+    <div class="pb-p" style="flex: 15208;"></div>
+    <div class="pb-c" style="flex: 12000;"></div>
+  </div>
+  <div style="display:flex; gap:16px; font-size:12px; color:var(--color-text-secondary); margin-bottom:1rem;">
+    <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;background:#1D9E75;border-radius:2px;display:inline-block;"></span>ACTIVE 44.8%</span>
+    <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;background:#EF9F27;border-radius:2px;display:inline-block;"></span>PAUSED 30.9%</span>
+    <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;background:#E24B4A;border-radius:2px;display:inline-block;"></span>CANCELLED 24.4%</span>
+  </div>
+
+  <div class="seclabel">課金間隔分布（ACTIVE契約のみ）</div>
+  <table class="tbl">
+    <thead><tr><th>課金間隔</th><th>ACTIVE</th><th>PAUSED</th><th>CANCELLED</th><th>構成比（全体）</th></tr></thead>
+    <tbody>
+      <tr><td>28日周期</td><td>601</td><td>102</td><td>111</td><td>1.7%</td></tr>
+      <tr><td>月1回（最多）</td><td>11,059</td><td>8,607</td><td>7,283</td><td>54.5%</td></tr>
+      <tr><td>月2回</td><td>4,906</td><td>2,825</td><td>2,086</td><td>20.0%</td></tr>
+      <tr><td>月3回（四半期）</td><td>5,498</td><td>3,674</td><td>2,520</td><td>23.7%</td></tr>
+    </tbody>
+  </table>
+  <div class="alert alert-warn" style="margin-top:0.75rem;">⚠ 月1回が停止者8,607件・解約者7,283件と最多。間隔設計の柔軟化（2→3ヶ月への変更提案）が停止防止の最重要施策。</div>
+
+  <div class="seclabel">4月以降の課金予定（ACTIVE契約の次回課金日分布）</div>
+  <div class="metrics" style="grid-template-columns: repeat(5, minmax(0,1fr));">
+    <div class="m"><div class="m-label">4月前半（〜4/14）</div><div class="m-val">7,057件</div></div>
+    <div class="m"><div class="m-label">4月後半（4/15〜30）</div><div class="m-val">8,690件</div></div>
+    <div class="m"><div class="m-label">5月</div><div class="m-val">4,679件</div></div>
+    <div class="m"><div class="m-label">6月</div><div class="m-val">2,074件</div></div>
+    <div class="m"><div class="m-label">7月以降</div><div class="m-val">251件</div></div>
+  </div>
+</div>
+
+<!-- ===== TAB 2: ブランド別 ===== -->
+<div id="s-brand" class="section">
+  <div class="seclabel">ブランド別 定期契約ステータス（実データ）</div>
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>ブランド</th><th>総契約</th><th>ACTIVE</th><th>PAUSED</th><th>CANCELLED</th>
+        <th>稼働率</th><th>停止率</th><th>解約率</th><th>平均課金回数</th>
+        <th>ステータス比率</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>VC</strong></td><td>27,349</td><td>10,811</td><td>9,076</td><td>7,462</td>
+        <td class="warn">39.5%</td><td class="warn">33.2%</td><td>27.3%</td><td>8.5回</td>
+        <td><div class="pb"><div class="pb-a" style="flex:39.5"></div><div class="pb-p" style="flex:33.2"></div><div class="pb-c" style="flex:27.3"></div></div></td>
+      </tr>
+      <tr>
+        <td><strong>C+D系</strong></td><td>20,515</td><td>10,071</td><td>6,020</td><td>4,424</td>
+        <td class="info">49.1%</td><td>29.3%</td><td>21.6%</td><td>9.5回</td>
+        <td><div class="pb"><div class="pb-a" style="flex:49.1"></div><div class="pb-p" style="flex:29.3"></div><div class="pb-c" style="flex:21.6"></div></div></td>
+      </tr>
+      <tr>
+        <td><strong>C+Cera</strong></td><td>697</td><td>634</td><td>37</td><td>26</td>
+        <td class="up">91.0%</td><td class="up">5.3%</td><td class="up">3.7%</td><td>9.4回</td>
+        <td><div class="pb"><div class="pb-a" style="flex:91.0"></div><div class="pb-p" style="flex:5.3"></div><div class="pb-c" style="flex:3.7"></div></div></td>
+      </tr>
+      <tr>
+        <td><strong>SKINBEAUTY</strong></td><td>504</td><td>356</td><td>71</td><td>77</td>
+        <td class="up">70.6%</td><td>14.1%</td><td>15.3%</td><td>1.6回</td>
+        <td><div class="pb"><div class="pb-a" style="flex:70.6"></div><div class="pb-p" style="flex:14.1"></div><div class="pb-c" style="flex:15.3"></div></div></td>
+      </tr>
+      <tr>
+        <td><strong>MINERALion</strong></td><td>207</td><td>192</td><td>4</td><td>11</td>
+        <td class="up">92.8%</td><td class="up">1.9%</td><td class="up">5.3%</td><td>2.3回</td>
+        <td><div class="pb"><div class="pb-a" style="flex:92.8"></div><div class="pb-p" style="flex:1.9"></div><div class="pb-c" style="flex:5.3"></div></div></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="alert alert-warn" style="margin-top:1rem;">⚠ VCの稼働率39.5%は構造的問題。契約の半数超が停止・解約済み。平均課金8.5回と歴史が長いためPAUSED層も根が深い（平均278日停止）。</div>
+  <div class="alert alert-success" style="margin-top:0.5rem;">✓ C+Ceraが91%・MINERALionが92.8%と新製品の稼働率が突出。「継続したい」製品設計の差が明確に出ている。SKINBEAUTYも70%超で立ち上がり順調。</div>
+  <div class="alert alert-info" style="margin-top:0.5rem;">📊 C+D系はVC比で大幅に良いが、初期離脱（1-2回での停止41%）が次の課題。3回目突破が定着の鍵。</div>
+</div>
+
+<!-- ===== TAB 3: ロイヤルティ深度 ===== -->
+<div id="s-depth" class="section">
+  <div class="seclabel">課金回数別 ACTIVE率（全ブランド合計）</div>
+  <div style="margin-bottom:1rem;">
+    <div class="tier-row"><div class="tier-label">初回(1回)</div><div class="tier-bar"><div class="tier-fill" style="width:26%;">26%</div></div><div class="tier-cnt">5,314件</div></div>
+    <div class="tier-row"><div class="tier-label">2回目</div><div class="tier-bar"><div class="tier-fill" style="width:30.4%;">30%</div></div><div class="tier-cnt">4,053件</div></div>
+    <div class="tier-row"><div class="tier-label">3〜5回</div><div class="tier-bar"><div class="tier-fill" style="width:36.7%;">37%</div></div><div class="tier-cnt">8,978件</div></div>
+    <div class="tier-row"><div class="tier-label">6〜10回</div><div class="tier-bar"><div class="tier-fill" style="width:50.7%;">51%</div></div><div class="tier-cnt">9,380件</div></div>
+    <div class="tier-row"><div class="tier-label">11〜20回</div><div class="tier-bar"><div class="tier-fill" style="width:60.7%;">61%</div></div><div class="tier-cnt">8,469件</div></div>
+    <div class="tier-row"><div class="tier-label">21回以上</div><div class="tier-bar"><div class="tier-fill" style="width:74.9%;">75%</div></div><div class="tier-cnt">6,023件</div></div>
+  </div>
+
+  <div class="seclabel">フェーズ別 ブランド比較（ACTIVE率）</div>
+  <table class="tbl">
+    <thead>
+      <tr><th>ブランド</th><th>初期(1-2回) ACTIVE率</th><th>定着(3-6回) ACTIVE率</th><th>ロイヤル(7回+) ACTIVE率</th><th>読み取り</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>VC</td>
+        <td class="dn">23.6%（5,504件）</td>
+        <td class="warn">35.1%（6,579件）</td>
+        <td>58.0%（11,268件）</td>
+        <td style="font-size:11px; color:var(--color-text-secondary);">初期離脱が深刻。3回突破で回復。</td>
+      </tr>
+      <tr>
+        <td>C+D系</td>
+        <td class="warn">29.3%（3,532件）</td>
+        <td>41.5%（4,660件）</td>
+        <td class="up">65.6%（9,860件）</td>
+        <td style="font-size:11px; color:var(--color-text-secondary);">VCより良好。ロイヤル層が厚い。</td>
+      </tr>
+      <tr>
+        <td>C+Cera</td>
+        <td class="up">89.7%（87件）</td>
+        <td class="up">93.0%（86件）</td>
+        <td class="up">96.0%（301件）</td>
+        <td style="font-size:11px; color:var(--color-text-secondary);">全フェーズで圧倒的。解約知らず。</td>
+      </tr>
+      <tr>
+        <td>SKINBEAUTY</td>
+        <td class="up">83.3%（239件）</td>
+        <td>81.0%（42件）</td>
+        <td class="up">94.7%（19件）</td>
+        <td style="font-size:11px; color:var(--color-text-secondary);">立ち上がり好調。定着層は少。</td>
+      </tr>
+      <tr>
+        <td>MINERALion</td>
+        <td class="up">80.0%（5件）</td>
+        <td class="up">100%（13件）</td>
+        <td class="up">100%（22件）</td>
+        <td style="font-size:11px; color:var(--color-text-secondary);">絶対数は小さいが離脱ゼロ。</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="alert alert-warn" style="margin-top:0.75rem;">⚠ 最大課題：VCとC+Dの「初期1-2回の離脱」。VC初期のACTIVE率23.6%は深刻で、購入者の半数近くが2回目以内に停止/解約している。ここを改善するだけで全体稼働率が数ポイント改善できる。</div>
+</div>
+
+<!-- ===== TAB 4: 停止分析 ===== -->
+<div id="s-paused" class="section">
+  <div class="metrics">
+    <div class="m"><div class="m-label">PAUSED総数</div><div class="m-val warn">15,208</div></div>
+    <div class="m"><div class="m-label">90日以内（回収可能）</div><div class="m-val info">3,065</div><div class="m-sub">全停止の20.2%</div></div>
+    <div class="m"><div class="m-label">91〜365日</div><div class="m-val warn">6,894</div><div class="m-sub">施策次第で回収可能</div></div>
+    <div class="m"><div class="m-label">1年超（実質離脱）</div><div class="m-val dn">5,249</div><div class="m-sub">全停止の34.5%</div></div>
+    <div class="m"><div class="m-label">VC停止（平均278日）</div><div class="m-val dn">9,076</div><div class="m-sub">1年超が3,198件</div></div>
+    <div class="m"><div class="m-label">C+D停止（平均269日）</div><div class="m-val warn">6,020</div><div class="m-sub">1年超が2,051件</div></div>
+  </div>
+
+  <div class="seclabel">停止期間分布（全ブランド）</div>
+  <table class="tbl">
+    <thead><tr><th>停止期間</th><th>件数</th><th>構成比</th><th>回収施策の推奨</th></tr></thead>
+    <tbody>
+      <tr><td>〜30日</td><td>1,095件</td><td>7.2%</td><td style="font-size:11px;">即時：間隔変更オファーで高確率回収</td></tr>
+      <tr><td>31〜60日</td><td>1,013件</td><td>6.7%</td><td style="font-size:11px;">急ぎ：C+D切替 + 箱数減量オファー</td></tr>
+      <tr><td>61〜90日</td><td>957件</td><td>6.3%</td><td style="font-size:11px;">通常：設計変更 + 新製品提案</td></tr>
+      <tr><td>91〜180日</td><td>2,596件</td><td>17.1%</td><td style="font-size:11px;">低温：季節訴求メール + ロイヤル個別対応</td></tr>
+      <tr><td>181〜365日</td><td>4,298件</td><td>28.3%</td><td style="font-size:11px;">困難：新製品情報提供のみ（費用対効果低）</td></tr>
+      <tr><td>1年超</td><td>5,249件</td><td class="dn">34.5%</td><td style="font-size:11px;color:var(--color-text-danger);">実質離脱扱い。大規模施策投資は非推奨</td></tr>
+    </tbody>
+  </table>
+
+  <div class="seclabel">ブランド別 停止分析（回収可能性）</div>
+  <table class="tbl">
+    <thead><tr><th>ブランド</th><th>停止数</th><th>90日以内</th><th>90日超〜1年</th><th>1年超</th><th>平均停止日数</th><th>90日回収率</th></tr></thead>
+    <tbody>
+      <tr><td>VC</td><td>9,076</td><td>1,663件</td><td>4,215件</td><td class="dn">3,198件</td><td>278日</td><td class="warn">18.3%</td></tr>
+      <tr><td>C+D系</td><td>6,020</td><td>1,290件</td><td>2,679件</td><td class="dn">2,051件</td><td>269日</td><td>21.4%</td></tr>
+      <tr><td>SKINBEAUTY</td><td>71</td><td class="up">71件(全件)</td><td>0件</td><td>0件</td><td>38日</td><td class="up">100%</td></tr>
+      <tr><td>C+Cera</td><td>37</td><td class="up">37件(全件)</td><td>0件</td><td>0件</td><td>18日</td><td class="up">100%</td></tr>
+      <tr><td>MINERALion</td><td>4</td><td class="up">4件(全件)</td><td>0件</td><td>0件</td><td>10日</td><td class="up">100%</td></tr>
+    </tbody>
+  </table>
+  <div class="alert alert-warn" style="margin-top:0.75rem;">⚠ 実態：戦略資料が「15,208件のPAUSEDに再開余地あり」と述べているが、実際は5,249件（34.5%）が1年超の実質離脱。真の回収可能プールはVC+C+Dで約6,000〜8,000件。これをターゲットに施策を絞る必要がある。</div>
+</div>
+
+<!-- ===== TAB 5: 課金トレンド ===== -->
+<div id="s-revenue" class="section">
+  <div class="seclabel">定期課金チャネル 月次売上（2025年1月〜2026年3月）</div>
+  <div style="position:relative; width:100%; height:220px; margin-bottom:1rem;">
+    <canvas id="revChart"></canvas>
+  </div>
+
+  <div class="seclabel">月次新規獲得 vs 2026年1-3月コホート残存率</div>
+  <table class="tbl">
+    <thead><tr><th>月</th><th>新規獲得</th><th>現在ACTIVE</th><th>現在PAUSED</th><th>現在CANCELLED</th><th>残存率（A+P）</th></tr></thead>
+    <tbody>
+      <tr><td>2025-08（最多）</td><td>3,006</td><td>1,179</td><td>911</td><td>916</td><td>69.5%</td></tr>
+      <tr><td>2025-09</td><td>2,077</td><td>948</td><td>588</td><td>541</td><td>73.9%</td></tr>
+      <tr><td>2025-12</td><td>1,114</td><td>621</td><td>252</td><td>241</td><td>78.4%</td></tr>
+      <tr><td>2026-01</td><td>1,150</td><td>792</td><td>196</td><td>162</td><td>85.9%</td></tr>
+      <tr><td>2026-02</td><td>1,246</td><td>958</td><td>144</td><td>144</td><td>88.5%</td></tr>
+      <tr><td>2026-03</td><td>1,297</td><td>1,160</td><td>56</td><td>81</td><td>93.8%</td></tr>
+    </tbody>
+  </table>
+  <div class="alert alert-success" style="margin-top:0.75rem;">✓ 2026年コホートの残存率が着実に改善（2025年8月コホートの69%→2026年2月の88%）。新規獲得の質または定着施策が改善している可能性。定期の新規月間獲得は1,150〜1,300件/月に安定。</div>
+</div>
+
+<!-- ===== TAB 6: 戦略 ===== -->
+<div id="s-strategy" class="section">
+  <div class="alert alert-info" style="margin-bottom:1rem;">
+    BigQueryデータで修正した事実：停止15,208件のうち実質回収可能は約6,000〜8,000件（50%超が1年超または実質離脱）。年間予算83.6億円に対し、定期チャネルの月次売上は150〜180M円（年換算1,800〜2,100M円）。残り65億円超が非定期（単品・toB・モール）。
+  </div>
+
+  <div class="seclabel">全社定期戦略 — Q1〜Q4優先施策（BQ実データ修正版）</div>
+  <div class="strat-grid">
+    <div class="strat-card">
+      <div class="strat-q">Q1 (Apr–Jun) 最優先</div>
+      <div class="strat-title">初期離脱を止める「3回突破」施策</div>
+      <div class="strat-actions">
+        <span>VC初期ACTIVE率23.6%→35%へ：2回目直前に間隔変更オファー（月1→2〜3ヶ月）</span>
+        <span>C+D初期29.3%→40%へ：3回目特典（例：特別レポートや少量おまけ）設計</span>
+        <span>停止90日以内の3,065件を最優先ターゲット：C+D切替＋箱数減量の2択オファー</span>
+        <span>C+Ceraの91%稼働を研究：「なぜ止まらないか」の定性調査→VC/C+Dに転用</span>
+      </div>
+    </div>
+    <div class="strat-card">
+      <div class="strat-q">Q2 (Jul–Sep)</div>
+      <div class="strat-title">「現実的な停止回収」と夏季攻勢</div>
+      <div class="strat-actions">
+        <span>1年超5,249件は回収施策対象から除外（ROI試算必須）</span>
+        <span>91〜365日停止6,894件：夏バテ/免疫訴求で低温アプローチ</span>
+        <span>C+D系：7月7,057件+8月8,690件の課金集中月を活かしアップセル提案</span>
+        <span>SKINBEAUTY：100件停止（全て90日以内）の即時回収が完全に可能</span>
+      </div>
+    </div>
+    <div class="strat-card">
+      <div class="strat-q">Q3 (Oct–Dec)</div>
+      <div class="strat-title">ロイヤル層深耕と年末設計</div>
+      <div class="strat-actions">
+        <span>21回以上の6,023件（74.9%稼働）：解約リスク低い最も価値ある層</span>
+        <span>このロイヤル層へのC+D追加提案が最高ROIの施策（既に信頼関係あり）</span>
+        <span>年末ギフト：C+D+SKINBEAUTYのセット定期新設で単価向上</span>
+        <span>停止理由データ取得（現在ほぼ0%→70%以上）のマイページ改修を完成させる</span>
+      </div>
+    </div>
+    <div class="strat-card">
+      <div class="strat-q">Q4 (Jan–Mar)</div>
+      <div class="strat-title">データドリブンな新年度設計</div>
+      <div class="strat-actions">
+        <span>Q1〜Q3で取得した停止理由データで来期の施策優先度を再設計</span>
+        <span>C+Cera/SKINBEAUTY/MINERALionの「高稼働モデル」をVCに転用する設計を試みる</span>
+        <span>定期月次売上の目標：現状150〜180M円→200M円超へ（ACTIVE率50%以上が目安）</span>
+        <span>2027年度予算の根拠をBQデータで構築（コホート別LTV分析）</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="seclabel" style="margin-top:1.5rem;">ブランド別 BQ修正後の最重要アクション</div>
+  <table class="tbl">
+    <thead><tr><th>ブランド</th><th>最大の課題（BQ検証済）</th><th>Q1の具体アクション</th><th>重要KPI</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><strong>VC</strong></td>
+        <td class="dn">初期離脱率76.4%（1-2回）</td>
+        <td>2回目課金前に「間隔延長 or C+D切替」の2択自動オファー実装</td>
+        <td>初期ACTIVE率 23.6%→30%</td>
+      </tr>
+      <tr>
+        <td><strong>C+D系</strong></td>
+        <td class="warn">初期離脱率70.7%（1-2回）</td>
+        <td>3回目特典設計。VCからの切替時に3回目まで継続した人の特典付与</td>
+        <td>初期ACTIVE率 29.3%→38%</td>
+      </tr>
+      <tr>
+        <td><strong>C+Cera</strong></td>
+        <td class="up">現状優秀（91%稼働）</td>
+        <td>稼働率モデルを研究・文書化しVC/C+Dに転用。現状維持で十分</td>
+        <td>ACTIVE率90%維持</td>
+      </tr>
+      <tr>
+        <td><strong>SKINBEAUTY</strong></td>
+        <td>平均課金回数1.6回（歴史浅）</td>
+        <td>停止71件全件（90日以内）を即時回収。3回突破施策を早期設計</td>
+        <td>ACTIVE件数 356→500件</td>
+      </tr>
+      <tr>
+        <td><strong>MINERALion</strong></td>
+        <td>絶対件数が小（ACTIVE 192件）</td>
+        <td>新規定期獲得を最優先。現停止4件は全て回収可能（平均10日停止）</td>
+        <td>ACTIVE件数 192→400件</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+function sw(id, el) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('s-' + id).classList.add('active');
+  el.classList.add('active');
+  if (id === 'revenue') buildChart();
+}
+
+let chartBuilt = false;
+function buildChart() {
+  if (chartBuilt) return;
+  chartBuilt = true;
+  const ctx = document.getElementById('revChart');
+  const labels = ['25-01','25-02','25-03','25-04','25-05','25-06','25-07','25-08','25-09','25-10','25-11','25-12','26-01','26-02','26-03'];
+  const amounts = [156.3,151.1,167.5,160.2,161.7,162.6,172.8,178.4,177.1,183.7,176.3,177.2,163.8,154.3,170.5];
+  const counts = [11788,11446,12699,12167,12356,12458,13291,13792,14137,14740,14060,14015,13071,12183,13401];
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [
+        { label: '課金金額（百万円）', data: amounts, backgroundColor: '#1D9E75', yAxisID: 'y' },
+        { label: '課金件数', data: counts.map(v => v/100), backgroundColor: 'rgba(55,138,221,0.4)', yAxisID: 'y2' }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: { position: 'left', title: { display: true, text: '金額(百万円)', font: { size: 10 } }, ticks: { font: { size: 10 } } },
+        y2: { position: 'right', title: { display: true, text: '件数÷100', font: { size: 10 } }, ticks: { font: { size: 10 } }, grid: { drawOnChartArea: false } },
+        x: { ticks: { font: { size: 9 }, autoSkip: false, maxRotation: 45 } }
+      }
+    }
+  });
+}
+</script>
