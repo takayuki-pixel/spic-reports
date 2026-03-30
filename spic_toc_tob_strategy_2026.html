@@ -3,598 +3,498 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SPIC 2026年度 toC/toB 分離戦略</title>
+<title>SPIC 2026年度 toC/toB 分離戦略（shop_id定義版）</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 14px; color: #1a1a18; background: #f5f4f0; }
-.header { background: #fff; border-bottom: 1px solid #d3d1c7; padding: 1rem 1.5rem; }
+.hdr { background: #fff; border-bottom: 1px solid #d3d1c7; padding: 1rem 1.5rem; }
 h1 { font-size: 17px; font-weight: 500; }
-.subtitle { font-size: 12px; color: #73726c; margin-top: 2px; }
+.sub { font-size: 12px; color: #73726c; margin-top: 2px; }
 .body { padding: 1.25rem 1.5rem; }
-
-/* Brand tabs */
-.brand-tabs { display: flex; gap: 3px; border-bottom: 1px solid #d3d1c7; margin-bottom: 1.25rem; overflow-x: auto; }
-.btab { padding: 7px 12px; font-size: 12px; cursor: pointer; border-bottom: 2px solid transparent; color: #73726c; white-space: nowrap; background: none; border-top: none; border-left: none; border-right: none; }
-.btab.active { color: #1a1a18; border-bottom-color: #1a1a18; font-weight: 500; }
-.bsec { display: none; }
-.bsec.on { display: block; }
-
-/* Split layout */
-.split { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 0.75rem; }
+.tabs { display: flex; gap: 3px; border-bottom: 1px solid #d3d1c7; margin-bottom: 1.25rem; overflow-x: auto; }
+.tab { padding: 7px 12px; font-size: 12px; cursor: pointer; border: none; border-bottom: 2px solid transparent; color: #73726c; background: none; white-space: nowrap; }
+.tab.active { color: #1a1a18; border-bottom-color: #1a1a18; font-weight: 500; }
+.sec { display: none; }
+.sec.on { display: block; }
+.split { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 .half { background: #fff; border-radius: 12px; border: 1px solid #d3d1c7; overflow: hidden; }
-.half-header { padding: 12px 16px 10px; border-bottom: 1px solid #d3d1c7; display: flex; align-items: center; gap: 8px; }
-.half-badge { font-size: 11px; font-weight: 500; padding: 3px 10px; border-radius: 20px; }
-.toc-badge { background: #e6f1fb; color: #042c53; }
-.tob-badge { background: #eaf3de; color: #173404; }
-.half-title { font-size: 14px; font-weight: 500; }
-.half-body { padding: 14px 16px; }
-
-/* Metrics row */
-.mrow { display: flex; gap: 8px; margin-bottom: 1rem; }
-.mm { background: #f5f4f0; border-radius: 8px; padding: 8px 10px; flex: 1; min-width: 0; }
-.mml { font-size: 10px; color: #73726c; margin-bottom: 2px; line-height: 1.2; }
-.mmv { font-size: 17px; font-weight: 500; line-height: 1; }
-.mms { font-size: 10px; color: #73726c; margin-top: 2px; }
+.hh { padding: 11px 15px 9px; border-bottom: 1px solid #d3d1c7; display: flex; align-items: center; gap: 8px; }
+.badge { font-size: 11px; font-weight: 500; padding: 2px 9px; border-radius: 16px; }
+.toc-b { background: #e6f1fb; color: #042c53; }
+.tob-b { background: #eaf3de; color: #173404; }
+.ht { font-size: 13px; font-weight: 500; }
+.hb { padding: 13px 15px; }
+.mx { display: flex; gap: 7px; margin-bottom: 0.9rem; }
+.m { background: #f5f4f0; border-radius: 7px; padding: 8px 10px; flex: 1; min-width: 0; }
+.ml { font-size: 10px; color: #73726c; margin-bottom: 2px; }
+.mv { font-size: 17px; font-weight: 500; }
+.ms { font-size: 10px; color: #73726c; margin-top: 1px; }
 .up { color: #1D9E75; } .dn { color: #E24B4A; } .warn { color: #EF9F27; } .info { color: #378ADD; }
-
-/* Channel bars */
-.ch { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; }
-.chl { width: 100px; font-size: 11px; color: #73726c; text-align: right; flex-shrink: 0; }
-.chb { flex: 1; background: #f5f4f0; height: 16px; border-radius: 3px; overflow: hidden; }
-.chf { height: 100%; border-radius: 3px; display: flex; align-items: center; padding-left: 5px; font-size: 9px; color: #fff; font-weight: 500; }
-.chv { width: 52px; font-size: 10px; color: #73726c; text-align: right; }
-
-/* Strategy blocks */
-.strat-label { font-size: 11px; font-weight: 500; color: #73726c; margin: 0.75rem 0 0.4rem; border-bottom: 1px solid #f0efe9; padding-bottom: 3px; }
-.qgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
-.qb { background: #f9f8f5; border-radius: 8px; border: 1px solid #e8e7e2; padding: 9px 11px; }
-.qbl { font-size: 10px; font-weight: 500; color: #888780; margin-bottom: 2px; }
-.qbt { font-size: 12px; font-weight: 500; margin-bottom: 5px; color: #1a1a18; }
-.qbc { font-size: 11px; color: #5f5e5a; line-height: 1.65; }
-.qbc span { display: block; padding-left: 9px; position: relative; margin-bottom: 1px; }
-.qbc span::before { content: "·"; position: absolute; left: 2px; color: #1a1a18; }
-
-/* Alert */
-.al { border-radius: 8px; padding: 9px 13px; font-size: 12px; margin-bottom: 10px; border: 1px solid; }
+.ch { display: flex; align-items: center; gap: 6px; margin-bottom: 5px; }
+.chl { width: 110px; font-size: 10px; color: #73726c; text-align: right; flex-shrink: 0; }
+.chb { flex: 1; background: #f0efe9; height: 15px; border-radius: 3px; overflow: hidden; }
+.chf { height: 100%; border-radius: 3px; display: flex; align-items: center; padding-left: 4px; font-size: 9px; color: #fff; font-weight: 500; }
+.chv { width: 56px; font-size: 10px; color: #73726c; text-align: right; }
+.sl { font-size: 11px; font-weight: 500; color: #73726c; margin: 0.7rem 0 0.35rem; border-bottom: 1px solid #f0efe9; padding-bottom: 3px; }
+.qg { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.qb { background: #f9f8f5; border-radius: 7px; border: 1px solid #e8e7e2; padding: 8px 10px; }
+.ql { font-size: 10px; font-weight: 500; color: #888780; margin-bottom: 2px; }
+.qt { font-size: 11px; font-weight: 500; margin-bottom: 4px; }
+.qc { font-size: 11px; color: #5f5e5a; line-height: 1.6; }
+.qc span { display: block; padding-left: 8px; position: relative; }
+.qc span::before { content: "·"; position: absolute; left: 1px; }
+.al { border-radius: 8px; padding: 9px 13px; font-size: 12px; margin-bottom: 10px; border: 1px solid; line-height: 1.6; }
+.al-g { background: #eaf3de; border-color: #97c459; color: #173404; }
+.al-b { background: #e6f1fb; border-color: #85b7eb; color: #042c53; }
 .al-w { background: #faeeda; border-color: #f9cb42; color: #412402; }
-.al-i { background: #e6f1fb; border-color: #85b7eb; color: #042c53; }
-.al-s { background: #eaf3de; border-color: #97c459; color: #173404; }
-.al-d { background: #fcebeb; border-color: #f09595; color: #501313; }
-
-/* Overview table */
-.ov-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-bottom: 1rem; }
-.ov-table th { text-align: left; font-size: 11px; color: #73726c; padding: 5px 8px; border-bottom: 1px solid #d3d1c7; font-weight: 500; }
-.ov-table td { padding: 6px 8px; border-bottom: 1px solid #eeede8; }
-.ov-table tr:last-child td { border-bottom: none; }
-.toc-col { background: #f0f7fe; }
-.tob-col { background: #f4faf0; }
-
-/* Insight box */
-.insight { background: #f9f8f5; border-left: 3px solid #378ADD; border-radius: 0 6px 6px 0; padding: 8px 12px; font-size: 12px; color: #3d3d3a; margin-bottom: 10px; }
-.insight.green { border-color: #1D9E75; }
-.insight.amber { border-color: #EF9F27; }
-.insight.red { border-color: #E24B4A; }
-
-/* Segment pill */
-.pill { display: inline-block; font-size: 10px; padding: 1px 7px; border-radius: 8px; margin-left: 4px; }
-.p-toc { background: #e6f1fb; color: #042c53; }
-.p-tob { background: #eaf3de; color: #173404; }
-
-.section-tag { font-size: 11px; font-weight: 500; color: #73726c; margin: 1rem 0 0.5rem; }
-
-/* Summary section */
-.sum-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 8px; margin-bottom: 1.25rem; }
-.sum-card { background: #fff; border: 1px solid #d3d1c7; border-radius: 10px; padding: 12px 14px; }
-.sum-brand { font-size: 12px; font-weight: 500; margin-bottom: 8px; }
-.sum-row { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 3px; color: #73726c; }
-.sum-val { font-weight: 500; color: #1a1a18; }
-.tocsplit { display: flex; height: 6px; border-radius: 3px; overflow: hidden; gap: 1px; margin-top: 6px; }
-.tocsplit-c { background: #378ADD; }
-.tocsplit-b { background: #1D9E75; }
+.al-r { background: #fcebeb; border-color: #f09595; color: #501313; }
+.insight { background: #f9f8f5; border-left: 3px solid #378ADD; border-radius: 0 6px 6px 0; padding: 8px 11px; font-size: 11px; color: #3d3d3a; margin-bottom: 7px; line-height: 1.6; }
+.insight.g { border-color: #1D9E75; }
+.insight.a { border-color: #EF9F27; }
+.insight.r { border-color: #E24B4A; }
+.tbl { width: 100%; border-collapse: collapse; font-size: 12px; }
+.tbl th { text-align: left; font-size: 11px; color: #73726c; padding: 5px 7px; border-bottom: 1px solid #d3d1c7; font-weight: 500; }
+.tbl td { padding: 6px 7px; border-bottom: 1px solid #f0efe9; vertical-align: top; }
+.tbl tr:last-child td { border-bottom: none; }
 </style>
 </head>
 <body>
-
-<div class="header">
-  <h1>SPIC 2026年度 ブランド戦略 — toC / toB 明確分離版</h1>
-  <div class="subtitle">BigQuery実データ（2025年4月〜2026年3月）+ 定期購入分析 + 市場動向 統合</div>
+<div class="hdr">
+  <h1>SPIC 2026年度 ブランド戦略 — toC / toB 分離版（shop_id定義ファイル厳守）</h1>
+  <div class="sub">BQ実データ 2025年4月〜2026年3月 ｜ toB: shop_id 7,8,12,18,20,23,26,27,42,43 ／ toC: shop_id 1,3,9,15,17,21,31,32,33,34,35,39,40,41</div>
 </div>
-
 <div class="body">
-
-<!-- Brand selector -->
-<div class="brand-tabs">
-  <button class="btab active" onclick="bs('overview',this)">📊 全社概況</button>
-  <button class="btab" onclick="bs('vc',this)">🔵 Lypo-C VC</button>
-  <button class="btab" onclick="bs('cd',this)">🟢 Lypo-C C+D</button>
-  <button class="btab" onclick="bs('skin',this)">🟠 SKINBEAUTY</button>
-  <button class="btab" onclick="bs('cera',this)">🔴 C+Cera</button>
-  <button class="btab" onclick="bs('min',this)">🟡 MINERALion</button>
-  <button class="btab" onclick="bs('cbd',this)">🟣 CBD</button>
+<div class="tabs">
+  <button class="tab active" onclick="bs('overview',this)">📊 全社概況</button>
+  <button class="tab" onclick="bs('vc',this)">🔵 VC</button>
+  <button class="tab" onclick="bs('cd',this)">🟢 C+D</button>
+  <button class="tab" onclick="bs('skin',this)">🟠 SKINBEAUTY</button>
+  <button class="tab" onclick="bs('cera',this)">🔴 C+Cera</button>
+  <button class="tab" onclick="bs('min',this)">🟡 MINERALion</button>
+  <button class="tab" onclick="bs('cbd',this)">🟣 CBD</button>
 </div>
 
-<!-- ===== OVERVIEW ===== -->
-<div id="b-overview" class="bsec on">
+<!-- OVERVIEW -->
+<div id="b-overview" class="sec on">
+  <div class="al al-w">
+    <strong>⚠ 最重要変更点：コダワリ（SPICのコダワリ / shop_id=18）はtoB（卸・ディーラーチャネル）に分類。</strong><br>
+    toB合計 <strong>約16.6億円（全体比24%）</strong> ／ toC合計 <strong>約53.3億円（76%）</strong>。コダワリはtoB売上の約95%を占める最大toBチャネル。
+  </div>
+  <div class="al al-b" style="font-size:11px;">
+    <strong>shop_id定義（ファイル準拠）</strong><br>
+    <strong>toB（卸・法人）:</strong> 7（点滴療法研究会）/ 8（Business/Biz）/ 12（エクスチェンジ）/ 18（SPICのコダワリ）/ 20（ビジネス部）/ 23（国際事業部）/ 26（Gym）/ 27（Salon）/ 42・43（ビジネス発注サイト）<br>
+    <strong>toC（一般消費者）:</strong> 1・3（リポスフェリック系）/ 9（Consumer）/ 15（リポスフェリック楽天）/ 17（Lypo-C Official Shopify）/ 21（コンシューマー部）/ 31〜35・39〜41（各モール）<br>
+    <strong>除外:</strong> 10・19・29・37（テスト）/ 25・30（社販）/ 22・45（ブランド部）
+  </div>
 
-  <div class="al al-i">BQ実績（2025年4月〜2026年3月）全ブランド合計：toC 約59.5億円 / toB 約2.4億円。toBは全体の約4%だが、平均受注単価がtoCの15〜200倍。少件数・高単価・法人継続が特徴。</div>
-
-  <table class="ov-table">
+  <div class="sl">ブランド別 toC/toB 年間売上（BQ実績 2025年4月〜2026年3月）</div>
+  <table class="tbl" style="margin-bottom:1rem;">
     <thead>
       <tr>
         <th>ブランド</th>
-        <th class="toc-col">toC 年間売上</th>
-        <th class="toc-col">toC 主力チャネル</th>
-        <th class="toc-col">定期稼働率</th>
-        <th class="tob-col">toB 年間売上</th>
-        <th class="tob-col">toB 主力チャネル</th>
-        <th class="tob-col">toB 平均単価/受注</th>
+        <th style="background:#f0f7ff;">toC 売上</th>
+        <th style="background:#f0f7ff;">toC 主力チャネル</th>
+        <th style="background:#f4fbf0;">toB 売上</th>
+        <th style="background:#f4fbf0;">toB 主力チャネル</th>
         <th>toB比率</th>
+        <th>コダワリ卸 平均単価</th>
       </tr>
     </thead>
     <tbody>
       <tr>
         <td><strong>🔵 VC</strong></td>
-        <td class="toc-col">約40.2億円</td>
-        <td class="toc-col">公式EC 46%・モール 29%</td>
-        <td class="toc-col warn">39.5%</td>
-        <td class="tob-col">約1.25億円</td>
-        <td class="tob-col">コンシュ（医療大口）</td>
-        <td class="tob-col">¥299万/件</td>
-        <td>3.0%</td>
+        <td style="background:#f0f7ff;"><strong>31.6億円</strong></td>
+        <td style="background:#f0f7ff;font-size:11px;">公式EC(17) 59%<br>Amazon 22% · 楽天 12%<br>コンシュ(21) 3%</td>
+        <td style="background:#f4fbf0;"><strong>10.1億円</strong></td>
+        <td style="background:#f4fbf0;font-size:11px;">コダワリ(18) 96%<br>エクスチェ(12) 2%</td>
+        <td class="warn"><strong>24%</strong></td>
+        <td style="font-size:11px;"><strong>¥119,200/受注</strong></td>
       </tr>
       <tr>
         <td><strong>🟢 C+D</strong></td>
-        <td class="toc-col">約19.5億円</td>
-        <td class="toc-col">公式EC 49%・モール 32%</td>
-        <td class="toc-col info">49.1%</td>
-        <td class="tob-col">約0.74億円</td>
-        <td class="tob-col">コンシュ（医療大口）</td>
-        <td class="tob-col">¥167万/件</td>
-        <td>3.6%</td>
+        <td style="background:#f0f7ff;"><strong>16.4億円</strong></td>
+        <td style="background:#f0f7ff;font-size:11px;">公式EC(17) 58%<br>Amazon 25% · 楽天 12%</td>
+        <td style="background:#f4fbf0;"><strong>3.9億円</strong></td>
+        <td style="background:#f4fbf0;font-size:11px;">コダワリ(18) 94%<br>エクスチェ(12) 3%</td>
+        <td class="warn"><strong>19%</strong></td>
+        <td style="font-size:11px;"><strong>¥67,210/受注</strong></td>
+      </tr>
+      <tr>
+        <td><strong>C+D+K</strong></td>
+        <td style="background:#f0f7ff;"><strong>0.08億円</strong></td>
+        <td style="background:#f0f7ff;font-size:11px;">Exclusive Shopify(39)</td>
+        <td style="background:#f4fbf0;"><strong>2.7億円</strong></td>
+        <td style="background:#f4fbf0;font-size:11px;">コダワリ(18) 94%<br>エクスチェ(12) 6%</td>
+        <td class="up"><strong>97%</strong></td>
+        <td style="font-size:11px;"><strong>¥56,395/受注</strong></td>
       </tr>
       <tr>
         <td><strong>🟠 SKINBEAUTY</strong></td>
-        <td class="toc-col">約1.24億円</td>
-        <td class="toc-col">公式EC 41%・コダワリ 40%</td>
-        <td class="toc-col up">70.6%</td>
-        <td class="tob-col">約0.053億円</td>
-        <td class="tob-col">エクスチェ（取次）</td>
-        <td class="tob-col">¥16万/件</td>
-        <td>4.1%</td>
+        <td style="background:#f0f7ff;"><strong>7.1億円</strong></td>
+        <td style="background:#f0f7ff;font-size:11px;">公式EC(17) 68%<br>楽天 14% · Amazon 13%</td>
+        <td style="background:#f4fbf0;"><strong>0.52億円</strong></td>
+        <td style="background:#f4fbf0;font-size:11px;">コダワリ(18) 90%<br>エクスチェ(12) 10%</td>
+        <td><strong>7%</strong></td>
+        <td style="font-size:11px;"><strong>¥72,472/受注</strong></td>
       </tr>
       <tr>
         <td><strong>🔴 C+Cera</strong></td>
-        <td class="toc-col">約0.64億円</td>
-        <td class="toc-col">公式EC 50%・コダワリ 39%</td>
-        <td class="toc-col up">91.0%</td>
-        <td class="tob-col">約0.014億円</td>
-        <td class="tob-col">エクスチェ（取次）</td>
-        <td class="tob-col">¥20万/件</td>
-        <td>2.1%</td>
+        <td style="background:#f0f7ff;"><strong>3.9億円</strong></td>
+        <td style="background:#f0f7ff;font-size:11px;">公式EC(17) 84%<br>Amazon 7% · 楽天 6%</td>
+        <td style="background:#f4fbf0;"><strong>0.27億円</strong></td>
+        <td style="background:#f4fbf0;font-size:11px;">コダワリ(18) 95%<br>エクスチェ(12) 5%</td>
+        <td><strong>6.5%</strong></td>
+        <td style="font-size:11px;"><strong>¥73,686/受注</strong></td>
       </tr>
       <tr>
         <td><strong>🟡 MINERALion</strong></td>
-        <td class="toc-col">約0.37億円</td>
-        <td class="toc-col">コダワリ 56%・公式EC 44%</td>
-        <td class="toc-col up">92.8%</td>
-        <td class="tob-col">約0.010億円</td>
-        <td class="tob-col">エクスチェ（取次）</td>
-        <td class="tob-col">¥6万/件</td>
-        <td>2.8%</td>
+        <td style="background:#f0f7ff;"><strong>1.7億円</strong></td>
+        <td style="background:#f0f7ff;font-size:11px;">公式EC(17) 69%<br>楽天・Amazon: 未進出</td>
+        <td style="background:#f4fbf0;"><strong>0.22億円</strong></td>
+        <td style="background:#f4fbf0;font-size:11px;">コダワリ(18) 95%<br>エクスチェ(12) 4%</td>
+        <td><strong>11%</strong></td>
+        <td style="font-size:11px;"><strong>¥29,662/受注</strong></td>
       </tr>
       <tr>
         <td><strong>🟣 CBD</strong></td>
-        <td class="toc-col">約1.25億円</td>
-        <td class="toc-col">コダワリ 67%・モール 34%</td>
-        <td class="toc-col" style="color:#888;">定期未整備</td>
-        <td class="tob-col">約0.063億円</td>
-        <td class="tob-col">エクスチェ・ビジネス</td>
-        <td class="tob-col">¥15万/件</td>
-        <td>4.8%</td>
+        <td style="background:#f0f7ff;"><strong>3.8億円</strong></td>
+        <td style="background:#f0f7ff;font-size:11px;">楽天(31) 43% · Amazon(32) 43%<br>公式EC(17): Shopify制約でゼロ</td>
+        <td style="background:#f4fbf0;"><strong>0.77億円</strong></td>
+        <td style="background:#f4fbf0;font-size:11px;">コダワリ(18) 93%<br>エクスチェ(12) 5%</td>
+        <td><strong>17%</strong></td>
+        <td style="font-size:11px;"><strong>¥44,736/受注</strong></td>
+      </tr>
+      <tr style="background:#f9f8f5;font-weight:500;">
+        <td>全社合計（全品目）</td>
+        <td style="background:#e6f1fb;"><strong>53.3億円（76%）</strong></td>
+        <td style="background:#e6f1fb;font-size:11px;"></td>
+        <td style="background:#eaf3de;"><strong>16.6億円（24%）</strong></td>
+        <td style="background:#eaf3de;font-size:11px;">コダワリが約15.7億円（95%）を占める</td>
+        <td><strong>24%</strong></td>
+        <td></td>
       </tr>
     </tbody>
   </table>
 
-  <div class="insight">
-    <strong>toBの構造的特徴（BQで確認）</strong>：コンシュ（コンシューマー）チャネルはVC・C+Dの医療機関大口専用。1受注あたりVC¥299万・C+D¥167万と圧倒的な高単価。件数は年間30件前後でも年間1億円超を生む。このチャネルを「維持」から「拡大」に転換できれば全社への貢献は大きい。
-  </div>
-  <div class="insight amber">
-    <strong>toBの課題</strong>：エクスチェ（取次）は中単価（¥15〜25万/件）だが、SKINBEAUTYのBiz（法人小口）は¥1,331/件と通常単品価格に近く、「法人割引なし・小口購入」の可能性がある。toBの定義と価格設計を明確化すべき。
-  </div>
-
-  <div class="section-tag">全社 toC/toB 売上構成（BQ年間実績）</div>
-  <div style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:1rem;">
-    <div style="display:flex; align-items:center; gap:6px; font-size:12px;"><span style="width:12px;height:12px;background:#378ADD;border-radius:2px;display:inline-block;"></span>toC 約59.5億円 (96%)</div>
-    <div style="display:flex; align-items:center; gap:6px; font-size:12px;"><span style="width:12px;height:12px;background:#1D9E75;border-radius:2px;display:inline-block;"></span>toB 約2.4億円 (4%)</div>
-    <div style="display:flex; align-items:center; gap:6px; font-size:12px;"><span style="width:12px;height:12px;background:#888780;border-radius:2px;display:inline-block;"></span>その他（社販・海外等）約4億円</div>
-  </div>
-
-  <div class="insight green">
-    <strong>2026年の方針</strong>：toCは「定期離脱の構造改革 + C+Dへの移行促進 + コスメキッチン展開」で既存資産を最大活用。toBは「コンシュ（医療大口）のVC→C+D+Kアップグレード + 新製品（SKINBEAUTY / C+Cera）の医療機関導入」で件数・単価の両輪を回す。
-  </div>
-</div>
-
-<!-- ===== VC ===== -->
-<div id="b-vc" class="bsec">
   <div class="split">
-    <!-- toC -->
-    <div class="half">
-      <div class="half-header">
-        <span class="half-badge toc-badge">toC</span>
-        <span class="half-title">🔵 Lypo-C VC — 一般消費者向け</span>
-      </div>
-      <div class="half-body">
-        <div class="mrow">
-          <div class="mm"><div class="mml">年間売上</div><div class="mmv">40.2億円</div><div class="mms">全社toC最大</div></div>
-          <div class="mm"><div class="mml">定期ACTIVE</div><div class="mmv warn">10,811件</div><div class="mms">稼働率39.5%</div></div>
-          <div class="mm"><div class="mml">初期離脱率</div><div class="mmv dn">76.4%</div><div class="mms">1-2回で離脱</div></div>
-        </div>
-
-        <div class="strat-label">toCチャネル構成（BQ年間実績）</div>
-        <div class="ch"><div class="chl">①公式EC</div><div class="chb"><div class="chf" style="width:46%;background:#378ADD;">46%</div></div><div class="chv">18.7億円</div></div>
-        <div class="ch"><div class="chl">③モール</div><div class="chb"><div class="chf" style="width:29%;background:#EF9F27;">29%</div></div><div class="chv">11.7億円</div></div>
-        <div class="ch"><div class="chl">②コダワリ</div><div class="chb"><div class="chf" style="width:24%;background:#5DCAA5;">24%</div></div><div class="chv">9.7億円</div></div>
-        <div class="ch"><div class="chl">④医療プロCon</div><div class="chb"><div class="chf" style="width:1%;background:#888780;"></div></div><div class="chv">0.11億円</div></div>
-
-        <div class="strat-label">toCオンライン動向</div>
-        <div class="insight" style="margin-bottom:6px;">富士経済：リポソームVC市場が若年層で拡大。LivOn Labs日本展開で楽天・Amazonに参入。「国産製造×DSM原料×無添加」の差別化が急務。</div>
-        <div class="insight amber">VC定期の根本課題：初期1-2回ACTIVE率23.6%。月1,300件獲得しても4人中3人が2回以内に離脱。C+Ceraの91%稼働モデルを研究・転用することが全社最重要施策。</div>
-
-        <div class="strat-label">toC 四半期戦略</div>
-        <div class="qgrid">
-          <div class="qb"><div class="qbl">Q1 予算9.77億円</div><div class="qbt">初期離脱構造を止める</div><div class="qbc"><span>2回目課金前「30→60日変更」自動オファー実装</span><span>停止90日以内1,663件へC+D切替デフォルトメール</span><span>公式LP：LivOn対抗「国産×DSM×無添加」明記</span><span>コスメキッチン：VC→C+D自然誘導スクリプト整備</span></div></div>
-          <div class="qb"><div class="qbl">Q2 予算10.30億円</div><div class="qbt">夏季ピーク最大化</div><div class="qbc"><span>7月予算351M：夏バテ×免疫×VC訴求に広告集中</span><span>モール：「VC → C+D比較LP」離脱ポップアップ</span><span>91〜365日停止4,215件に夏の免疫訴求復帰メール</span><span>コスメキッチン：4〜8週消化率を初測定</span></div></div>
-          <div class="qb"><div class="qbl">Q3 予算10.22億円</div><div class="qbt">ロイヤル層深耕</div><div class="qbc"><span>21回以上4,510件へC+D追加提案（LTV+28.8%の根拠）</span><span>決済11回以上停止1,051件を人力対応（電話・LINE）</span><span>年末ギフト：VC28包 贈答パッケージ化</span><span>@cosme秋レビュー強化でランキング維持</span></div></div>
-          <div class="qb"><div class="qbl">Q4 予算9.71億円</div><div class="qbt">改善実績で来期設計</div><div class="qbc"><span>初期ACTIVE率23.6%→30%超を今期定量目標</span><span>停止理由取得率0%→70%マイページ改修完成</span><span>C+Ceraの91%稼働モデル転用を施策化</span></div></div>
-        </div>
-      </div>
+    <div>
+      <div class="insight g"><strong>最大の構造的発見：コダワリ（shop_id=18）はtoB全体の95%</strong><br>toB総額16.6億円のうちコダワリが約15.7億円。コダワリはサロン・クリニック・健康食品販売店等のディーラーへの卸チャネル。VC卸が¥119,200/受注・C+D卸が¥67,210/受注と、消費者向け公式ECの約10〜15倍の受注単価。コダワリ卸先を深耕・拡大することがtoB成長の唯一の主軸。</div>
+      <div class="insight a"><strong>C+D+KはtoB特化製品（97%）</strong><br>C+D+K（ビタミンD 5,000IU）はほぼ全量がコダワリ卸経由。医療機関・クリニック向け高用量製品として機能しており、「コダワリ卸先の中のクリニック層」にC+D+Kを提案することがこのカテゴリのtoB成長策。</div>
     </div>
-
-    <!-- toB -->
-    <div class="half">
-      <div class="half-header">
-        <span class="half-badge tob-badge">toB</span>
-        <span class="half-title">🔵 Lypo-C VC — 法人・医療機関向け</span>
-      </div>
-      <div class="half-body">
-        <div class="mrow">
-          <div class="mm"><div class="mml">年間売上</div><div class="mmv">1.25億円</div><div class="mms">toB全体最大</div></div>
-          <div class="mm"><div class="mml">コンシュ受注</div><div class="mmv info">32件/年</div><div class="mms">¥299万/件</div></div>
-          <div class="mm"><div class="mml">エクスチェ</div><div class="mmv">89件/年</div><div class="mms">¥25万/件</div></div>
-        </div>
-
-        <div class="strat-label">toBチャネル構成（BQ年間実績）</div>
-        <div class="ch"><div class="chl">コンシュ（医療大口）</div><div class="chb"><div class="chf" style="width:76%;background:#1D9E75;">76%・9,574万</div></div><div class="chv">9,574万円</div></div>
-        <div class="ch"><div class="chl">エクスチェ（取次）</div><div class="chb"><div class="chf" style="width:18%;background:#5DCAA5;">18%</div></div><div class="chv">2,238万円</div></div>
-        <div class="ch"><div class="chl">ビジネス</div><div class="chb"><div class="chf" style="width:4%;background:#97c459;">4%</div></div><div class="chv">455万円</div></div>
-        <div class="ch"><div class="chl">Biz（法人小口）</div><div class="chb"><div class="chf" style="width:2%;background:#C0DD97;"></div></div><div class="chv">244万円</div></div>
-
-        <div class="strat-label">toBインサイト（BQ検証）</div>
-        <div class="insight green">コンシュは医療機関大口。年32件で9,574万円。1受注¥299万は美容クリニック・医院への大量供給を示す。このチャネルのVC→C+Dアップグレードが最高ROIのtoB施策。</div>
-        <div class="insight amber">Biz（法人小口）の平均受注¥2,298は単品購入と変わらない。「法人向け価格設計」がなく、福利厚生需要を取り切れていない可能性がある。</div>
-
-        <div class="strat-label">toB 四半期戦略</div>
-        <div class="qgrid">
-          <div class="qb"><div class="qbl">Q1 最優先</div><div class="qbt">コンシュVC→C+D転換</div><div class="qbc"><span>コンシュ既存顧客32件に「C+D切替」案内を個別商談</span><span>C+Dへの移行だけで単価1.78倍（¥299万→¥167万×複数回）</span><span>医療現場でのVC使用実績をC+Dでも証明できる資料作成</span><span>C+D+K（5,000IU）は医院・店舗専用：クリニックへ個別提案</span></div></div>
-          <div class="qb"><div class="qbl">Q2</div><div class="qbt">エクスチェ取次の深耕</div><div class="qbc"><span>エクスチェ89件取引先の顧客数・業種を把握（BQ分析）</span><span>新製品（SKINBEAUTY/C+Cera）をVCに同梱提案</span><span>夏の医院向け「免疫サポートパッケージ」提案</span></div></div>
-          <div class="qb"><div class="qbl">Q3</div><div class="qbt">toBウェルネス法人開拓</div><div class="qbc"><span>Biz法人小口の¥2,298/件を改善：福利厚生向け法人セット価格設計</span><span>企業の健康経営施策と連携した「福利厚生サプリ」提案資料作成</span><span>健康経営優良法人認定企業リストへのアプローチ</span></div></div>
-          <div class="qb"><div class="qbl">Q4</div><div class="qbt">toB顧客LTV設計</div><div class="qbc"><span>コンシュ顧客のリピート率・継続期間をBQで初測定</span><span>来期toB目標：コンシュ件数32→45件（+40%）</span><span>C+D+Kを含めたVCファミリー合計でtoB2億円を目指す</span></div></div>
-        </div>
-      </div>
+    <div>
+      <div class="insight r"><strong>CBDのtoCはモール依存・Shopify制約が固定化</strong><br>CBDのtoC（3.8億円）は楽天・Amazonが86%。Shopify（公式EC shop_id=17）での販売が制限されるため、公式EC経由の顧客データ統合・定期設計が不可能。一方コダワリ（toB）が0.77億円（17%）を担っており、CBD販売の実態はコダワリ卸が重要な位置を占めている。</div>
+      <div class="insight"><strong>MINERALionのtoCはコダワリ分が消えた実態</strong><br>コダワリがtoBに移ったことで、MINERALionのtoCは公式EC（69%）のみ。楽天・AmazonへのtoCモール展開が未着手のまま。モール出店がMINERALionのtoC拡大に最も即効性のある施策。</div>
     </div>
   </div>
 </div>
 
-<!-- ===== C+D ===== -->
-<div id="b-cd" class="bsec">
+<!-- VC -->
+<div id="b-vc" class="sec">
+  <div class="al al-b">BQ実績: toC 31.6億円（76%）/ toB 10.1億円（24%）。toBはコダワリ卸が96%（9.72億円）。</div>
   <div class="split">
     <div class="half">
-      <div class="half-header">
-        <span class="half-badge toc-badge">toC</span>
-        <span class="half-title">🟢 Lypo-C C+D — 一般消費者向け</span>
-      </div>
-      <div class="half-body">
-        <div class="mrow">
-          <div class="mm"><div class="mml">年間売上(toC)</div><div class="mmv">19.5億円</div><div class="mms">+49% YoY</div></div>
-          <div class="mm"><div class="mml">定期ACTIVE</div><div class="mmv info">10,071件</div><div class="mms">稼働率49.1%</div></div>
-          <div class="mm"><div class="mml">VC比LTV</div><div class="mmv up">+28.8%</div><div class="mms">リピート+8.2pt</div></div>
+      <div class="hh"><span class="badge toc-b">toC</span><span class="ht">🔵 VC — 一般消費者向け</span></div>
+      <div class="hb">
+        <div class="mx">
+          <div class="m"><div class="ml">年間売上</div><div class="mv">31.6億円</div><div class="ms">toC全体の59%</div></div>
+          <div class="m"><div class="ml">定期ACTIVE</div><div class="mv warn">10,811件</div><div class="ms">稼働率39.5%</div></div>
+          <div class="m"><div class="ml">初期離脱</div><div class="mv dn">76.4%</div><div class="ms">1-2回で停止</div></div>
         </div>
-
-        <div class="strat-label">toCチャネル構成</div>
-        <div class="ch"><div class="chl">①公式EC</div><div class="chb"><div class="chf" style="width:49%;background:#1D9E75;">49%</div></div><div class="chv">9.5億円</div></div>
-        <div class="ch"><div class="chl">③モール</div><div class="chb"><div class="chf" style="width:32%;background:#EF9F27;">32%</div></div><div class="chv">6.3億円</div></div>
-        <div class="ch"><div class="chl">②コダワリ</div><div class="chb"><div class="chf" style="width:19%;background:#5DCAA5;">19%</div></div><div class="chv">3.7億円</div></div>
-
-        <div class="strat-label">toCオンライン動向</div>
-        <div class="insight">ビタミンD市場CAGR8.79%（〜2030）。Google検索で「ビタミンD 欠乏」急増。夏の室内勤務・日照不足文脈での需要拡大。ディアナチュラ等大手がVitD市場参入中。「リポソーム×液体×C+D同時摂取」の差別化維持が必須。</div>
-        <div class="insight green">初期ACTIVE率29.3%はVCより改善されているが、3回突破後は65.6%と大きく改善。3回目特典設計が定着率の分岐点。</div>
-
-        <div class="strat-label">toC 四半期戦略</div>
-        <div class="qgrid">
-          <div class="qb"><div class="qbl">Q1 予算5.72億円</div><div class="qbt">VC顧客のC+D化</div><div class="qbc"><span>公式ECマイページ：「VC→C+D替える」ボタン設置（Q1中完成）</span><span>VC停止90日以内1,663件：デフォルト再開を「C+D 1箱」に変更</span><span>「ビタミンD欠乏チェックリスト」SEO記事4月公開</span><span>Amazonの「VC商品ページ」にC+D導線を追加</span></div></div>
-          <div class="qb"><div class="qbl">Q2 予算6.12億円</div><div class="qbt">夏×ビタミンD不足を確立</div><div class="qbc"><span>7月206.5M予算：室内冷房→日光不足→D欠乏訴求に広告集中</span><span>楽天：「ビタミンD サプリ」カテゴリ露出強化</span><span>コスメキッチン：「守る力を届ける」接客スクリプト展開</span><span>3回目特典（使用ガイドBOOK）設計・実装</span></div></div>
-          <div class="qb"><div class="qbl">Q3 予算6.08億円</div><div class="qbt">年末×免疫ロイヤル深耕</div><div class="qbc"><span>C+D×SKINBEAUTYの「飲む×塗る」年末ギフトセット</span><span>C+D定期6ヶ月継続率をBQで初計測</span><span>Amazon「リポソーム ビタミンD」1位維持を必達KPI</span></div></div>
-          <div class="qb"><div class="qbl">Q4 予算5.74億円</div><div class="qbt">25億円超着地へ</div><div class="qbc"><span>月平均180M×12=21.6億円が最低ライン。施策上乗せで25億円超</span><span>初期ACTIVE率29.3%→38%が来期予算根拠</span><span>来期C+D予算30億円台の根拠データをBQで構築</span></div></div>
+        <div class="sl">toCチャネル構成</div>
+        <div class="ch"><div class="chl">公式EC(17)</div><div class="chb"><div class="chf" style="width:59%;background:#378ADD;">59%</div></div><div class="chv">18.7億円</div></div>
+        <div class="ch"><div class="chl">Amazon(32)</div><div class="chb"><div class="chf" style="width:22%;background:#EF9F27;">22%</div></div><div class="chv">6.9億円</div></div>
+        <div class="ch"><div class="chl">楽天(31)</div><div class="chb"><div class="chf" style="width:12%;background:#E24B4A;">12%</div></div><div class="chv">3.8億円</div></div>
+        <div class="ch"><div class="chl">Yahoo(33)</div><div class="chb"><div class="chf" style="width:4%;background:#888780;"></div></div><div class="chv">1.2億円</div></div>
+        <div class="ch"><div class="chl">コンシュ(21)</div><div class="chb"><div class="chf" style="width:3%;background:#1D9E75;"></div></div><div class="chv">9,574万円</div></div>
+        <div class="sl">toC 四半期戦略</div>
+        <div class="qg">
+          <div class="qb"><div class="ql">Q1 9.77億円</div><div class="qt">初期離脱を止める</div><div class="qc"><span>2回目前の「30→60日変更」自動オファー実装</span><span>停止90日以内1,663件へC+D切替デフォルトメール</span><span>公式LP「国産×DSM×無添加」明記（LivOn対抗）</span></div></div>
+          <div class="qb"><div class="ql">Q2 10.30億円</div><div class="qt">夏季ピーク最大化</div><div class="qc"><span>7月351M：夏バテ×免疫×VC広告集中</span><span>停止4,215件に夏の免疫訴求復帰メール</span></div></div>
+          <div class="qb"><div class="ql">Q3 10.22億円</div><div class="qt">ロイヤル層深耕</div><div class="qc"><span>21回以上4,510件へC+D追加提案（LTV+28.8%）</span><span>年末ギフト：VC28包 贈答パッケージ化</span></div></div>
+          <div class="qb"><div class="ql">Q4 9.71億円</div><div class="qt">来期設計</div><div class="qc"><span>初期ACTIVE率23.6%→30%超を今期目標として検証</span><span>停止理由取得率0%→70%マイページ改修完成</span></div></div>
         </div>
       </div>
     </div>
-
     <div class="half">
-      <div class="half-header">
-        <span class="half-badge tob-badge">toB</span>
-        <span class="half-title">🟢 Lypo-C C+D — 法人・医療機関向け</span>
-      </div>
-      <div class="half-body">
-        <div class="mrow">
-          <div class="mm"><div class="mml">年間売上(toB)</div><div class="mmv">0.74億円</div><div class="mms">VCのtoB比VC比で高率</div></div>
-          <div class="mm"><div class="mml">コンシュ受注</div><div class="mmv info">30件/年</div><div class="mms">¥167万/件</div></div>
-          <div class="mm"><div class="mml">上位版C+D+K</div><div class="mmv up">医院専用</div><div class="mms">エクスチェ14.9M</div></div>
+      <div class="hh"><span class="badge tob-b">toB</span><span class="ht">🔵 VC — 卸・法人向け</span></div>
+      <div class="hb">
+        <div class="mx">
+          <div class="m"><div class="ml">年間売上</div><div class="mv">10.1億円</div><div class="ms">toB全体の61%</div></div>
+          <div class="m"><div class="ml">コダワリ受注</div><div class="mv info">8,153件</div><div class="ms">¥119,200/件</div></div>
+          <div class="m"><div class="ml">エクスチェ</div><div class="mv">89件</div><div class="ms">¥251,418/件</div></div>
         </div>
-
-        <div class="strat-label">toBチャネル構成</div>
-        <div class="ch"><div class="chl">コンシュ（医療大口）</div><div class="chb"><div class="chf" style="width:68%;background:#1D9E75;">68%・5,007万</div></div><div class="chv">5,007万円</div></div>
-        <div class="ch"><div class="chl">エクスチェ（取次）</div><div class="chb"><div class="chf" style="width:14%;background:#5DCAA5;">14%</div></div><div class="chv">1,064万円</div></div>
-        <div class="ch"><div class="chl">Biz（法人）</div><div class="chb"><div class="chf" style="width:11%;background:#97c459;">11%</div></div><div class="chv">840万円</div></div>
-        <div class="ch"><div class="chl">ビジネス</div><div class="chb"><div class="chf" style="width:6%;background:#C0DD97;">6%</div></div><div class="chv">474万円</div></div>
-
-        <div class="strat-label">C+D+K（医院・店舗専用）の位置づけ</div>
-        <div class="insight green">C+D+K（ビタミンD 5,000IU + ビタミンK配合）はC+Dの2.5倍の高用量版。エクスチェ経由で年間14.9M。VCファミリーのtoB最上位製品として医院・クリニックのプロコースへのアップセル商材。</div>
-
-        <div class="strat-label">toB 四半期戦略</div>
-        <div class="qgrid">
-          <div class="qb"><div class="qbl">Q1 最優先</div><div class="qbt">医院向けC+D定番化</div><div class="qbc"><span>コンシュ30件既存医院に「C+D+K（5,000IU）」アップグレード提案</span><span>ビタミンD欠乏患者へのサプリ処方の文脈で院内採用拡大</span><span>医師向けC+D技術資料（リポソーム×吸収率）を整備</span></div></div>
-          <div class="qb"><div class="qbl">Q2</div><div class="qbt">新規医院開拓</div><div class="qbc"><span>コンシュ件数：30→40件に増加（夏の「免疫×D不足」医院需要）</span><span>美容クリニック向け：C+D点滴前後の経口補完として提案</span><span>スポーツ医学・リハビリクリニックへのC+D for SPORTS連携</span></div></div>
-          <div class="qb"><div class="qbl">Q3</div><div class="qbt">toBウェルネス法人</div><div class="qbc"><span>Biz法人向け：「秋冬の従業員免疫サポートパッケージ」提案</span><span>健康経営優良法人認定企業へのD欠乏対策サプリ訴求</span><span>C+D + C+D+KのtoB年間受発注契約モデルを試行</span></div></div>
-          <div class="qb"><div class="qbl">Q4</div><div class="qbt">toB構造最適化</div><div class="qbc"><span>VCとC+Dを合算したtoB売上2億円超を来期目標として設定</span><span>コンシュ・エクスチェの顧客別継続率をBQで初測定</span><span>C+D+Kの年間予算144Mへの貢献度測定</span></div></div>
+        <div class="sl">toBチャネル構成</div>
+        <div class="ch"><div class="chl">コダワリ(18)</div><div class="chb"><div class="chf" style="width:96%;background:#1D9E75;">96% · 9.72億</div></div><div class="chv">9.72億円</div></div>
+        <div class="ch"><div class="chl">エクスチェ(12)</div><div class="chb"><div class="chf" style="width:2%;background:#5DCAA5;"></div></div><div class="chv">2,238万円</div></div>
+        <div class="ch"><div class="chl">国際(23)</div><div class="chb"><div class="chf" style="width:0.6%;background:#888780;"></div></div><div class="chv">588万円</div></div>
+        <div class="ch"><div class="chl">ビジネス部(20)</div><div class="chb"><div class="chf" style="width:0.5%;background:#888780;"></div></div><div class="chv">455万円</div></div>
+        <div class="ch"><div class="chl">Biz(8)</div><div class="chb"><div class="chf" style="width:0.2%;background:#d3d1c7;"></div></div><div class="chv">244万円</div></div>
+        <div class="insight g">コダワリ卸は月平均679件・8,100万円の安定したtoB基盤。卸先（サロン・クリニック・健康食品店等）へのC+D・C+Ceraのクロスセルで卸売上の単価引き上げが最優先。</div>
+        <div class="insight">エクスチェ（取次）は89件・¥251,418/件と高単価。この取次先の深耕と新規取次先の開拓が高単価toBを増やす最短ルート。</div>
+        <div class="sl">toB 四半期戦略</div>
+        <div class="qg">
+          <div class="qb"><div class="ql">Q1 最優先</div><div class="qt">コダワリ卸先の把握と深耕</div><div class="qc"><span>コダワリ8,153件の卸先業種・購入頻度をBQで分析</span><span>C+D・C+D+K追加提案で卸単価を引き上げ</span><span>新製品（SKINBEAUTY・C+Cera）を既存卸先へ横展開</span></div></div>
+          <div class="qb"><div class="ql">Q2-Q4</div><div class="qt">卸先の拡大</div><div class="qc"><span>エクスチェ取次の新規開拓（取次先の業種分析）</span><span>国際(23)・Gym(26)・Salon(27)チャネルへの展開</span><span>コダワリ卸先向けの季節別提案キット整備</span></div></div>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ===== SKINBEAUTY ===== -->
-<div id="b-skin" class="bsec">
+<!-- C+D -->
+<div id="b-cd" class="sec">
+  <div class="al al-b">BQ実績: toC 16.4億円（81%）/ toB 3.9億円（19%）。toBはコダワリ卸が94%（3.68億円）。</div>
   <div class="split">
     <div class="half">
-      <div class="half-header">
-        <span class="half-badge toc-badge">toC</span>
-        <span class="half-title">🟠 SKINBEAUTY — 一般消費者向け</span>
-      </div>
-      <div class="half-body">
-        <div class="mrow">
-          <div class="mm"><div class="mml">年間売上(toC)</div><div class="mmv">1.24億円</div><div class="mms">2025年8月発売</div></div>
-          <div class="mm"><div class="mml">定期ACTIVE</div><div class="mmv up">356件</div><div class="mms">稼働率70.6%</div></div>
-          <div class="mm"><div class="mml">停止71件</div><div class="mmv up">平均38日</div><div class="mms">全件即回収可</div></div>
+      <div class="hh"><span class="badge toc-b">toC</span><span class="ht">🟢 C+D — 一般消費者向け</span></div>
+      <div class="hb">
+        <div class="mx">
+          <div class="m"><div class="ml">年間売上</div><div class="mv">16.4億円</div><div class="ms">YoY +49%</div></div>
+          <div class="m"><div class="ml">定期ACTIVE</div><div class="mv up">10,071件</div><div class="ms">稼働率49.1%</div></div>
+          <div class="m"><div class="ml">既存の定期転換</div><div class="mv up">44.2%</div><div class="ms">全ブランド最高</div></div>
         </div>
-        <div class="strat-label">toCチャネル構成</div>
-        <div class="ch"><div class="chl">①公式EC</div><div class="chb"><div class="chf" style="width:41%;background:#D85A30;">41%</div></div><div class="chv">4,775万円</div></div>
-        <div class="ch"><div class="chl">②コダワリ</div><div class="chb"><div class="chf" style="width:40%;background:#EF9F27;">40%</div></div><div class="chv">4,667万円</div></div>
-        <div class="ch"><div class="chl">③モール</div><div class="chb"><div class="chf" style="width:19%;background:#888780;">19%</div></div><div class="chv">2,156万円</div></div>
-        <div class="strat-label">toCオンライン動向</div>
-        <div class="insight">富士経済：インナービューティ×リポソームVC市場が若年層で急拡大。「塗るLypo-C」はコダワリ経由の高感度層と公式EC定期の2軸で立ち上がり中。コスメキッチン5月展開が認知の最大加速装置。</div>
-        <div class="strat-label">toC 四半期戦略</div>
-        <div class="qgrid">
-          <div class="qb"><div class="qbl">Q1 予算58M</div><div class="qbt">認知蓄積×即回収</div><div class="qbc"><span>停止71件（全件90日以内）を即時メール1通で回収</span><span>コスメキッチン：スタッフ教育資料4月完成・5月展開</span><span>7包お試しキット（¥3,410）を試し口として前面配置</span><span>SNS：「防腐剤不使用×個包装」UGC促進</span></div></div>
-          <div class="qb"><div class="qbl">Q2 予算78M</div><div class="qbt">夏UV×VC補給</div><div class="qbc"><span>「UV後のビタミンC外用補給」Instagram・TikTok広告</span><span>コスメキッチン4〜8週消化率を初測定</span><span>C+Ceraとの「飲む×塗る」セット定期を試験提案</span><span>楽天：「ビタミンC 化粧品 無添加」カテゴリ最適化</span></div></div>
-          <div class="qb"><div class="qbl">Q3 予算123M</div><div class="qbt">定期転換を加速</div><div class="qbc"><span>Q3から予算がQ1比2倍超：前半認知蓄積が直接効く</span><span>28包定期（¥12,320）への移行率が最重要KPI</span><span>年末：C+DとのペアセットでLTV向上</span><span>@cosme・LIPS口コミ数増加施策（モニター活用）</span></div></div>
-          <div class="qb"><div class="qbl">Q4 予算169M</div><div class="qbt">定番品へ転換完成</div><div class="qbc"><span>Q4が全体の39%：年末→新年「肌リセット」訴求</span><span>レフィル（30包）定期移行で継続コスト意識を下げる</span><span>定期ACTIVE 356件→800件超を今期目標</span></div></div>
+        <div class="sl">toCチャネル構成</div>
+        <div class="ch"><div class="chl">公式EC(17)</div><div class="chb"><div class="chf" style="width:58%;background:#1D9E75;">58%</div></div><div class="chv">9.5億円</div></div>
+        <div class="ch"><div class="chl">Amazon(32)</div><div class="chb"><div class="chf" style="width:25%;background:#EF9F27;">25%</div></div><div class="chv">4.1億円</div></div>
+        <div class="ch"><div class="chl">楽天(31)</div><div class="chb"><div class="chf" style="width:12%;background:#E24B4A;">12%</div></div><div class="chv">2.0億円</div></div>
+        <div class="ch"><div class="chl">Yahoo他</div><div class="chb"><div class="chf" style="width:3%;background:#888780;"></div></div><div class="chv">0.5億円</div></div>
+        <div class="sl">toC 四半期戦略</div>
+        <div class="qg">
+          <div class="qb"><div class="ql">Q1 5.72億円</div><div class="qt">VC顧客をC+D化</div><div class="qc"><span>マイページ「VCをC+Dに替える」ボタン設置</span><span>VC停止90日以内のデフォルト再開をC+Dに</span><span>「ビタミンD欠乏チェック」SEO記事4月公開</span></div></div>
+          <div class="qb"><div class="ql">Q2 6.12億円</div><div class="qt">夏=ビタミンD不足確立</div><div class="qc"><span>夏の室内冷房→日光不足→D欠乏訴求に広告集中</span><span>楽天「ビタミンD サプリ」カテゴリ露出強化</span></div></div>
+          <div class="qb"><div class="ql">Q3 6.08億円</div><div class="qt">ロイヤル深耕</div><div class="qc"><span>C+D単品購入者への定期切替提案（既存転換44.2%）</span><span>年末ギフト：C+D×SKINBEAUTYペアセット</span></div></div>
+          <div class="qb"><div class="ql">Q4 5.74億円</div><div class="qt">25億円超着地</div><div class="qc"><span>Amazon「リポソーム ビタミンD」1位維持</span><span>初期ACTIVE率29.3%→38%目標</span></div></div>
         </div>
       </div>
     </div>
-
     <div class="half">
-      <div class="half-header">
-        <span class="half-badge tob-badge">toB</span>
-        <span class="half-title">🟠 SKINBEAUTY — 法人・医療機関向け</span>
-      </div>
-      <div class="half-body">
-        <div class="mrow">
-          <div class="mm"><div class="mml">年間売上(toB)</div><div class="mmv">530万円</div><div class="mms">まだ小さい</div></div>
-          <div class="mm"><div class="mml">エクスチェ受注</div><div class="mmv info">32件/年</div><div class="mms">¥16万/件</div></div>
-          <div class="mm"><div class="mml">医療機関実績</div><div class="mmv up">あり</div><div class="mms">エレクトロポレーション</div></div>
+      <div class="hh"><span class="badge tob-b">toB</span><span class="ht">🟢 C+D — 卸・法人向け</span></div>
+      <div class="hb">
+        <div class="mx">
+          <div class="m"><div class="ml">年間売上</div><div class="mv">3.9億円</div><div class="ms">toB2位</div></div>
+          <div class="m"><div class="ml">コダワリ受注</div><div class="mv info">5,473件</div><div class="ms">¥67,210/件</div></div>
+          <div class="m"><div class="ml">ビジネス部</div><div class="mv">8件</div><div class="ms">¥592,188/件</div></div>
         </div>
-
-        <div class="strat-label">toBチャネル構成</div>
-        <div class="ch"><div class="chl">エクスチェ（取次）</div><div class="chb"><div class="chf" style="width:96%;background:#D85A30;">96%・510万</div></div><div class="chv">510万円</div></div>
-        <div class="ch"><div class="chl">Biz（法人小口）</div><div class="chb"><div class="chf" style="width:3%;background:#888780;"></div></div><div class="chv">16万円</div></div>
-
-        <div class="al al-s" style="margin-top:0.75rem;">
-          <strong>SKINBEAUTYのtoB最大の差別化：医療機関でのエレクトロポレーション（美容導入）使用実績。</strong> これはVC内服サプリにはない、唯一無二のチャネル連携。美容クリニックでの施術との組み合わせで「医療×コスメ」訴求が可能。
-        </div>
-
-        <div class="strat-label">toBターゲット別戦略（新規開拓）</div>
-        <div class="qgrid">
-          <div class="qb"><div class="qbl">Q1 最優先</div><div class="qbt">医療機関初期開拓</div><div class="qbc"><span>エレクトロポレーション実績のある医院30件への個別DM</span><span>「Lypo-C SKINBEAUTY × 美容導入」の活用事例を作成</span><span>美容皮膚科・美容外科向けの技術資料（スティンギングテスト済み・防腐剤不使用）を整備</span><span>コンシュ経由のVC既存医院にSKINBEAUTY導入を提案</span></div></div>
-          <div class="qb"><div class="qbl">Q2</div><div class="qbt">サロン・エステへの展開</div><div class="qbc"><span>エステサロン・美容室：施術前後のホームケア商品として提案</span><span>「塗るLypo-C」の店頭販売をサロンでテスト展開</span><span>コスメキッチン展開実績を活用した展示会アプローチ</span></div></div>
-          <div class="qb"><div class="qbl">Q3</div><div class="qbt">医療×コスメ連携強化</div><div class="qbc"><span>美容クリニック向け：C+Cera（内側）+SKINBEAUTY（外側）のセット提案</span><span>季節訴求：秋の乾燥肌シーズンに合わせた医院向けキット提案</span><span>エクスチェ取次経由での新規ルート開拓</span></div></div>
-          <div class="qb"><div class="qbl">Q4</div><div class="qbt">toB基盤の確立</div><div class="qbc"><span>toB売上530万円→2,000万円を来期目標として設定</span><span>医療機関でのリピート受注率をBQで測定</span><span>「医療機関採用済み」のsocial proofをtoC訴求にも活用</span></div></div>
+        <div class="sl">toBチャネル構成</div>
+        <div class="ch"><div class="chl">コダワリ(18)</div><div class="chb"><div class="chf" style="width:94%;background:#1D9E75;">94% · 3.68億</div></div><div class="chv">3.68億円</div></div>
+        <div class="ch"><div class="chl">エクスチェ(12)</div><div class="chb"><div class="chf" style="width:3%;background:#5DCAA5;"></div></div><div class="chv">1,064万円</div></div>
+        <div class="ch"><div class="chl">Biz(8)</div><div class="chb"><div class="chf" style="width:2%;background:#97c459;"></div></div><div class="chv">840万円</div></div>
+        <div class="ch"><div class="chl">ビジネス部(20)</div><div class="chb"><div class="chf" style="width:1%;background:#C0DD97;"></div></div><div class="chv">474万円</div></div>
+        <div class="insight g">ビタミンD市場CAGR8.79%（〜2030）の追い風。コダワリ卸先にC+D+Kをグレードアップ提案することでVC→C+D→C+D+Kの段階的単価引き上げが実現できる。</div>
+        <div class="insight">ビジネス部(20)の¥592,188/件（8件）は法人大口の実績。この顧客層の継続・拡大が高LTVのtoB成長策。</div>
+        <div class="sl">toB 四半期戦略</div>
+        <div class="qg">
+          <div class="qb"><div class="ql">Q1-Q2</div><div class="qt">コダワリ卸先にC+D+K提案</div><div class="qc"><span>VC取扱いコダワリ卸先に「C+D+K」追加提案</span><span>ビタミンD欠乏の根拠資料を卸先向けに整備</span></div></div>
+          <div class="qb"><div class="ql">Q3-Q4</div><div class="qt">法人チャネル開拓</div><div class="qc"><span>Biz(8)の法人小口：福利厚生向け価格設計を整備</span><span>健康経営優良法人認定企業へのD欠乏対策訴求</span></div></div>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ===== C+CERA ===== -->
-<div id="b-cera" class="bsec">
+<!-- SKINBEAUTY -->
+<div id="b-skin" class="sec">
+  <div class="al al-b">BQ実績: toC 7.1億円（93%）/ toB 0.52億円（7%）。コダワリ卸は発売直後から644件・4,667万円を計上。</div>
   <div class="split">
     <div class="half">
-      <div class="half-header">
-        <span class="half-badge toc-badge">toC</span>
-        <span class="half-title">🔴 C+Cera — 一般消費者向け</span>
-      </div>
-      <div class="half-body">
-        <div class="mrow">
-          <div class="mm"><div class="mml">年間売上(toC)</div><div class="mmv">0.64億円</div><div class="mms">新製品・急成長</div></div>
-          <div class="mm"><div class="mml">定期稼働率</div><div class="mmv up">91.0%</div><div class="mms">全ブランド最高</div></div>
-          <div class="mm"><div class="mml">解約率</div><div class="mmv up">3.7%</div><div class="mms">圧倒的低解約</div></div>
+      <div class="hh"><span class="badge toc-b">toC</span><span class="ht">🟠 SKINBEAUTY — 一般消費者向け</span></div>
+      <div class="hb">
+        <div class="mx">
+          <div class="m"><div class="ml">年間売上</div><div class="mv">7.1億円</div><div class="ms">2025年8月発売</div></div>
+          <div class="m"><div class="ml">定期ACTIVE</div><div class="mv up">356件</div><div class="ms">稼働率70.6%</div></div>
+          <div class="m"><div class="ml">解約「実感なし」</div><div class="mv warn">21.4%</div><div class="ms">他ブランドの2倍</div></div>
         </div>
-        <div class="strat-label">toCチャネル構成</div>
-        <div class="ch"><div class="chl">①公式EC</div><div class="chb"><div class="chf" style="width:50%;background:#993C1D;">50%</div></div><div class="chv">3,274万円</div></div>
-        <div class="ch"><div class="chl">②コダワリ</div><div class="chb"><div class="chf" style="width:39%;background:#D85A30;">39%</div></div><div class="chv">2,564万円</div></div>
-        <div class="ch"><div class="chl">③モール</div><div class="chb"><div class="chf" style="width:9%;background:#EF9F27;">9%</div></div><div class="chv">590万円</div></div>
-        <div class="strat-label">toCオンライン動向</div>
-        <div class="insight green">富士経済：「飲むセラミド」市場形成期と完全一致。乾燥対策広告が2025年急増。稼働率91%という事実自体が「継続したくなる製品力」の証明。この製品設計の哲学をVC/C+Dに転用することが全社最重要施策。</div>
-        <div class="strat-label">toC 四半期戦略</div>
-        <div class="qgrid">
-          <div class="qb"><div class="qbl">Q1 予算60M</div><div class="qbt">91%稼働モデルの解剖</div><div class="qbc"><span>C+Cera定期継続顧客への定性調査（5〜10件インタビュー）：なぜ止まらないかを明文化→VC転用</span><span>コスメキッチン：「国産米ぬか×サステナブル×セラミドを飲む」メインストーリー</span><span>VC/C+D既存顧客へ「C+Ceraを追加」クロスセルメール</span></div></div>
-          <div class="qb"><div class="qbl">Q2 予算75M</div><div class="qbt">夏の肌ダメージ訴求</div><div class="qbc"><span>「UV後のセラミド補給」×SKINBEAUTYとの「飲む×塗る」Instagram展開</span><span>楽天・Amazon：「乾燥対策 サプリ セラミド」カテゴリ最適化</span><span>3回突破者データを抽出：ロイヤル化の予兆指標設計</span></div></div>
-          <div class="qb"><div class="qbl">Q3 予算87M</div><div class="qbt">秋冬乾燥シーズンに全力</div><div class="qbc"><span>「C+Cera+SKINBEAUTY」定期セットを10月ローンチ</span><span>年末ギフト：C+Cera×SKINBEAUTYビューティセット展開</span><span>28包定期移行率と解約率を中間測定</span></div></div>
-          <div class="qb"><div class="qbl">Q4 予算90M</div><div class="qbt">スキンライン定番化完成</div><div class="qbc"><span>定期ACTIVE 634件→1,000件超を今期目標</span><span>SKINBEAUTYと合わせた「スキンライン2ブランド」として来期予算組み立て</span><span>稼働率91%モデルのVC転用成果を測定</span></div></div>
+        <div class="sl">toCチャネル構成</div>
+        <div class="ch"><div class="chl">公式EC(17)</div><div class="chb"><div class="chf" style="width:68%;background:#D85A30;">68%</div></div><div class="chv">4.8億円</div></div>
+        <div class="ch"><div class="chl">楽天(31)</div><div class="chb"><div class="chf" style="width:14%;background:#EF9F27;"></div></div><div class="chv">1.0億円</div></div>
+        <div class="ch"><div class="chl">Amazon(32)</div><div class="chb"><div class="chf" style="width:13%;background:#888780;"></div></div><div class="chv">0.9億円</div></div>
+        <div class="sl">toC 四半期戦略</div>
+        <div class="qg">
+          <div class="qb"><div class="ql">Q1 58M</div><div class="qt">認知蓄積×即回収</div><div class="qc"><span>停止71件（全件90日以内）即時メール回収</span><span>30・60日フォローメール設計（実感なし対策）</span><span>コスメキッチン5月展開準備</span></div></div>
+          <div class="qb"><div class="ql">Q2 78M</div><div class="qt">夏UV×塗る必然性</div><div class="qc"><span>「UV後ビタミンC外用補給」Instagram・TikTok広告</span><span>C+Ceraとの「飲む×塗る」セット提案</span></div></div>
+          <div class="qb"><div class="ql">Q3 123M</div><div class="qt">定期転換加速</div><div class="qc"><span>28包定期（¥12,320）への移行率を最重要KPIに</span><span>年末ギフト：C+DとのペアセットでLTV向上</span></div></div>
+          <div class="qb"><div class="ql">Q4 169M</div><div class="qt">定番品へ転換完成</div><div class="qc"><span>定期ACTIVE 356件→800件超を今期目標</span><span>レフィル（30包）定期移行で継続コスト低減</span></div></div>
         </div>
       </div>
     </div>
-
     <div class="half">
-      <div class="half-header">
-        <span class="half-badge tob-badge">toB</span>
-        <span class="half-title">🔴 C+Cera — 法人・医療機関向け</span>
-      </div>
-      <div class="half-body">
-        <div class="mrow">
-          <div class="mm"><div class="mml">年間売上(toB)</div><div class="mmv">140万円</div><div class="mms">エクスチェ7件</div></div>
-          <div class="mm"><div class="mml">エクスチェ単価</div><div class="mmv info">¥20万/件</div><div class="mms">中単価</div></div>
-          <div class="mm"><div class="mml">toB開拓状況</div><div class="mmv warn">未着手</div><div class="mms">大きな余地あり</div></div>
+      <div class="hh"><span class="badge tob-b">toB</span><span class="ht">🟠 SKINBEAUTY — 卸・法人向け</span></div>
+      <div class="hb">
+        <div class="mx">
+          <div class="m"><div class="ml">年間売上</div><div class="mv">0.52億円</div><div class="ms">発売直後で成長中</div></div>
+          <div class="m"><div class="ml">コダワリ受注</div><div class="mv info">644件</div><div class="ms">¥72,472/件</div></div>
+          <div class="m"><div class="ml">エクスチェ</div><div class="mv">32件</div><div class="ms">¥159,379/件</div></div>
         </div>
-
-        <div class="al al-w" style="margin-bottom:0.75rem;">現在toBはほぼゼロ。しかしSKINBEAUTYとセットで「飲む×塗るの医療機関パッケージ」として展開すれば、美容クリニック向けに大きなtoB拡大余地がある。</div>
-
-        <div class="strat-label">toBターゲット別戦略（新規開拓）</div>
-        <div class="qgrid">
-          <div class="qb"><div class="qbl">Q1-Q2 開拓準備</div><div class="qbt">医療機関向け提案設計</div><div class="qbc"><span>「C+Cera（内側）+ SKINBEAUTY（外側）」の医療機関向けセット提案資料を作成</span><span>美容皮膚科・美容外科向け：「飲むセラミドでインナーケアを処方する」訴求</span><span>コンシュ経由のVC・C+D既存医院に対しC+Ceraを追加提案</span></div></div>
-          <div class="qb"><div class="qbl">Q3-Q4 軌道化</div><div class="qbt">秋冬乾燥需要×医院</div><div class="qbc"><span>秋の乾燥肌シーズン：医院・サロン向け「乾燥肌ケアパッケージ」として展開</span><span>エクスチェ取次を活用した新規医院への横展開</span><span>toBの売上目標：140万円→1,000万円を来期目標として設定</span></div></div>
+        <div class="sl">toBチャネル構成</div>
+        <div class="ch"><div class="chl">コダワリ(18)</div><div class="chb"><div class="chf" style="width:90%;background:#D85A30;">90% · 4,667万</div></div><div class="chv">4,667万円</div></div>
+        <div class="ch"><div class="chl">エクスチェ(12)</div><div class="chb"><div class="chf" style="width:10%;background:#EF9F27;"></div></div><div class="chv">510万円</div></div>
+        <div class="insight g">コダワリ卸は発売後すぐに644件・4,667万円を計上。「塗るLypo-C」がサロン・クリニック系コダワリ卸先に受け入れられている証拠。エレクトロポレーション連携がコダワリ卸先（美容クリニック系）での差別化軸。</div>
+        <div class="insight">Salon(shop_id=27)・Gym(shop_id=26)専用チャネルへのSKINBEAUTY登録がtoB拡大の次のステップ。</div>
+        <div class="sl">toB 四半期戦略</div>
+        <div class="qg">
+          <div class="qb"><div class="ql">Q1-Q2</div><div class="qt">コダワリ卸先の深耕</div><div class="qc"><span>コスメキッチン5月展開と連携した卸先提案</span><span>エレクトロポレーション実績医院・サロンへ個別提案</span><span>C+Ceraと「飲む×塗るセット卸」を設計</span></div></div>
+          <div class="qb"><div class="ql">Q3-Q4</div><div class="qt">Salon/Gymチャネル開拓</div><div class="qc"><span>Salon(27)・Gym(26)へのSKINBEAUTY登録</span><span>toB年間目標：0.52億→1.0億円</span></div></div>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ===== MINERALION ===== -->
-<div id="b-min" class="bsec">
+<!-- C+CERA -->
+<div id="b-cera" class="sec">
+  <div class="al al-g">BQ実績: toC 3.9億円（93.5%）/ toB 0.27億円（6.5%）。定期稼働率91.0%（全ブランド最高）。toCが圧倒的主体で健全な成長軌道。</div>
   <div class="split">
     <div class="half">
-      <div class="half-header">
-        <span class="half-badge toc-badge">toC</span>
-        <span class="half-title">🟡 MINERALion — 一般消費者向け</span>
-      </div>
-      <div class="half-body">
-        <div class="mrow">
-          <div class="mm"><div class="mml">年間売上(toC)</div><div class="mmv">0.37億円</div><div class="mms">公式EC+コダワリのみ</div></div>
-          <div class="mm"><div class="mml">定期稼働率</div><div class="mmv up">92.8%</div><div class="mms">全ブランド1位</div></div>
-          <div class="mm"><div class="mml">楽天・Amazon</div><div class="mmv dn">実績ゼロ</div><div class="mms">BQ確認済 未進出</div></div>
+      <div class="hh"><span class="badge toc-b">toC</span><span class="ht">🔴 C+Cera — 一般消費者向け</span></div>
+      <div class="hb">
+        <div class="mx">
+          <div class="m"><div class="ml">年間売上</div><div class="mv">3.9億円</div><div class="ms">予算超過ペース</div></div>
+          <div class="m"><div class="ml">定期稼働率</div><div class="mv up">91.0%</div><div class="ms">全ブランド最高</div></div>
+          <div class="m"><div class="ml">VC→C+Cera転換</div><div class="mv info">34.4%</div><div class="ms">BQ確認済</div></div>
         </div>
-        <div class="strat-label">toCチャネル構成（BQ確認）</div>
-        <div class="ch"><div class="chl">②コダワリ</div><div class="chb"><div class="chf" style="width:56%;background:#BA7517;">56%</div></div><div class="chv">2,097万円</div></div>
-        <div class="ch"><div class="chl">①公式EC</div><div class="chb"><div class="chf" style="width:44%;background:#EF9F27;">44%</div></div><div class="chv">1,641万円</div></div>
-        <div class="ch"><div class="chl">楽天・Amazon</div><div class="chb"><div class="chf" style="width:0%;background:#888780;"></div></div><div class="chv">0円（未進出）</div></div>
-        <div class="al al-i" style="margin-top:0.75rem;">BQ確認：楽天・Amazon実績ゼロ＝最大の未開拓ポテンシャル。VCが楽天で月5,000件超の受注を持つ同一プラットフォームに、92.8%稼働の製品力でゼロから参入できる。</div>
-        <div class="strat-label">toC 四半期戦略</div>
-        <div class="qgrid">
-          <div class="qb"><div class="qbl">Q1 予算39M</div><div class="qbt">モール出店準備</div><div class="qbc"><span>楽天・Amazon出店準備：Q2ローンチ目標で商品ページ・A+コンテンツを4月中完成</span><span>BQで購入者プロファイル分析：年齢層・購入経緯を特定しターゲットを明確化</span><span>コスメキッチン：「花崗岩由来×50年研究」ストーリーの初速テスト</span></div></div>
-          <div class="qb"><div class="qbl">Q2 予算49M</div><div class="qbt">楽天・Amazon初出店</div><div class="qbc"><span>「ミネラル サプリ 鉄 液体」カテゴリで楽天出店（Q2ローンチ）</span><span>夏の疲労×ミネラル補給：「夏バテ×鉄不足×MINERALion」コンテンツ展開</span><span>Lypo-CシリーズとのEC内クロスセル：VC/C+D購入者へのレコメンド設定</span></div></div>
-          <div class="qb"><div class="qbl">Q3 予算55M</div><div class="qbt">モール軌道化</div><div class="qbc"><span>楽天・AmazonのROI評価：継続投資か最適化かを判断</span><span>単品→定期転換率の計測と施策設計（VC/C+Dの定期転換施策を参考に）</span><span>秋：「鉄補給×骨強化×免疫」マルチ訴求コンテンツ</span></div></div>
-          <div class="qb"><div class="qbl">Q4 予算65M</div><div class="qbt">年間2億円ブランド確定</div><div class="qbc"><span>Q4 65M（通期最大）：年末の健康意識向上×モール年末商戦に最大投下</span><span>定期ACTIVE 192件→400件超が今期目標</span></div></div>
+        <div class="sl">toCチャネル構成</div>
+        <div class="ch"><div class="chl">公式EC(17)</div><div class="chb"><div class="chf" style="width:84%;background:#993C1D;">84%</div></div><div class="chv">3.27億円</div></div>
+        <div class="ch"><div class="chl">Amazon(32)</div><div class="chb"><div class="chf" style="width:7%;background:#EF9F27;"></div></div><div class="chv">0.27億円</div></div>
+        <div class="ch"><div class="chl">楽天(31)</div><div class="chb"><div class="chf" style="width:6%;background:#E24B4A;"></div></div><div class="chv">0.25億円</div></div>
+        <div class="sl">toC 四半期戦略</div>
+        <div class="qg">
+          <div class="qb"><div class="ql">Q1 60M</div><div class="qt">91%稼働モデルの解剖</div><div class="qc"><span>継続顧客への定性調査（5〜10件）：なぜ止まらないかを明文化→VC転用</span><span>飲み方コンテンツ強化（「味が苦手22.7%」解消）</span></div></div>
+          <div class="qb"><div class="ql">Q2 75M</div><div class="qt">夏×セラミド需要</div><div class="qc"><span>「UV後セラミド補給」×SKINBEAUTYとの「飲む×塗る」Instagram展開</span></div></div>
+          <div class="qb"><div class="ql">Q3 87M</div><div class="qt">秋冬乾燥シーズン全力</div><div class="qc"><span>C+Cera+SKINBEAUTYセット定期を10月ローンチ</span><span>年末ビューティセットで年末商戦を取る</span></div></div>
+          <div class="qb"><div class="ql">Q4 90M</div><div class="qt">定番化の礎</div><div class="qc"><span>定期ACTIVE 634件→1,000件超を今期目標</span><span>91%稼働モデルをVC定期改修に転用</span></div></div>
         </div>
       </div>
     </div>
-
     <div class="half">
-      <div class="half-header">
-        <span class="half-badge tob-badge">toB</span>
-        <span class="half-title">🟡 MINERALion — 法人・医療機関向け</span>
-      </div>
-      <div class="half-body">
-        <div class="mrow">
-          <div class="mm"><div class="mml">年間売上(toB)</div><div class="mmv">100万円</div><div class="mms">エクスチェ16件</div></div>
-          <div class="mm"><div class="mml">エクスチェ単価</div><div class="mmv info">¥6万/件</div><div class="mms">低単価・要改善</div></div>
-          <div class="mm"><div class="mml">toB開拓状況</div><div class="mmv warn">ほぼ未着手</div><div class="mms">余地大</div></div>
+      <div class="hh"><span class="badge tob-b">toB</span><span class="ht">🔴 C+Cera — 卸・法人向け</span></div>
+      <div class="hb">
+        <div class="mx">
+          <div class="m"><div class="ml">年間売上</div><div class="mv">0.27億円</div><div class="ms">新製品・開拓中</div></div>
+          <div class="m"><div class="ml">コダワリ受注</div><div class="mv info">348件</div><div class="ms">¥73,686/件</div></div>
+          <div class="m"><div class="ml">エクスチェ</div><div class="mv">7件</div><div class="ms">¥200,649/件</div></div>
         </div>
-
-        <div class="al al-w" style="margin-bottom:0.75rem;">MINERALionのtoB単価は¥6万/件と最も低い。「添加物ゼロ×花崗岩由来×液体」の特性は美容・健康施設向けの業務用販売（複数箱単位）としてリポジションできる可能性がある。</div>
-
-        <div class="strat-label">toBターゲット別戦略</div>
-        <div class="qgrid">
-          <div class="qb"><div class="qbl">Q1-Q2 開拓設計</div><div class="qbt">ターゲット業種の特定</div><div class="qbc"><span>美容サロン・スパ施設向け：「天然ミネラル水として飲用提供」の業務用提案</span><span>農業・ウェルネス施設（THEMAROX™の農業利用実績を活用）への提案</span><span>コスメキッチン展開：toC認知を起点にtoB取引先を発掘</span></div></div>
-          <div class="qb"><div class="qbl">Q3-Q4 拡大</div><div class="qbt">業務用パッケージ設計</div><div class="qbc"><span>toB向け複数箱セット（10箱単位）価格設定の整備</span><span>「約50年の研究実績」を前面に出した業者向け技術資料</span><span>toBの売上目標：100万円→500万円を来期目標として設定</span></div></div>
+        <div class="sl">toBチャネル構成</div>
+        <div class="ch"><div class="chl">コダワリ(18)</div><div class="chb"><div class="chf" style="width:95%;background:#993C1D;">95% · 2,564万</div></div><div class="chv">2,564万円</div></div>
+        <div class="ch"><div class="chl">エクスチェ(12)</div><div class="chb"><div class="chf" style="width:5%;background:#EF9F27;"></div></div><div class="chv">140万円</div></div>
+        <div class="insight g">「国産米ぬか由来×サステナブル×飲むセラミド」はコスメ系サロン・美容クリニックとの親和性が高い。SKINBEAUTYとのセット卸（飲む×塗る）がコダワリ卸先への提案として最も有力。</div>
+        <div class="sl">toB 四半期戦略</div>
+        <div class="qg">
+          <div class="qb"><div class="ql">Q1-Q2</div><div class="qt">SKINBEAUTY連携卸</div><div class="qc"><span>「C+Cera（内側）+SKINBEAUTY（外側）」セット卸提案資料を作成</span><span>VC・C+Dのコダワリ卸先にC+Ceraを追加提案</span></div></div>
+          <div class="qb"><div class="ql">Q3-Q4</div><div class="qt">Salon/Gymチャネル展開</div><div class="qc"><span>Salon(27)チャネルへのC+Cera登録</span><span>toB年間目標：0.27億→0.6億円</span></div></div>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ===== CBD ===== -->
-<div id="b-cbd" class="bsec">
-  <div class="al al-d">⚠ 2025年9月サントリーHD元会長CBD問題。2024年12月大麻取締法改正（THC残留基準設定）。CBN規制2026年2月以降施行の可能性。法規制対応を最優先とした上で戦略を展開する。</div>
+<!-- MINERALION -->
+<div id="b-min" class="sec">
+  <div class="al al-b">BQ実績: toC 1.7億円（89%）/ toB 0.22億円（11%）。toCはモール未進出（楽天・Amazon実績ゼロ）。</div>
   <div class="split">
     <div class="half">
-      <div class="half-header">
-        <span class="half-badge toc-badge">toC</span>
-        <span class="half-title">🟣 CBD — 一般消費者向け</span>
-      </div>
-      <div class="half-body">
-        <div class="mrow">
-          <div class="mm"><div class="mml">年間売上(toC)</div><div class="mmv">1.25億円</div><div class="mms">コダワリ主力</div></div>
-          <div class="mm"><div class="mml">公式EC比率</div><div class="mmv dn">ほぼ0%</div><div class="mms">VCと真逆の構造</div></div>
-          <div class="mm"><div class="mml">定期設計</div><div class="mmv warn">未整備</div><div class="mms">単品中心</div></div>
+      <div class="hh"><span class="badge toc-b">toC</span><span class="ht">🟡 MINERALion — 一般消費者向け</span></div>
+      <div class="hb">
+        <div class="mx">
+          <div class="m"><div class="ml">年間売上</div><div class="mv">1.7億円</div><div class="ms">公式EC中心</div></div>
+          <div class="m"><div class="ml">定期稼働率</div><div class="mv up">92.8%</div><div class="ms">全ブランド1位</div></div>
+          <div class="m"><div class="ml">楽天・Amazon</div><div class="mv dn">ゼロ</div><div class="ms">toC未進出（BQ確認）</div></div>
         </div>
-        <div class="strat-label">toCチャネル構成（BQ確認：公式ECほぼなし）</div>
-        <div class="ch"><div class="chl">②コダワリ</div><div class="chb"><div class="chf" style="width:67%;background:#534AB7;">67%</div></div><div class="chv">7,171万円</div></div>
-        <div class="ch"><div class="chl">③モール</div><div class="chb"><div class="chf" style="width:32%;background:#7F77DD;">32%</div></div><div class="chv">3,668万円</div></div>
-        <div class="ch"><div class="chl">①公式EC</div><div class="chb"><div class="chf" style="width:0%;background:#888780;"></div></div><div class="chv">※ほぼゼロ</div></div>
-        <div class="insight amber" style="margin-top:0.75rem;">CBDの公式EC比率がほぼゼロはBQで初めて確認した重大事実。VCが公式EC 46%・コダワリ 24%という自社完結型なのに対し、CBDはコダワリ・モール依存型。定期設計が公式ECに存在しない可能性がある。Q1で要確認。</div>
-        <div class="strat-label">toCオンライン動向</div>
-        <div class="insight">Euromonitor：2026年CBD合法市場が違法大麻市場を超える見通し。大正製薬が2mgカプセルで参入。Lypo-Cの10mg高濃度液体形態の差別化価値が高まっている。</div>
-        <div class="strat-label">toC 四半期戦略</div>
-        <div class="qgrid">
-          <div class="qb"><div class="qbl">Q1 予算33M（月11M）</div><div class="qbt">規制確認×公式EC強化</div><div class="qbc"><span>CBN規制影響を法務と即確認（2026年2月以降施行の可能性）</span><span>全チャネル「THC<1ppm・日本法基準適合」表記を統一</span><span>公式ECにCBD定期コースが存在するか確認→なければQ2に設計</span><span>BQで購入者プロファイル：「睡眠・ストレス・スポーツ」どれが最多かを特定</span></div></div>
-          <div class="qb"><div class="qbl">Q2 予算33M</div><div class="qbt">公式EC定期×スポーツ</div><div class="qbc"><span>公式ECにCBD定期コースをQ2中に設計・実装（コダワリ依存からの脱却）</span><span>for SPORTS C+Dとの「アスリート向けリカバリースタック」訴求テスト</span><span>「舌下1〜2分含む」体験訴求のSNSコンテンツ</span><span>大正製薬2mgに対し「Lypo-C 10mg高濃度液体が本物」訴求を確立</span></div></div>
-          <div class="qb"><div class="qbl">Q3 予算41M</div><div class="qbt">Q4投下前の定期候補特定</div><div class="qbc"><span>公式EC定期の初期稼働率を測定（Q2実装後の3ヶ月実績）</span><span>睡眠・ストレス市場：秋の「休養×CBD」コンテンツを量産</span><span>Q4投下63Mを「定期候補層」「リピーター層」に分けて設計</span></div></div>
-          <div class="qb"><div class="qbl">Q4 予算63M</div><div class="qbt">年末×睡眠需要で最大化</div><div class="qbc"><span>Q4が通期の37%：年末の「ストレス×睡眠の乱れ」訴求と完全一致</span><span>27包（大容量）への移行促進でLTV最大化</span><span>来期投資規模：規制動向・競合状況をQ4末に評価して来期予算を決定</span></div></div>
+        <div class="sl">toCチャネル構成</div>
+        <div class="ch"><div class="chl">公式EC(17)</div><div class="chb"><div class="chf" style="width:69%;background:#BA7517;">69%</div></div><div class="chv">1.18億円</div></div>
+        <div class="ch"><div class="chl">Con(9)/コンシュ(21)</div><div class="chb"><div class="chf" style="width:1%;background:#EF9F27;"></div></div><div class="chv">175万円</div></div>
+        <div class="ch"><div class="chl">楽天・Amazon</div><div class="chb"><div class="chf" style="width:0%;background:#d3d1c7;"></div></div><div class="chv">0円（未進出）</div></div>
+        <div class="al al-r" style="font-size:11px;margin-top:0.5rem;">⚠ コダワリがtoBに移ったことでtoCは公式ECのみ。楽天・Amazon出店がMINERALionのtoC最大の成長施策。</div>
+        <div class="sl">toC 四半期戦略</div>
+        <div class="qg">
+          <div class="qb"><div class="ql">Q1 39M</div><div class="qt">モール出店準備</div><div class="qc"><span>楽天・Amazon商品ページ・A+コンテンツを4月中に整備</span><span>トライアル後ステップメール5通設計（転換率8%→15%超目標）</span></div></div>
+          <div class="qb"><div class="ql">Q2 49M</div><div class="qt">楽天初出店</div><div class="qc"><span>「ミネラル サプリ 鉄 液体」カテゴリでQ2ローンチ</span><span>夏バテ×鉄不足訴求コンテンツ展開</span></div></div>
+          <div class="qb"><div class="ql">Q3 55M</div><div class="qt">モール軌道化</div><div class="qc"><span>楽天・AmazonのROI評価し継続投資判断</span><span>トライアル転換率8%→15%超を今期目標</span></div></div>
+          <div class="qb"><div class="ql">Q4 65M</div><div class="qt">年間2億円確定</div><div class="qc"><span>定期ACTIVE 192件→400件超が今期目標</span></div></div>
         </div>
       </div>
     </div>
-
     <div class="half">
-      <div class="half-header">
-        <span class="half-badge tob-badge">toB</span>
-        <span class="half-title">🟣 CBD — 法人・医療機関向け</span>
-      </div>
-      <div class="half-body">
-        <div class="mrow">
-          <div class="mm"><div class="mml">年間売上(toB)</div><div class="mmv">630万円</div><div class="mms">エクスチェ+ビジネス</div></div>
-          <div class="mm"><div class="mml">ビジネス受注</div><div class="mmv warn">1件/年</div><div class="mms">¥125万/件</div></div>
-          <div class="mm"><div class="mml">規制リスク</div><div class="mmv dn">最高水準</div><div class="mms">toB展開は慎重に</div></div>
+      <div class="hh"><span class="badge tob-b">toB</span><span class="ht">🟡 MINERALion — 卸・法人向け</span></div>
+      <div class="hb">
+        <div class="mx">
+          <div class="m"><div class="ml">年間売上</div><div class="mv">0.22億円</div><div class="ms">小さいが実績あり</div></div>
+          <div class="m"><div class="ml">コダワリ受注</div><div class="mv info">707件</div><div class="ms">¥29,662/件</div></div>
+          <div class="m"><div class="ml">エクスチェ</div><div class="mv">16件</div><div class="ms">¥61,628/件</div></div>
         </div>
-
-        <div class="strat-label">toBチャネル構成</div>
-        <div class="ch"><div class="chl">エクスチェ（取次）</div><div class="chb"><div class="chf" style="width:67%;background:#534AB7;">67%・425万</div></div><div class="chv">425万円</div></div>
-        <div class="ch"><div class="chl">ビジネス</div><div class="chb"><div class="chf" style="width:20%;background:#7F77DD;">20%</div></div><div class="chv">125万円</div></div>
-        <div class="ch"><div class="chl">Biz（法人小口）</div><div class="chb"><div class="chf" style="width:3%;background:#888780;"></div></div><div class="chv">22万円</div></div>
-        <div class="ch"><div class="chl">コンシュ</div><div class="chb"><div class="chf" style="width:9%;background:#AFA9EC;">9%</div></div><div class="chv">58万円</div></div>
-
-        <div class="al al-w" style="margin-top:0.75rem;">CBDのtoB展開は規制リスクが最も高い領域。サントリー問題（2025年9月）後、企業の法的リスク意識が高まっており、「法人に販売した際の企業責任」が問われるケースが増加している。toBでの展開はコンシュ（医療機関）チャネルに限定し、一般法人向けのBiz展開は当面は慎重を期すべき。</div>
-
-        <div class="strat-label">toB 戦略方針</div>
-        <div class="qgrid">
-          <div class="qb"><div class="qbl">Q1 最優先</div><div class="qbt">法的リスク確認と範囲整理</div><div class="qbc"><span>CBDのtoB展開における企業法的リスクを法務と確認</span><span>医療機関（コンシュ）向けのみ継続：臨床CBDオイル研究会700名推奨を訴求軸に</span><span>Biz（法人小口）への積極的な販売拡大は当面保留</span></div></div>
-          <div class="qb"><div class="qbl">Q2以降</div><div class="qbt">医療機関限定で深耕</div><div class="qbc"><span>コンシュ経由での医療機関への展開：「臨床で使える品質」訴求</span><span>スポーツトレーナー・スポーツクリニック向けへのリカバリー訴求</span><span>CBD市場の規制・社会的受容度の変化を四半期ごとにモニタリング</span></div></div>
+        <div class="sl">toBチャネル構成</div>
+        <div class="ch"><div class="chl">コダワリ(18)</div><div class="chb"><div class="chf" style="width:95%;background:#BA7517;">95% · 2,097万</div></div><div class="chv">2,097万円</div></div>
+        <div class="ch"><div class="chl">エクスチェ(12)</div><div class="chb"><div class="chf" style="width:4%;background:#EF9F27;"></div></div><div class="chv">99万円</div></div>
+        <div class="insight">コダワリ卸の¥29,662/件はVC（¥119,200）より低く、複数箱セットの業務用パッケージ設計で単価引き上げの余地がある。ウェルネス施設・スパ系コダワリ卸先との親和性が高い。</div>
+        <div class="sl">toB 四半期戦略</div>
+        <div class="qg">
+          <div class="qb"><div class="ql">Q1-Q2</div><div class="qt">業務用パッケージ設計</div><div class="qc"><span>スパ・ウェルネス施設向け複数箱セット価格を整備</span><span>Gym(26)チャネルへのMINERALion登録を検討</span></div></div>
+          <div class="qb"><div class="ql">Q3-Q4</div><div class="qt">卸単価の引き上げ</div><div class="qc"><span>エクスチェ取次新規開拓（¥61,628/件の高単価層）</span><span>toB年間目標：0.22億→0.5億円</span></div></div>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-</div><!-- /body -->
+<!-- CBD -->
+<div id="b-cbd" class="sec">
+  <div class="al al-w">⚠ Shopify（公式EC shop_id=17）ではCBD販売不可のためtoCはモール主体。コダワリ（toB）はCBD卸の中心だがCBN規制リスクに最大限の注意が必要。</div>
+  <div class="split">
+    <div class="half">
+      <div class="hh"><span class="badge toc-b">toC</span><span class="ht">🟣 CBD — 一般消費者向け</span></div>
+      <div class="hb">
+        <div class="mx">
+          <div class="m"><div class="ml">年間売上</div><div class="mv">3.8億円</div><div class="ms">モール中心</div></div>
+          <div class="m"><div class="ml">公式EC(17)</div><div class="mv dn">ゼロ</div><div class="ms">Shopify制約</div></div>
+          <div class="m"><div class="ml">定期設計</div><div class="mv warn">未整備</div><div class="ms">単品購入が中心</div></div>
+        </div>
+        <div class="sl">toCチャネル構成（モール主体）</div>
+        <div class="ch"><div class="chl">楽天(31)</div><div class="chb"><div class="chf" style="width:43%;background:#534AB7;">43%</div></div><div class="chv">1.63億円</div></div>
+        <div class="ch"><div class="chl">Amazon(32)</div><div class="chb"><div class="chf" style="width:43%;background:#7F77DD;">43%</div></div><div class="chv">1.61億円</div></div>
+        <div class="ch"><div class="chl">Yahoo他</div><div class="chb"><div class="chf" style="width:9%;background:#AFA9EC;"></div></div><div class="chv">0.37億円</div></div>
+        <div class="ch"><div class="chl">Con/コンシュ</div><div class="chb"><div class="chf" style="width:2%;background:#888780;"></div></div><div class="chv">0.06億円</div></div>
+        <div class="sl">toC 四半期戦略</div>
+        <div class="qg">
+          <div class="qb"><div class="ql">Q1 33M</div><div class="qt">規制確認×法準拠表記統一</div><div class="qc"><span>CBN規制影響を法務と即確認</span><span>楽天・Amazon全ページに「THC&lt;1ppm」表記統一</span></div></div>
+          <div class="qb"><div class="ql">Q2 33M</div><div class="qt">for SPORTS連携</div><div class="qc"><span>「アスリート向けリカバリースタック」訴求テスト</span><span>楽天「CBD サプリ 安全性」SEO強化</span></div></div>
+          <div class="qb"><div class="ql">Q3 41M</div><div class="qt">睡眠・ストレス需要</div><div class="qc"><span>秋の繁忙期「休養×CBD」コンテンツ量産</span><span>楽天・Amazon定期購入設定の可否を検討</span></div></div>
+          <div class="qb"><div class="ql">Q4 63M</div><div class="qt">年末疲弊×睡眠需要</div><div class="qc"><span>Q4が通期の37%集中：年末×睡眠訴求と一致</span><span>27包（大容量）への移行促進でLTV最大化</span></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="half">
+      <div class="hh"><span class="badge tob-b">toB</span><span class="ht">🟣 CBD — 卸・法人向け</span></div>
+      <div class="hb">
+        <div class="mx">
+          <div class="m"><div class="ml">年間売上</div><div class="mv">0.77億円</div><div class="ms">コダワリ卸が主体</div></div>
+          <div class="m"><div class="ml">コダワリ受注</div><div class="mv info">1,603件</div><div class="ms">¥44,736/件</div></div>
+          <div class="m"><div class="ml">規制リスク</div><div class="mv dn">最高水準</div><div class="ms">慎重対応必須</div></div>
+        </div>
+        <div class="sl">toBチャネル構成</div>
+        <div class="ch"><div class="chl">コダワリ(18)</div><div class="chb"><div class="chf" style="width:93%;background:#534AB7;">93% · 7,171万</div></div><div class="chv">7,171万円</div></div>
+        <div class="ch"><div class="chl">エクスチェ(12)</div><div class="chb"><div class="chf" style="width:5%;background:#7F77DD;"></div></div><div class="chv">425万円</div></div>
+        <div class="ch"><div class="chl">ビジネス部(20)</div><div class="chb"><div class="chf" style="width:2%;background:#AFA9EC;"></div></div><div class="chv">125万円</div></div>
+        <div class="insight a">CBDのtoBはコダワリ卸が93%。Shopify公式EC制約の分を実質的にコダワリ卸（toB）が担っている構造。コダワリ卸先（カフェ・サロン・健康食品店等）へのTHC表記統一とコンプライアンス確認が急務。</div>
+        <div class="insight r">CBN規制（2026年2月以降施行可能性）がコダワリCBD卸にも影響する可能性あり。規制対応完了まではCBD toBの積極拡大は保留し、既存卸先の維持を優先。</div>
+        <div class="sl">toB 四半期戦略</div>
+        <div class="qg">
+          <div class="qb"><div class="ql">Q1 最優先</div><div class="qt">規制リスク対応</div><div class="qc"><span>コダワリ卸先全店にTHC基準適合・CBN規制影響を通知</span><span>コダワリCBD卸先の業種を把握（カフェ・サロン・健康食品店等）</span></div></div>
+          <div class="qb"><div class="ql">Q2以降</div><div class="qt">医療機関限定で継続</div><div class="qc"><span>スポーツクリニック・整形外科への「リカバリーCBD」提案</span><span>規制・社会的受容度の変化を四半期ごとにモニタリング</span></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
+</div>
 <script>
 function bs(id, el) {
-  document.querySelectorAll('.bsec').forEach(s => { s.style.display='none'; s.classList.remove('on'); });
-  document.querySelectorAll('.btab').forEach(t => t.classList.remove('active'));
-  var target = document.getElementById('b-' + id);
-  target.style.display = 'block';
-  target.classList.add('on');
+  document.querySelectorAll('.sec').forEach(s => { s.style.display='none'; s.classList.remove('on'); });
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('b-' + id).style.display = 'block';
+  document.getElementById('b-' + id).classList.add('on');
   el.classList.add('active');
 }
-document.querySelectorAll('.bsec').forEach((s, i) => { s.style.display = i===0 ? 'block' : 'none'; });
+document.querySelectorAll('.sec').forEach((s, i) => { s.style.display = i===0 ? 'block' : 'none'; });
 </script>
 </body>
 </html>
