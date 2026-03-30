@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SPIC 2026年度 戦略レポート集</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+  font-size: 14px;
+  color: #1a1a18;
+  background: #f5f4f0;
+  min-height: 100vh;
+}
+
+/* Header */
+.hdr {
+  background: #fff;
+  border-bottom: 1px solid #d3d1c7;
+  padding: 2rem 2rem 1.5rem;
+}
+.hdr-inner { max-width: 960px; margin: 0 auto; }
+.hdr-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 500;
+  color: #73726c;
+  background: #f0efe9;
+  border: 1px solid #d3d1c7;
+  border-radius: 20px;
+  padding: 3px 10px;
+  margin-bottom: 10px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+h1 {
+  font-size: 24px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  margin-bottom: 6px;
+}
+.hdr-sub {
+  font-size: 13px;
+  color: #73726c;
+  line-height: 1.6;
+}
+.hdr-meta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 14px;
+  flex-wrap: wrap;
+}
+.hdr-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  color: #888780;
+}
+.dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: #1D9E75;
+  display: inline-block;
+}
+
+/* Body */
+.body { max-width: 960px; margin: 0 auto; padding: 2rem; }
+
+/* Section */
+.section { margin-bottom: 2.5rem; }
+.section-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: #73726c;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #d3d1c7;
+}
+
+/* Cards */
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
+.card {
+  background: #fff;
+  border: 1px solid #d3d1c7;
+  border-radius: 12px;
+  padding: 18px 20px;
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: box-shadow 0.15s, border-color 0.15s, transform 0.1s;
+  cursor: pointer;
+}
+.card:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  border-color: #b4b2a9;
+  transform: translateY(-1px);
+}
+.card-tag {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.tag {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 8px;
+  letter-spacing: 0.03em;
+}
+.tag-strategy { background: #e6f1fb; color: #042c53; }
+.tag-analysis { background: #eaf3de; color: #173404; }
+.tag-customer { background: #faeeda; color: #412402; }
+.tag-bq      { background: #f3e8ff; color: #3b0764; }
+.tag-toc-tob { background: #fcebeb; color: #501313; }
+
+.card-icon { font-size: 22px; }
+.card-title {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: #1a1a18;
+}
+.card-desc {
+  font-size: 12px;
+  color: #73726c;
+  line-height: 1.6;
+  flex: 1;
+}
+.card-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 4px;
+}
+.card-file {
+  font-size: 10px;
+  color: #b4b2a9;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+}
+.card-arrow {
+  font-size: 14px;
+  color: #d3d1c7;
+  transition: color 0.15s, transform 0.15s;
+}
+.card:hover .card-arrow {
+  color: #73726c;
+  transform: translateX(2px);
+}
+
+/* Summary cards */
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 10px;
+  margin-bottom: 2rem;
+}
+.sum {
+  background: #fff;
+  border: 1px solid #d3d1c7;
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+.sum-l { font-size: 11px; color: #73726c; margin-bottom: 4px; }
+.sum-v { font-size: 22px; font-weight: 500; }
+.sum-s { font-size: 11px; color: #73726c; margin-top: 2px; }
+.up { color: #1D9E75; }
+.info { color: #378ADD; }
+.warn { color: #EF9F27; }
+
+/* Footer */
+.footer {
+  border-top: 1px solid #d3d1c7;
+  padding: 1.5rem 2rem;
+  text-align: center;
+  font-size: 12px;
+  color: #b4b2a9;
+}
+.footer a { color: #73726c; text-decoration: none; }
+.footer a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="hdr-inner">
+    <div class="hdr-badge">spic-reports</div>
+    <h1>SPIC 2026年度 戦略レポート集</h1>
+    <p class="hdr-sub">BigQuery実データ × 定期購入分析 × 市場動向を統合した、ブランド別・顧客行動別の戦略ダッシュボード一覧</p>
+    <div class="hdr-meta">
+      <span class="hdr-meta-item"><span class="dot"></span> 最終更新：2026年3月30日</span>
+      <span class="hdr-meta-item">📊 レポート数：8</span>
+      <span class="hdr-meta-item">🗄️ データソース：BigQuery / adebis / Shopify</span>
+    </div>
+  </div>
+</div>
+
+<div class="body">
+
+  <!-- KPI summary -->
+  <div class="summary-grid">
+    <div class="sum"><div class="sum-l">2026年度予算</div><div class="sum-v">83.6億円</div><div class="sum-s">全社合計</div></div>
+    <div class="sum"><div class="sum-l">定期ACTIVE</div><div class="sum-v warn">22,064件</div><div class="sum-s">稼働率44.8%</div></div>
+    <div class="sum"><div class="sum-l">定期純減</div><div class="sum-v" style="color:#E24B4A;">▲1,683件/月</div><div class="sum-s">BQ実証</div></div>
+    <div class="sum"><div class="sum-l">C+D YoY</div><div class="sum-v up">+49.0%</div><div class="sum-s">2026年1-2月</div></div>
+    <div class="sum"><div class="sum-l">C+Cera稼働率</div><div class="sum-v up">91.0%</div><div class="sum-s">全ブランド最高</div></div>
+    <div class="sum"><div class="sum-l">MINERALion転換率</div><div class="sum-v" style="color:#E24B4A;">8.0%</div><div class="sum-s">トライアル→通常版</div></div>
+  </div>
+
+  <!-- Brand Strategy -->
+  <div class="section">
+    <div class="section-title">ブランド戦略</div>
+    <div class="cards">
+
+      <a class="card" href="spic_fy2026_brand_strategy.html">
+        <div class="card-tag">
+          <span class="card-icon">🔵</span>
+          <span class="tag tag-strategy">ブランド戦略</span>
+        </div>
+        <div class="card-title">2026年度 ブランド別新年度戦略</div>
+        <div class="card-desc">VC・C+D・SKINBEAUTY・C+Cera・MINERALion・CBDの6ブランド別に、BQ実績・オンライン動向・四半期戦略を統合。全社サマリを含む7タブ構成。</div>
+        <div class="card-meta">
+          <span class="card-file">spic_fy2026_brand_strategy.html</span>
+          <span class="card-arrow">→</span>
+        </div>
+      </a>
+
+      <a class="card" href="spic_fy2026_quarterly_brand_strategy.html">
+        <div class="card-tag">
+          <span class="card-icon">📅</span>
+          <span class="tag tag-strategy">四半期戦略</span>
+        </div>
+        <div class="card-title">2026年度 四半期別ブランド戦略</div>
+        <div class="card-desc">予算データ（Q1〜Q4）× BQ実績 × 定期分析を統合した四半期別ロードマップ。各ブランドのQ1〜Q4の具体施策と予算配分を記載。</div>
+        <div class="card-meta">
+          <span class="card-file">spic_fy2026_quarterly_brand_strategy.html</span>
+          <span class="card-arrow">→</span>
+        </div>
+      </a>
+
+      <a class="card" href="spic_toc_tob_strategy_2026.html">
+        <div class="card-tag">
+          <span class="card-icon">🏢</span>
+          <span class="tag tag-toc-tob">toC / toB 分離</span>
+        </div>
+        <div class="card-title">toC / toB 明確分離版戦略</div>
+        <div class="card-desc">各ブランドのtoC（一般消費者）とtoB（医療機関・法人）を左右分割で表示。コンシュ（医療大口）¥299万/件・Biz法人小口¥2,298/件の価格構造を実証。</div>
+        <div class="card-meta">
+          <span class="card-file">spic_toc_tob_strategy_2026.html</span>
+          <span class="card-arrow">→</span>
+        </div>
+      </a>
+
+    </div>
+  </div>
+
+  <!-- Customer Analysis -->
+  <div class="section">
+    <div class="section-title">顧客行動分析</div>
+    <div class="cards">
+
+      <a class="card" href="spic_customer_analysis_2026.html">
+        <div class="card-tag">
+          <span class="card-icon">👤</span>
+          <span class="tag tag-customer">顧客分析</span>
+        </div>
+        <div class="card-title">顧客行動分析 2026（Vol.1）</div>
+        <div class="card-desc">新規/既存比率・C+Cera転換分析（VC→C+Cera 34.4%実証）・VC購入者のクロスセル行動・年齢層分析・CBD Shopify制約の5タブ構成。</div>
+        <div class="card-meta">
+          <span class="card-file">spic_customer_analysis_2026.html</span>
+          <span class="card-arrow">→</span>
+        </div>
+      </a>
+
+      <a class="card" href="spic_customer_analysis_2026_2.html">
+        <div class="card-tag">
+          <span class="card-icon">🔍</span>
+          <span class="tag tag-customer">顧客分析</span>
+        </div>
+        <div class="card-title">顧客行動分析 2026（Vol.2）</div>
+        <div class="card-desc">クロスセル行動・定期転換率詳細・MINERALionトライアル問題（転換率8%）・解約理由分析・流入経路別の詳細分析。</div>
+        <div class="card-meta">
+          <span class="card-file">spic_customer_analysis_2026_2.html</span>
+          <span class="card-arrow">→</span>
+        </div>
+      </a>
+
+      <a class="card" href="spic_deep_analysis_vol2.html">
+        <div class="card-tag">
+          <span class="card-icon">📉</span>
+          <span class="tag tag-analysis">深掘り分析</span>
+        </div>
+        <div class="card-title">深掘り分析 Vol.2</div>
+        <div class="card-desc">解約理由（BQ実証10,519件）・定期転換率マトリクス・MINERALionトライアル92%終了問題・流入経路×新規/既存・月次CV推移と7〜8月VCスパイクの分析。</div>
+        <div class="card-meta">
+          <span class="card-file">spic_deep_analysis_vol2.html</span>
+          <span class="card-arrow">→</span>
+        </div>
+      </a>
+
+    </div>
+  </div>
+
+  <!-- Data / BQ -->
+  <div class="section">
+    <div class="section-title">データ分析・BQレポート</div>
+    <div class="cards">
+
+      <a class="card" href="spic_subscription_bq_analysis_strategy.html">
+        <div class="card-tag">
+          <span class="card-icon">🗄️</span>
+          <span class="tag tag-bq">BigQuery</span>
+        </div>
+        <div class="card-title">定期購入 BQ分析 × 戦略提言</div>
+        <div class="card-desc">BigQuery実データによる定期契約分析。ACTIVE 22,064件・PAUSED 15,208件・CANCELLED 12,000件の内訳と、ブランド別の稼働率・停止日数・初期離脱率を実証。戦略提言付き。</div>
+        <div class="card-meta">
+          <span class="card-file">spic_subscription_bq_analysis_strategy.html</span>
+          <span class="card-arrow">→</span>
+        </div>
+      </a>
+
+      <a class="card" href="product_detail_online_report.html">
+        <div class="card-tag">
+          <span class="card-icon">🛒</span>
+          <span class="tag tag-bq">BigQuery</span>
+        </div>
+        <div class="card-title">製品別オンライン動向レポート</div>
+        <div class="card-desc">製品別の売上・チャネル構成・オンライン上の競合動向を整理したレポート。各製品の強み・課題・市場ポジションを一覧化。</div>
+        <div class="card-meta">
+          <span class="card-file">product_detail_online_report.html</span>
+          <span class="card-arrow">→</span>
+        </div>
+      </a>
+
+    </div>
+  </div>
+
+  <!-- Key insights -->
+  <div class="section">
+    <div class="section-title">今期の最重要インサイト（BQ実証）</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px;">
+
+      <div style="background:#fcebeb;border:1px solid #f09595;border-radius:10px;padding:14px 16px;">
+        <div style="font-size:11px;font-weight:600;color:#501313;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.04em;">優先度S｜全社最優先</div>
+        <div style="font-size:13px;font-weight:500;margin-bottom:6px;">VC初期離脱の構造改革</div>
+        <div style="font-size:12px;color:#73726c;line-height:1.65;">初期ACTIVE率 23.6%（4人中3人が2回以内に離脱）。2回目課金前の間隔変更自動オファー＋C+Ceraの91%稼働モデルの転用が最短経路。</div>
+      </div>
+
+      <div style="background:#e6f1fb;border:1px solid #85b7eb;border-radius:10px;padding:14px 16px;">
+        <div style="font-size:11px;font-weight:600;color:#042c53;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.04em;">優先度A｜Q1中に着手</div>
+        <div style="font-size:13px;font-weight:500;margin-bottom:6px;">C+DのVC顧客組み込み</div>
+        <div style="font-size:12px;color:#73726c;line-height:1.65;">VCマイページにC+D切替ボタンを実装。VC→C+D転換率9.9%（BQ確認）。公式EC構成比37.6%→42%で年間+0.7億円増収見込み。</div>
+      </div>
+
+      <div style="background:#eaf3de;border:1px solid #97c459;border-radius:10px;padding:14px 16px;">
+        <div style="font-size:11px;font-weight:600;color:#173404;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.04em;">優先度B｜Q1-Q2</div>
+        <div style="font-size:13px;font-weight:500;margin-bottom:6px;">MINERALionのモール初展開</div>
+        <div style="font-size:12px;color:#73726c;line-height:1.65;">楽天・Amazon実績ゼロをBQで確認。稼働率92.8%の製品力を持つがモール未進出。Q2出店でトライアル転換率8%→15%超を目標に。</div>
+      </div>
+
+      <div style="background:#faeeda;border:1px solid #f9cb42;border-radius:10px;padding:14px 16px;">
+        <div style="font-size:11px;font-weight:600;color:#412402;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.04em;">優先度C｜Q1中に確認</div>
+        <div style="font-size:13px;font-weight:500;margin-bottom:6px;">CBD規制リスクのヘッジ</div>
+        <div style="font-size:12px;color:#73726c;line-height:1.65;">CBN規制（2026年2月以降）・Shopify制約・公式EC売上ほぼゼロを確認。コダワリECをCBD公式ハブとして再定義し定期設計を構築する。</div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  <p>SPIC 戦略レポート集 &nbsp;|&nbsp; <a href="https://github.com/takayuki-pixel/spic-reports">GitHub Repository</a> &nbsp;|&nbsp; データ基準日：2026年3月30日 &nbsp;|&nbsp; BigQuery: spic-com-2025-apr-00</p>
+</div>
+
+</body>
+</html>
