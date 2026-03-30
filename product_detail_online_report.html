@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>商品ブランド別 詳細レポート（売上 × オンライン動向）3/23〜3/29</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f3; color: #1a1a18; margin: 0; padding: 20px; }
+  .page { max-width: 1000px; margin: 0 auto; }
+  .sec { font-size: 11px; font-weight: 500; color: #73726c; letter-spacing: .06em; text-transform: uppercase; margin: 1.4rem 0 .5rem; }
+  .tab-nav { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 1rem; }
+  .tab-btn { font-size: 12px; padding: 5px 12px; border-radius: 20px; border: 0.5px solid #b4b2a9; background: transparent; color: #73726c; cursor: pointer; transition: all .15s; }
+  .tab-btn.active { background: #1a1a18; color: #fff; border-color: transparent; }
+  .tab-btn:hover:not(.active) { background: #f1efe8; }
+  .pcard { display: none; } .pcard.active { display: block; }
+  .pg { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 9px; margin-bottom: .8rem; }
+  .kpi { background: #f1efe8; border-radius: 8px; padding: 10px 12px; }
+  .kl { font-size: 11px; color: #73726c; margin-bottom: 2px; }
+  .kv { font-size: 17px; font-weight: 500; color: #1a1a18; }
+  .ks { font-size: 11px; margin-top: 2px; }
+  .up { color: #1D9E75; } .down { color: #E24B4A; }
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .box { background: #fff; border: 0.5px solid rgba(0,0,0,.12); border-radius: 12px; padding: 12px 14px; }
+  .box-title { font-size: 12px; font-weight: 500; color: #73726c; margin-bottom: 8px; }
+  .sr { display: flex; justify-content: space-between; align-items: center; font-size: 12px; padding: 3px 0; border-bottom: 0.5px solid rgba(0,0,0,.08); gap: 8px; }
+  .sr:last-child { border: none; }
+  .sk { color: #73726c; max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .sv { font-weight: 500; white-space: nowrap; }
+  .ch-row { display: flex; align-items: center; gap: 6px; padding: 3px 0; font-size: 11px; }
+  .ch-name { width: 120px; color: #73726c; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .bg-bar { flex: 1; background: #f1efe8; border-radius: 3px; height: 5px; overflow: hidden; }
+  .bg-fill { height: 100%; border-radius: 3px; }
+  .ch-val { width: 52px; text-align: right; font-weight: 500; }
+  .alert-box   { background: #faeeda; border-left: 3px solid #BA7517; border-radius: 8px; padding: 8px 12px; font-size: 12px; color: #854F0B; margin: 0; line-height: 1.6; }
+  .info-box    { background: #e6f1fb; border-left: 3px solid #185FA5; border-radius: 8px; padding: 8px 12px; font-size: 12px; color: #0C447C; margin: 0; line-height: 1.6; }
+  .success-box { background: #eaf3de; border-left: 3px solid #3B6D11; border-radius: 8px; padding: 8px 12px; font-size: 12px; color: #27500A; margin: 0; line-height: 1.6; }
+  .badge { font-size: 10px; padding: 2px 7px; border-radius: 12px; font-weight: 500; display: inline-block; }
+  .badge-up { background: #eaf3de; color: #27500A; } .badge-dn { background: #fcebeb; color: #791F1F; }
+  .brand-header { display: flex; align-items: center; gap: 8px; margin-bottom: .8rem; flex-wrap: wrap; }
+  .brand-dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+  .brand-name { font-size: 15px; font-weight: 500; }
+  .chart-wrap { position: relative; width: 100%; height: 140px; margin-bottom: .5rem; }
+  .q-row { display: flex; align-items: center; gap: 6px; padding: 3px 0; border-bottom: 0.5px solid rgba(0,0,0,.08); font-size: 11px; }
+  .q-row:last-child { border: none; }
+  .q-name { flex: 1; }
+  .q-stat { width: 52px; text-align: right; color: #73726c; }
+  .report-header { background: #fff; border-radius: 12px; border: 0.5px solid rgba(0,0,0,.12); padding: 16px 20px; margin-bottom: 20px; }
+  .fix-note { font-size: 11px; color: #73726c; margin: 6px 0 0; padding: 5px 8px; background: #f1efe8; border-radius: 6px; line-height: 1.5; }
+  @media(max-width:600px){ .pg{grid-template-columns:repeat(2,1fr);} .row2{grid-template-columns:1fr;} }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="report-header">
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+      <h1 style="font-size:18px;font-weight:500;margin:0">📦 商品ブランド別 詳細レポート</h1>
+      <span style="font-size:11px;background:#eaf3de;color:#27500A;padding:2px 9px;border-radius:10px">チャネル集計修正済 v2</span>
+    </div>
+    <p style="font-size:13px;color:#73726c;margin:4px 0 8px">売上実績 × GA4 オンライン動向 × Search Console｜2026年3月23日〜29日</p>
+    <div style="font-size:12px;color:#854F0B;background:#faeeda;padding:6px 10px;border-radius:6px;line-height:1.5">
+      ⚠️ <strong>修正内容：</strong>旧版はチャネル別売上が各ブランドの<em>単品1アイテムの値</em>になっていた。今版はブランド内<em>全商品の合算値</em>に修正。影響ブランド：VC / C+D / C+Cera / SKINBEAUTY / MINERALion
+    </div>
+  </div>
+
+  <div class="sec">🔍 商品ブランドを選択</div>
+  <div class="tab-nav" id="tabs"></div>
+  <div id="cards"></div>
+</div>
+
+<script>
+const LABELS=['3/23','3/24','3/25','3/26','3/27','3/28','3/29'];
+const products=[
+{
+  id:'vc',name:'Lypo-C VC',color:'#1D9E75',wowStr:'+26.8%',wowCls:'up',
+  toc:45296384,tob:7330479,prev:50218936,tocOrders:4086,tobOrders:109,
+  tocDly:[5510818,5717967,7647556,6242728,5448296,8184026,3514993],
+  tobDly:[1236312,1672350,689592,1768217,934824,705632,323552],
+  ga4:{purchases:633,cartTotal:728,
+    items:[
+      {n:'VC 30包入',r:3830184,p:516,c:677},
+      {n:'【定期】VC 1箱',r:450000,p:60,c:32},
+      {n:'VC 4箱セット',r:345600,p:12,c:7},
+      {n:'VC 2箱セット',r:225000,p:15,c:6},
+      {n:'VC 3箱セット',r:172800,p:8,c:6},
+    ],
+    // ✅ 全商品合算（VC30包入・各セット品・定期・11包入・ギフト等を全チャネルで集計）
+    ch:[
+      {n:'Paid Search',   r:1296089,p:151,c:'#BA7517'},
+      {n:'Direct',        r:1019412,p:113,c:'#3B8BD4'},
+      {n:'Organic Search',r:951601, p:109,c:'#1D9E75'},
+      {n:'Org. Shopping', r:843812, p:99, c:'#0F6E56'},
+      {n:'Organic Social',r:644738, p:65, c:'#D85A30'},
+    ],
+    note:null},
+  sc:[
+    {q:'リポC',           cl:311,im:1741,ct:'18.6%',po:'1.0'},
+    {q:'リポソームビタミンC',cl:199,im:1859,ct:'10.7%',po:'1.7'},
+    {q:'リポシー',         cl:81, im:536, ct:'15.1%',po:'1.2'},
+    {q:'lypo-c',          cl:79, im:351, ct:'22.5%',po:'1.3'},
+    {q:'リポシービタミンC', cl:62, im:441, ct:'14.1%',po:'1.0'},
+  ],
+  insight:'主力VC。Paid Search ¥1,296Kがトップ、次いでDirect ¥1,019K・Organic Search ¥952K。「リポC」SEO1位・CTR 18.6%で安定集客。3/27メルマガ（MION500）配信翌日3/28にVC購買が¥8.2Mと週最高。メルマガ翌日転換の構造が明確。',
+  ins:'success',
+  fix:'【旧版の誤り】Organic Searchが完全欠落。Paid Search ¥742K・Direct ¥639Kは単品値で大幅過小。全商品合算でPaid ¥1,296K・Organic Search ¥952Kに修正。'
+},
+{
+  id:'cd',name:'C+D',color:'#3B8BD4',wowStr:'+13.7%',wowCls:'up',
+  toc:38616263,tob:9811758,prev:49735360,tocOrders:2918,tobOrders:92,
+  tocDly:[5141309,5212042,6546475,5940783,5058585,7857059,2861010],
+  tobDly:[2412690,1621254,956940,1262418,2675592,672660,210204],
+  ga4:{purchases:338,cartTotal:495,
+    items:[
+      {n:'C+D 30包入（旧）',r:1584004,p:180,c:357},
+      {n:'C+D 30包入（新）',r:1311400,p:158,c:90},
+      {n:'【定期】C+D 2箱', r:453600, p:27, c:22},
+      {n:'【定期】C+D 1箱', r:399500, p:47, c:18},
+      {n:'C+D 11包入',      r:48230,  p:14, c:8},
+    ],
+    // ✅ 全商品合算（30包入2バリアント・11包入・定期各種を全チャネルで集計）
+    ch:[
+      {n:'Paid Search',   r:929576,p:103,c:'#BA7517'},
+      {n:'Direct',        r:705604,p:68, c:'#3B8BD4'},
+      {n:'Organic Search',r:621532,p:74, c:'#1D9E75'},
+      {n:'Org. Shopping', r:445249,p:44, c:'#0F6E56'},
+      {n:'Organic Social',r:433904,p:40, c:'#D85A30'},
+    ],
+    note:null},
+  sc:[
+    {q:'lypo-c vitamin c+d', cl:10, im:89,   ct:'11.2%',po:'1.0'},
+    {q:'リポソームビタミンC',  cl:199,im:1859, ct:'10.7%',po:'1.7'},
+    {q:'ビタミンD 食品',       cl:72, im:3434, ct:'2.1%', po:'1.3'},
+  ],
+  insight:'toC最大品（¥38.6M）。Paid Search ¥930Kがトップ（旧版¥1,128Kは2バリアントの重複で過大だった）。Organic Shopping ¥445K・Organic Social ¥434Kが旧版より大きく正しい。toB前週¥14.9M→今週¥9.8M（−34%）。「ビタミンD 食品」でトップ表示を維持し潜在層獲得に貢献。',
+  ins:'info',
+  fix:'【旧版の誤り】Paid Searchは30包入1バリアントのみで¥1,128K（過大）。Org. ShoppingはPaid Shoppingと誤混入。全商品合算でPaid ¥930K・Org.Shopping ¥445Kに修正。'
+},
+{
+  id:'cera',name:'C+Cera',color:'#7F77DD',wowStr:'+11.3%',wowCls:'up',
+  toc:5002148,tob:1967194,prev:6743436,tocOrders:299,tobOrders:32,
+  tocDly:[713560,655020,576100,540980,768208,668860,620420],
+  tobDly:[342468,393012,201528,403806,565380,0,60588],
+  ga4:{purchases:111,cartTotal:194,
+    items:[
+      {n:'C+Cera 28包（Amazon等）',r:565320,p:42,c:140},
+      {n:'C+Cera 28包（公式）',    r:701820,p:54,c:51},
+      {n:'【定期】C+Cera 1箱',    r:246240,p:19,c:1},
+      {n:'C+Cera 7包入',          r:55500, p:15,c:2},
+    ],
+    // ✅ 全商品合算（28包2バリアント・7包・定期各種を全チャネルで集計）
+    ch:[
+      {n:'Organic Social',r:426060,p:29,c:'#D85A30'},
+      {n:'Organic Search',r:293420,p:23,c:'#1D9E75'},
+      {n:'Paid Search',   r:220560,p:18,c:'#BA7517'},
+      {n:'Direct',        r:217480,p:17,c:'#3B8BD4'},
+      {n:'Unassigned',    r:177980,p:15,c:'#888780'},
+    ],
+    note:null},
+  sc:[
+    {q:'リポC C+Cera',    cl:8,im:42,ct:'19.0%',po:'1.1'},
+    {q:'セラミド ビタミンC',cl:5,im:63,ct:'7.9%', po:'2.3'},
+  ],
+  insight:'Organic Social（¥426K）が最大チャネル。SNSが購買動線の中核で、定期2箱¥76K・3箱¥75KもOrganic Social経由という高額定期コンバージョンが特徴。旧版でEmailをTop5掲載していたが正しくはUnassigned（¥178K）がTop5入り。カートイン194件に対し購買111件（57%）は改善余地あり。',
+  ins:'success',
+  fix:'【旧版の誤り】EmailはTop5外。DirectとUnassignedが過小だった。旧版Organic Search ¥318Kは正しくは¥293K。上位5位の顔ぶれとOrderも変化。'
+},
+{
+  id:'lypo',name:'Lypospheric',color:'#0F6E56',wowStr:'+32.6%',wowCls:'up',
+  toc:5811590,tob:0,prev:4796490,tocOrders:308,tobOrders:0,
+  tocDly:[663460,807130,1546290,310510,497460,470610,716130],
+  tobDly:[0,0,0,0,0,0,0],
+  ga4:{purchases:0,cartTotal:0,items:[],ch:[],
+    note:'Shopify公式（lypo-spheric.myshopify.com）はGA4(lypo-c.shop)に含まれないため集計対象外'},
+  sc:[
+    {q:'リポスフェリック',cl:15,im:112,ct:'13.4%',po:'1.2'},
+    {q:'Lypospheric',   cl:9, im:48, ct:'18.8%',po:'1.0'},
+    {q:'lypo-spheric',  cl:7, im:30, ct:'23.3%',po:'1.0'},
+  ],
+  insight:'完全toC・楽天メイン。3/25に¥1.55Mと週ピーク（楽天スーパーセール連動）。3/26に急落（¥310K）しており楽天依存の週内ムラが大きい。SC「リポスフェリック」CTR13%で安定1位。Shopify公式も¥1.77M（週計）。toBはゼロで純粋B2C特化型。',
+  ins:'info',
+  fix:'GA4データなし。修正対象外。'
+},
+{
+  id:'skin',name:'SKINBEAUTY',color:'#D85A30',wowStr:'+19.0%',wowCls:'up',
+  toc:2534159,tob:1310552,prev:3716078,tocOrders:206,tobOrders:32,
+  tocDly:[248892,277076,567590,367222,373934,396409,304036],
+  tobDly:[158840,211640,274120,480832,32120,32120,121880],
+  ga4:{purchases:35,cartTotal:48,
+    items:[
+      {n:'SKINBEAUTY 28包',        r:357280,p:29,c:47},
+      {n:'【定期】SKINBEAUTY 2箱', r:88704, p:4, c:0},
+      {n:'7 PURE DROPS KIT',      r:20460, p:6, c:1},
+      {n:'【定期】SKINBEAUTY 28包',r:34374, p:3, c:0},
+    ],
+    // ✅ 全商品合算（28包・7PURE DROPS・定期各種を全チャネルで集計）
+    ch:[
+      {n:'Direct',         r:170100,p:13,c:'#3B8BD4'},
+      {n:'Paid Search',    r:123284,p:10,c:'#BA7517'},
+      {n:'Org. Shopping',  r:80450, p:5, c:'#0F6E56'},
+      {n:'Unassigned',     r:79016, p:8, c:'#888780'},
+      {n:'Organic Search', r:64148, p:6, c:'#1D9E75'},
+    ],
+    note:null},
+  sc:[
+    {q:'スキンビューティ',      cl:5,im:31,ct:'16.1%',po:'1.3'},
+    {q:'リポC スキンビューティ', cl:4,im:18,ct:'22.2%',po:'1.0'},
+  ],
+  insight:'Direct（¥170K）が最大チャネル—定期2箱セット等の既存顧客リピートが主体。toB 3/26が¥480Kと週最高（サロン・クリニック向け大口）。Organic Searchが弱くSCクエリも少ない。SNS認知強化とSKINBEAUTY単体SEO改善が課題。',
+  ins:'info',
+  fix:'【旧版の誤り】Directは単品のみ¥114K→全商品合算で¥170Kに修正。Org.ShoppingとUnassignedが新たにTop5入り。旧版のOrg.Shopping位置にあったのは実はPaid Shoppingだった。'
+},
+{
+  id:'min',name:'MINERALion',color:'#BA7517',wowStr:'+40.0%',wowCls:'up',
+  toc:1183032,tob:1439100,prev:2313000,tocOrders:718,tobOrders:37,
+  tocDly:[132840,68904,123336,272376,232416,200232,152928],
+  tobDly:[42120,210195,193320,164160,248400,569160,11745],
+  ga4:{purchases:633,cartTotal:900,
+    items:[
+      {n:'トライアル4包（¥0）', r:0,      p:538,c:739},
+      {n:'MINERALion 30包入',  r:285768, p:49, c:131},
+      {n:'MINERALion 30包',   r:253152, p:46, c:28},
+      {n:'【定期】1箱',         r:123552, p:22, c:2},
+    ],
+    // ✅ 全商品合算（30包入・30包・トライアル・定期各種を全チャネルで集計）
+    // ※ Email 213件中198件・Direct 189件中162件が¥0無料トライアル
+    ch:[
+      {n:'Direct',         r:197208,p:189,c:'#3B8BD4'},
+      {n:'Organic Social', r:154440,p:95, c:'#D85A30'},
+      {n:'Paid Search',    r:128520,p:30, c:'#BA7517'},
+      {n:'Organic Search', r:112104,p:29, c:'#1D9E75'},
+      {n:'Email',          r:99792, p:213,c:'#7F77DD'},
+    ],
+    note:'件数にはトライアル4包（¥0）を含む。Email 213件中198件・Direct 189件中162件が無料トライアル。'},
+  sc:[
+    {q:'ミネラリオン',cl:35,im:110,ct:'31.8%',po:'1.0'},
+  ],
+  insight:'3/27メルマガ（MION500）でGA4トライアル4包が週計538件（3/27だけで303件）。収益ベースではDirect（¥197K）が最大—Emailは購買213件中198件が¥0無料品。「ミネラリオン」CTR 31.8%と圧倒的1位。toB 3/28に¥569Kの大口入電あり。メルマガ→トライアル→通常購買の転換設計が立証された週。',
+  ins:'success',
+  fix:'【旧版の誤り】Direct ¥119K・Organic Social ¥108K・Email ¥68Kはいずれも単品値で過小。全商品合算でDirect ¥197K・Organic Social ¥154K・Email ¥100Kに修正。Email購買件数が多い理由（無料トライアル）も明示。'
+},
+{
+  id:'cbd',name:'CBD',color:'#993556',wowStr:'−7.4%',wowCls:'down',
+  toc:888414,tob:788264,prev:2047454,tocOrders:101,tobOrders:22,
+  tocDly:[101844,155628,213408,131944,69788,104994,110808],
+  tobDly:[133164,0,174960,40824,122472,225504,92340],
+  ga4:{purchases:0,cartTotal:0,items:[],ch:[],
+    note:'lypo-c.shopではなく楽天/Amazon等での販売が中心のためGA4データなし。修正対象外。'},
+  sc:[
+    {q:'lypo-c cbd',cl:3,im:21,ct:'14.3%',po:'1.1'},
+    {q:'リポC CBD', cl:2,im:14,ct:'14.3%',po:'1.0'},
+  ],
+  insight:'toC・toB共にマイナス。toCは3/25（¥213K）が週最高だが3/27に¥70Kまで落ち後に戻し。toBは大口受注有無で日々変動。SCクエリが極めて少なく、ブランド認知が弱い可能性。lypo-c.shopにCBD専用LP整備と計測体制の構築が急務。',
+  ins:'alert',fix:'GA4データなし。修正対象外。'
+},
+{
+  id:'cdk',name:'C+D+K',color:'#888780',wowStr:'−72.9%',wowCls:'down',
+  toc:14364,tob:312336,prev:1466694,tocOrders:2,tobOrders:15,
+  tocDly:[0,7182,0,0,7182,0,0],
+  tobDly:[0,0,312336,0,0,0,0],
+  ga4:{purchases:0,cartTotal:0,items:[],ch:[],note:'lypo-c.shopでの販売は確認されず。toB限定販売に移行か。修正対象外。'},
+  sc:[],
+  insight:'3/25のみtoB¥312Kの受注があり、他6日間はほぼゼロ。前週¥1.47Mから大幅減。toCはSC・GA4ともにデータなしで事実上toC向け販売停止の状態。在庫状況・廃番予定・販売戦略の見直しが急務。',
+  ins:'alert',fix:'GA4データなし。修正対象外。'
+}
+];
+
+function fmt(v){return '¥'+(v/1e6).toFixed(2)+'M';}
+function fmtK(v){return '¥'+(v/1000).toFixed(0)+'K';}
+
+const tabsEl=document.getElementById('tabs');
+const cardsEl=document.getElementById('cards');
+
+products.forEach((p,idx)=>{
+  const btn=document.createElement('button');
+  btn.className='tab-btn'+(idx===0?' active':'');
+  btn.textContent=p.name;
+  btn.onclick=()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.pcard').forEach(c=>c.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('card-'+p.id).classList.add('active');
+  };
+  tabsEl.appendChild(btn);
+
+  const total=p.toc+p.tob;
+  const tocR=(total>0?(p.toc/total*100).toFixed(0):0)+'%';
+  const tobR=(total>0?(p.tob/total*100).toFixed(0):0)+'%';
+  const wCls=total>=p.prev?'up':'down';
+
+  // Channel bars
+  let chBars='';
+  if(p.ga4.ch.length>0){
+    const maxR=Math.max(...p.ga4.ch.map(c=>c.r));
+    chBars=p.ga4.ch.map(c=>`
+      <div class="ch-row">
+        <span class="ch-name">${c.n}</span>
+        <div class="bg-bar"><div class="bg-fill" style="width:${Math.round(c.r/maxR*100)}%;background:${c.c}"></div></div>
+        <span class="ch-val">${fmtK(c.r)}</span>
+        <span style="width:32px;text-align:right;color:#73726c;font-size:11px">${c.p}件</span>
+      </div>`).join('');
+    if(p.ga4.note) chBars+=`<p style="font-size:11px;color:#73726c;margin:6px 0 0;line-height:1.5">${p.ga4.note}</p>`;
+  } else {
+    chBars=`<p style="font-size:12px;color:#73726c;padding:6px 0;margin:0">${p.ga4.note||'データなし'}</p>`;
+  }
+
+  // Items
+  let itemRows='';
+  if(p.ga4.items.length>0){
+    itemRows=p.ga4.items.map(i=>`
+      <div class="sr">
+        <span class="sk">${i.n}</span>
+        <span class="sv">${i.r>0?fmtK(i.r):'¥0（無料）'}</span>
+        <span style="color:#73726c;font-size:11px;white-space:nowrap">${i.p}購入</span>
+        <span style="color:#73726c;font-size:11px;white-space:nowrap">カート${i.c}</span>
+      </div>`).join('');
+  } else {
+    itemRows=`<p style="font-size:12px;color:#73726c;padding:6px 0;margin:0">${p.ga4.note||'GA4データなし'}</p>`;
+  }
+
+  // SC
+  let qRows='';
+  if(p.sc.length>0){
+    qRows=`<div style="display:flex;justify-content:space-between;font-size:10px;color:#73726c;margin-bottom:4px;padding-bottom:3px;border-bottom:0.5px solid rgba(0,0,0,.08)">
+      <span style="flex:1">クエリ</span><span style="width:44px;text-align:right">クリック</span><span style="width:36px;text-align:right">CTR</span><span style="width:36px;text-align:right">順位</span>
+    </div>`+p.sc.map(q=>`
+      <div class="q-row">
+        <span class="q-name">${q.q}</span>
+        <span class="q-stat">${q.cl}</span>
+        <span class="q-stat">${q.ct}</span>
+        <span class="q-stat">${q.po}</span>
+      </div>`).join('');
+  } else {
+    qRows=`<p style="font-size:12px;color:#73726c;padding:4px 0;margin:0">検索クエリデータなし</p>`;
+  }
+
+  const insCls=p.ins==='alert'?'alert-box':p.ins==='success'?'success-box':'info-box';
+  const fixTag=p.ga4.ch.length>0
+    ?`<span style="font-size:10px;background:#faeeda;color:#854F0B;padding:2px 7px;border-radius:10px">修正済</span>`
+    :`<span style="font-size:10px;background:#f1efe8;color:#73726c;padding:2px 7px;border-radius:10px">GA4データなし</span>`;
+
+  cardsEl.innerHTML+=`
+  <div class="pcard${idx===0?' active':''}" id="card-${p.id}">
+    <div class="brand-header">
+      <div class="brand-dot" style="background:${p.color}"></div>
+      <span class="brand-name">${p.name}</span>
+      <span class="badge badge-${p.wowCls==='up'?'up':'dn'}">${p.wowStr} 前週比</span>
+      ${fixTag}
+    </div>
+    <div class="pg">
+      <div class="kpi"><div class="kl">週間売上合計</div><div class="kv">${fmt(total)}</div><div class="ks ${wCls}">前週 ${fmt(p.prev)}</div></div>
+      <div class="kpi"><div class="kl">toC</div><div class="kv">${fmt(p.toc)}</div><div class="ks">${tocR}（${p.tocOrders.toLocaleString()}件）</div></div>
+      <div class="kpi"><div class="kl">toB</div><div class="kv">${fmt(p.tob)}</div><div class="ks">${tobR}（${p.tobOrders}件）</div></div>
+      <div class="kpi"><div class="kl">GA4 購買件数</div><div class="kv">${p.ga4.purchases>0?p.ga4.purchases.toLocaleString()+'件':'—'}</div><div class="ks">カート追加 ${p.ga4.cartTotal>0?p.ga4.cartTotal.toLocaleString():'—'}</div></div>
+    </div>
+    <div class="chart-wrap"><canvas id="ch-${p.id}"></canvas></div>
+    <div class="row2" style="margin-top:.5rem">
+      <div class="box">
+        <div class="box-title">📱 GA4 主要商品（公式ECのみ）</div>
+        ${itemRows}
+      </div>
+      <div class="box">
+        <div class="box-title">📡 流入チャネル別・全商品合算（GA4）✅</div>
+        ${chBars}
+      </div>
+    </div>
+    <div class="row2" style="margin-top:8px">
+      <div class="box">
+        <div class="box-title">🔍 Search Console クエリ上位</div>
+        ${qRows}
+      </div>
+      <div class="box">
+        <div class="box-title">💡 週次インサイト</div>
+        <div class="${insCls}">${p.insight}</div>
+        <p class="fix-note">📝 <strong>修正メモ：</strong>${p.fix}</p>
+      </div>
+    </div>
+  </div>`;
+});
+
+setTimeout(()=>{
+  products.forEach(p=>{
+    const el=document.getElementById('ch-'+p.id);
+    if(!el)return;
+    new Chart(el,{
+      type:'bar',
+      data:{labels:LABELS,datasets:[
+        {label:'toC',data:p.tocDly.map(v=>+(v/1e6).toFixed(2)),backgroundColor:p.color+'cc',stack:'s'},
+        {label:'toB',data:p.tobDly.map(v=>+(v/1e6).toFixed(2)),backgroundColor:p.color+'44',stack:'s',borderWidth:1,borderColor:p.color},
+      ]},
+      options:{responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{display:true,position:'top',labels:{boxWidth:8,font:{size:10}}}},
+        scales:{
+          x:{stacked:true,ticks:{autoSkip:false,font:{size:10}}},
+          y:{stacked:true,grid:{color:'rgba(0,0,0,.06)'},ticks:{font:{size:10}}}
+        }}
+    });
+  });
+},50);
+</script>
+</body>
+</html>
