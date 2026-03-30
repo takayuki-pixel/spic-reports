@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>SPIC 深掘り分析 Vol.2</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 14px; color: #1a1a18; background: #f5f4f0; }
+.hdr { background: #fff; border-bottom: 1px solid #d3d1c7; padding: 1rem 1.5rem; }
+h1 { font-size: 16px; font-weight: 500; }
+.sub { font-size: 11px; color: #73726c; margin-top: 2px; }
+.body { padding: 1.25rem 1.5rem; }
+.tabs { display: flex; gap: 3px; border-bottom: 1px solid #d3d1c7; margin-bottom: 1.25rem; overflow-x: auto; }
+.tab { padding: 7px 12px; font-size: 12px; cursor: pointer; border: none; border-bottom: 2px solid transparent; color: #73726c; background: none; white-space: nowrap; }
+.tab.active { color: #1a1a18; border-bottom-color: #1a1a18; font-weight: 500; }
+.sec { display: none; }
+.sec.on { display: block; }
+
+.lbl { font-size: 12px; font-weight: 500; color: #73726c; margin: 1rem 0 0.5rem; border-bottom: 1px solid #e8e7e2; padding-bottom: 4px; }
+
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px,1fr)); gap: 9px; margin-bottom: 1.25rem; }
+.card { background: #fff; border: 1px solid #d3d1c7; border-radius: 10px; padding: 11px 13px; }
+.cl { font-size: 11px; color: #73726c; margin-bottom: 3px; line-height: 1.3; }
+.cv { font-size: 21px; font-weight: 500; line-height: 1; }
+.cs { font-size: 11px; color: #73726c; margin-top: 2px; }
+.up { color: #1D9E75; } .dn { color: #E24B4A; } .warn { color: #EF9F27; } .info { color: #378ADD; }
+
+.al { border-radius: 8px; padding: 10px 14px; font-size: 13px; margin-bottom: 12px; border: 1px solid; line-height: 1.6; }
+.al-g { background: #eaf3de; border-color: #97c459; color: #173404; }
+.al-b { background: #e6f1fb; border-color: #85b7eb; color: #042c53; }
+.al-w { background: #faeeda; border-color: #f9cb42; color: #412402; }
+.al-r { background: #fcebeb; border-color: #f09595; color: #501313; }
+
+table { width: 100%; border-collapse: collapse; font-size: 12px; }
+th { text-align: left; font-size: 11px; color: #73726c; padding: 6px 8px; border-bottom: 1px solid #d3d1c7; font-weight: 500; white-space: nowrap; }
+td { padding: 6px 8px; border-bottom: 1px solid #f0efe9; vertical-align: middle; }
+tr:last-child td { border-bottom: none; }
+
+.g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.g3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+.panel { background: #fff; border: 1px solid #d3d1c7; border-radius: 10px; padding: 14px 16px; }
+.pt { font-size: 13px; font-weight: 500; margin-bottom: 0.75rem; }
+
+.insight { background: #f9f8f5; border-left: 3px solid #378ADD; padding: 9px 12px; border-radius: 0 7px 7px 0; font-size: 12px; color: #3d3d3a; margin-bottom: 8px; line-height: 1.6; }
+.insight.green { border-color: #1D9E75; }
+.insight.amber { border-color: #EF9F27; }
+.insight.red { border-color: #E24B4A; }
+
+.sbar { display: flex; height: 18px; border-radius: 3px; overflow: hidden; margin-top: 3px; }
+.sb { display: flex; align-items: center; justify-content: center; font-size: 9px; color: #fff; font-weight: 500; }
+
+.prog { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.pl { width: 120px; font-size: 11px; color: #73726c; flex-shrink: 0; text-align: right; }
+.pt2 { flex: 1; background: #f0efe9; height: 16px; border-radius: 3px; overflow: hidden; }
+.pf { height: 100%; display: flex; align-items: center; padding-left: 5px; font-size: 10px; color: #fff; font-weight: 500; border-radius: 3px; }
+.pv { width: 40px; font-size: 10px; color: #73726c; text-align: right; }
+
+.dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 4px; vertical-align: middle; }
+
+/* Reason bar chart */
+.rbar { display: flex; align-items: center; gap: 6px; margin-bottom: 7px; font-size: 12px; }
+.rbl { width: 150px; flex-shrink: 0; font-size: 11px; color: #5f5e5a; }
+.rbt { flex: 1; background: #f0efe9; height: 18px; border-radius: 3px; overflow: hidden; }
+.rbf { height: 100%; display: flex; align-items: center; padding-left: 5px; font-size: 10px; color: #fff; font-weight: 500; border-radius: 3px; }
+.rbv { width: 70px; font-size: 11px; color: #73726c; text-align: right; }
+
+/* Monthly trend mini chart area */
+.trend-row { display: flex; align-items: flex-end; gap: 3px; height: 60px; }
+.trend-bar { flex: 1; border-radius: 2px 2px 0 0; min-width: 4px; }
+.trend-label { font-size: 9px; color: #73726c; text-align: center; margin-top: 3px; }
+
+/* Flow arrow */
+.flow { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 0.75rem; }
+.fb { background: #fff; border: 1px solid #d3d1c7; border-radius: 8px; padding: 9px 12px; text-align: center; flex: 1; min-width: 90px; }
+.fbl { font-size: 10px; color: #73726c; margin-bottom: 2px; }
+.fbv { font-size: 17px; font-weight: 500; }
+.fbs { font-size: 10px; color: #73726c; }
+.fa { color: #d3d1c7; font-size: 16px; flex-shrink: 0; }
+
+/* Channel badges */
+.ch-badge { display: inline-block; font-size: 10px; padding: 2px 7px; border-radius: 8px; margin: 2px; }
+.ad { background: #e6f1fb; color: #042c53; }
+.direct { background: #faeeda; color: #412402; }
+.organic { background: #eaf3de; color: #173404; }
+.ref { background: #f5f4f0; color: #5f5e5a; }
+</style>
+</head>
+<body>
+<div class="hdr">
+  <h1>SPIC 深掘り分析 Vol.2 — 解約理由・定期転換・MINERALion・流入経路・月次CV</h1>
+  <div class="sub">BQ実データ（adebis CV + Shopify定期契約 2025年4月〜2026年3月）</div>
+</div>
+<div class="body">
+<div class="tabs">
+  <button class="tab active" onclick="sw('cancel',this)">① 解約理由分析</button>
+  <button class="tab" onclick="sw('teiki',this)">② 定期転換率詳細</button>
+  <button class="tab" onclick="sw('mineral',this)">③ MINERALionトライアル問題</button>
+  <button class="tab" onclick="sw('channel',this)">④ 流入経路×新規/既存</button>
+  <button class="tab" onclick="sw('monthly',this)">⑤ 月次CV推移</button>
+</div>
+
+<!-- ① 解約理由 -->
+<div id="s-cancel" class="sec on">
+  <div class="al al-b">BQ実データ：定期解約時のキャンセル理由（全ブランド合計10,519件）。最多は「高いから」28.0%、次いで「商品が余っている」25.3%。この2つで全解約の53%を占める。</div>
+
+  <div class="lbl">全ブランド合計 解約理由ランキング（Shopify定期解約データ）</div>
+  <div class="rbar"><div class="rbl">①高いから</div><div class="rbt"><div class="rbf" style="width:28%;background:#E24B4A;">28.0%</div></div><div class="rbv">2,947件</div></div>
+  <div class="rbar"><div class="rbl">②商品が余っている</div><div class="rbt"><div class="rbf" style="width:25.3%;background:#EF9F27;">25.3%</div></div><div class="rbv">2,672件</div></div>
+  <div class="rbar"><div class="rbl">③他サプリを試すから</div><div class="rbt"><div class="rbf" style="width:13.5%;background:#888780;">13.5%</div></div><div class="rbv">1,421件</div></div>
+  <div class="rbar"><div class="rbl">④実感・変化がない</div><div class="rbt"><div class="rbf" style="width:9.5%;background:#5DCAA5;">9.5%</div></div><div class="rbv">1,000件</div></div>
+  <div class="rbar"><div class="rbl">⑤美味しくない/味</div><div class="rbt"><div class="rbf" style="width:6.3%;background:#AFA9EC;">6.3%</div></div><div class="rbv">659件</div></div>
+  <div class="rbar"><div class="rbl">⑥特典が期待はずれ</div><div class="rbt"><div class="rbf" style="width:1.6%;background:#B4B2A9;">1.6%</div></div><div class="rbv">166件</div></div>
+
+  <div class="lbl">ブランド別 解約理由の分布比較</div>
+  <table>
+    <thead>
+      <tr>
+        <th>ブランド</th>
+        <th style="background:#fcebeb;">高いから</th>
+        <th style="background:#faeeda;">商品余っている</th>
+        <th>他サプリへ</th>
+        <th>実感なし</th>
+        <th>味が苦手</th>
+        <th>解約総数</th>
+        <th>注目点</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="dot" style="background:#378ADD;"></span><strong>VC</strong></td>
+        <td style="background:#fcebeb;" class="dn"><strong>33.4%</strong></td>
+        <td style="background:#faeeda;">28.9%</td>
+        <td>15.6%</td>
+        <td>11.2%</td>
+        <td>7.6%</td>
+        <td>6,608件</td>
+        <td style="font-size:11px;color:#73726c;">「高い」が最多。価格感度が最も高い。</td>
+      </tr>
+      <tr>
+        <td><span class="dot" style="background:#1D9E75;"></span><strong>C+D系</strong></td>
+        <td style="background:#faeeda;">27.1%</td>
+        <td style="background:#fcebeb;"><strong>35.5%</strong></td>
+        <td>17.7%</td>
+        <td>9.1%</td>
+        <td>6.3%</td>
+        <td>3,851件</td>
+        <td style="font-size:11px;color:#73726c;">「余っている」が最多＝配送間隔の設計問題。</td>
+      </tr>
+      <tr>
+        <td><span class="dot" style="background:#D85A30;"></span><strong>SKINBEAUTY</strong></td>
+        <td style="background:#fcebeb;"><strong>28.6%</strong></td>
+        <td>26.8%</td>
+        <td>14.3%</td>
+        <td class="warn"><strong>21.4%</strong></td>
+        <td>7.1%</td>
+        <td>56件</td>
+        <td style="font-size:11px;color:#E24B4A;">「実感なし21.4%」が他ブランドより高い。効果実感の訴求が課題。</td>
+      </tr>
+      <tr>
+        <td><span class="dot" style="background:#993C1D;"></span><strong>C+Cera</strong></td>
+        <td>22.7%</td>
+        <td style="background:#faeeda;"><strong>31.8%</strong></td>
+        <td>13.6%</td>
+        <td>4.5%</td>
+        <td class="dn"><strong>22.7%</strong></td>
+        <td>22件</td>
+        <td style="font-size:11px;color:#E24B4A;">「味が苦手22.7%」が突出。液状サプリの味問題がある。</td>
+      </tr>
+      <tr>
+        <td><span class="dot" style="background:#BA7517;"></span><strong>MINERALion</strong></td>
+        <td>0%</td>
+        <td><strong>40.0%</strong></td>
+        <td>20.0%</td>
+        <td>0%</td>
+        <td>20.0%</td>
+        <td>5件</td>
+        <td style="font-size:11px;color:#73726c;">件数少だが「余っている」が最多。</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="g2" style="margin-top:1rem;">
+    <div class="panel">
+      <div class="pt">解約理由から導く施策</div>
+      <div class="insight red">
+        <strong>①「高いから」（28%）→ 価格でなく価値で引き留める</strong><br>
+        割引提示は最後の手段。戦略資料通り①間隔変更②箱数減量を先に提案。VCの「1箱→隔月1箱」設計の自動提案が有効。「高い」と感じるのは効果実感があれば解消されることも多い。
+      </div>
+      <div class="insight amber">
+        <strong>②「商品が余っている」（25%）→ C+Dで特に深刻（35.5%）</strong><br>
+        C+Dの「余っている」率がVCより高い。C+Dはより大箱（30包）を買う傾向があるため消費しきれない。C+Dの定期は「28包/月1回」より「11包/28日」など小さい単位への変更提案が効果的。
+      </div>
+      <div class="insight red">
+        <strong>③SKINBEAUTYの「実感なし21.4%」が危険水域</strong><br>
+        他ブランドが9〜11%台なのに対してSKINBEAUTYは21.4%。「塗る美容液」はVC内服サプリより効果実感が遅い可能性。定期開始後30日・60日のメール（「2週目から肌の手触りが変わります」等の期待値設定コンテンツ）で解約を防ぐ。
+      </div>
+      <div class="insight amber">
+        <strong>④C+Ceraの「味が苦手22.7%」</strong><br>
+        液状サプリ全般の課題。他ブランド（VC 7.6%・C+D 6.3%）より明らかに高い。C+Ceraは米ぬか由来のため独特の風味がある可能性。飲み方（冷水・ジュース混合）の案内コンテンツを定期購入者向けに強化する。
+      </div>
+    </div>
+    <div class="panel">
+      <div class="pt">解約防止フロー（BQデータ根拠）</div>
+      <div class="insight green">
+        <strong>停止から解約への転落を防ぐタイミング</strong><br>
+        BQで確認したPAUSED平均日数：VC 278日、C+D 269日。1年以上停止している5,249件は実質解約に近い。対して90日以内の3,065件は「まだ戻れる状態」。この90日以内が最も回収ROIが高い介入タイミング。
+      </div>
+      <div style="margin: 0.5rem 0; font-size: 12px; font-weight: 500; color: #73726c;">優先介入タイミングと推奨施策</div>
+      <table style="font-size:11px;">
+        <thead><tr><th>停止後の時間</th><th>推奨施策</th><th>訴求軸</th></tr></thead>
+        <tbody>
+          <tr><td>〜7日（直後）</td><td>間隔変更自動提案メール</td><td>「まだ残ってますか？」在庫確認型</td></tr>
+          <tr><td>7〜30日</td><td>箱数減量 or C+D切替提案</td><td>「量を減らして続ける」選択肢提示</td></tr>
+          <tr><td>31〜60日</td><td>新製品情報 + 戻る理由作り</td><td>「C+Ceraが出ました」等の新情報提供</td></tr>
+          <tr><td>61〜90日</td><td>季節訴求型メール</td><td>「春の免疫準備」等の時節訴求</td></tr>
+          <tr><td>91〜365日</td><td>低温アプローチ（年2回程度）</td><td>ブランドニュースレター的な軽い接触</td></tr>
+          <tr><td>1年超</td><td>施策コスト投下は最小限</td><td>解約防止より新規獲得にコストを使う</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ② 定期転換率 -->
+<div id="s-teiki" class="sec">
+  <div class="al al-b">adebis CVデータから新規/既存×単品/定期の組み合わせを分析。新規顧客の「最初から定期を選ぶ率」と既存顧客の「追加で定期を選ぶ率」を分離。</div>
+
+  <div class="lbl">ブランド別 定期転換率マトリクス（adebis CV 2025年4月〜2026年3月）</div>
+
+  <table style="margin-bottom:1rem;">
+    <thead>
+      <tr>
+        <th>ブランド</th>
+        <th colspan="2" style="background:#eaf3de;text-align:center;">新規顧客（false）</th>
+        <th colspan="2" style="background:#e6f1fb;text-align:center;">既存顧客（true）</th>
+        <th>新規の定期転換率</th>
+        <th>既存の定期再購入率</th>
+        <th>戦略的意味</th>
+      </tr>
+    </thead>
+    <thead>
+      <tr>
+        <th></th>
+        <th style="background:#f4faf0;font-size:10px;">単品</th>
+        <th style="background:#f4faf0;font-size:10px;">定期</th>
+        <th style="background:#f0f7fe;font-size:10px;">単品</th>
+        <th style="background:#f0f7fe;font-size:10px;">定期</th>
+        <th></th><th></th><th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="dot" style="background:#378ADD;"></span><strong>VC</strong></td>
+        <td style="background:#f4faf0;">15,130件<br><span style="font-size:10px;color:#73726c;">68.1%</span></td>
+        <td style="background:#f4faf0;">7,086件<br><span style="font-size:10px;color:#73726c;">31.9%</span></td>
+        <td style="background:#f0f7fe;">50,466件<br><span style="font-size:10px;color:#73726c;">94.0%</span></td>
+        <td style="background:#f0f7fe;">3,247件<br><span style="font-size:10px;color:#73726c;">6.0%</span></td>
+        <td class="info"><strong>31.9%</strong></td>
+        <td class="warn">6.0%</td>
+        <td style="font-size:11px;color:#73726c;">既存の94%が単品リピート。既存の定期追加が低い。</td>
+      </tr>
+      <tr>
+        <td><span class="dot" style="background:#1D9E75;"></span><strong>C+D</strong></td>
+        <td style="background:#f4faf0;">8,895件<br><span style="font-size:10px;color:#73726c;">71.2%</span></td>
+        <td style="background:#f4faf0;">3,602件<br><span style="font-size:10px;color:#73726c;">28.8%</span></td>
+        <td style="background:#f0f7fe;">2,252件<br><span style="font-size:10px;color:#73726c;">55.8%</span></td>
+        <td style="background:#f0f7fe;">1,783件<br><span style="font-size:10px;color:#73726c;">44.2%</span></td>
+        <td class="info">28.8%</td>
+        <td class="up"><strong>44.2%</strong></td>
+        <td style="font-size:11px;color:#73726c;">既存の44%が定期追加。全ブランド中最高の定着構造。</td>
+      </tr>
+      <tr>
+        <td><span class="dot" style="background:#D85A30;"></span><strong>C+Cera</strong></td>
+        <td style="background:#f4faf0;">361件<br><span style="font-size:10px;color:#73726c;">70.4%</span></td>
+        <td style="background:#f4faf0;">152件<br><span style="font-size:10px;color:#73726c;">29.6%</span></td>
+        <td style="background:#f0f7fe;">66件<br><span style="font-size:10px;color:#73726c;">67.3%</span></td>
+        <td style="background:#f0f7fe;">32件<br><span style="font-size:10px;color:#73726c;">32.7%</span></td>
+        <td class="info">29.6%</td>
+        <td>32.7%</td>
+        <td style="font-size:11px;color:#73726c;">新規・既存ともに定期転換が約30%台。安定した設計。</td>
+      </tr>
+      <tr>
+        <td><span class="dot" style="background:#D85A30;"></span><strong>SKINBEAUTY</strong></td>
+        <td style="background:#f4faf0;">1,402件<br><span style="font-size:10px;color:#73726c;">79.7%</span></td>
+        <td style="background:#f4faf0;">357件<br><span style="font-size:10px;color:#73726c;">20.3%</span></td>
+        <td style="background:#f0f7fe;">438件<br><span style="font-size:10px;color:#73726c;">87.4%</span></td>
+        <td style="background:#f0f7fe;">63件<br><span style="font-size:10px;color:#73726c;">12.6%</span></td>
+        <td class="warn">20.3%</td>
+        <td class="dn">12.6%</td>
+        <td style="font-size:11px;color:#E24B4A;">既存の12.6%しか定期化しない。試用後の定期誘導が弱い。</td>
+      </tr>
+      <tr>
+        <td><span class="dot" style="background:#BA7517;"></span><strong>MINERALion</strong></td>
+        <td style="background:#f4faf0;">325件<br><span style="font-size:10px;color:#73726c;">75.9%</span></td>
+        <td style="background:#f4faf0;">103件<br><span style="font-size:10px;color:#73726c;">24.1%</span></td>
+        <td style="background:#f0f7fe;">61件<br><span style="font-size:10px;color:#73726c;">87.1%</span></td>
+        <td style="background:#f0f7fe;">9件<br><span style="font-size:10px;color:#73726c;">12.9%</span></td>
+        <td>24.1%</td>
+        <td class="dn"><strong>12.9%</strong></td>
+        <td style="font-size:11px;color:#E24B4A;">既存顧客が定期追加しない。単品リピートに留まっている。</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="g2">
+    <div class="panel">
+      <div class="pt">C+Dの「既存44.2%定期」は全ブランド最高の強みである</div>
+      <div class="insight green">C+Dを一度でも購入した既存顧客の44.2%が定期購入を追加している。これはVCの6.0%の7倍以上。C+Dは「買った人が定期に変わりやすい」製品設計になっている。この強みを意識的に活かすため、C+D単品購入者へのすぐ後の定期切替提案が高ROI施策。</div>
+      <div class="insight amber">VCは既存の94%が単品リピートで定期追加がわずか6%。「VCをすでに持っている顧客は定期を増やさない」傾向。これはVCのサブスクが既に飽和しており、増やすよりC+Dへの切替・追加を提案する方が有効であることを裏付ける。</div>
+    </div>
+    <div class="panel">
+      <div class="pt">SKINBEAUTYの「既存12.6%定期」をどう改善するか</div>
+      <div class="insight red">既存顧客がSKINBEAUTYを2回目以降に買う時の87.4%が「単品再購入」。定期化への動機が弱い。解約理由の「実感なし21.4%」と合わせると「効果がわからないから定期にしない」という構造。</div>
+      <div class="insight">対策：定期開始後30日・60日・90日のフォローメール（「今の肌の変化に気づきましたか？」）で効果実感を育てる。定期に変えると「次回○○円お得」の金額メリットを明示する（現状だとわかりにくい可能性）。7包→28包への「アップグレード定期」を試した人への追加オファーを設計。</div>
+    </div>
+  </div>
+</div>
+
+<!-- ③ MINERALionトライアル -->
+<div id="s-mineral" class="sec">
+  <div class="al al-r">MINERALionの「トライアル→通常版転換率わずか8%」はBQ実証の重大発見。2,174件のトライアル購入者のうち、通常版を購入したのは150件のみ（8%）。92%がトライアルで終了している。</div>
+
+  <div class="lbl">MINERALion 購買フロー（BQ実データ）</div>
+  <div class="flow">
+    <div class="fb">
+      <div class="fbl">adebis新規CV</div>
+      <div class="fbv">1,790件</div>
+      <div class="fbs">うち91%が新規顧客</div>
+    </div>
+    <div class="fa">→</div>
+    <div class="fb" style="border-color:#BA7517;border-width:1.5px;">
+      <div class="fbl">トライアル購入</div>
+      <div class="fbv warn">2,174件</div>
+      <div class="fbs">平均¥1,731（試し価格）</div>
+    </div>
+    <div class="fa">→</div>
+    <div class="fb" style="border-color:#E24B4A;border-width:1.5px;">
+      <div class="fbl">トライアルのみで終了</div>
+      <div class="fbv dn">1,731件</div>
+      <div class="fbs dn">92.0%が転換なし</div>
+    </div>
+    <div class="fa">→</div>
+    <div class="fb" style="border-color:#1D9E75;border-width:1.5px;">
+      <div class="fbl">通常版・定期へ転換</div>
+      <div class="fbv up">150件</div>
+      <div class="fbs">8.0%のみ</div>
+    </div>
+  </div>
+
+  <div class="cards">
+    <div class="card"><div class="cl">通常初回購入の平均単価</div><div class="cv">¥11,101</div><div class="cs">30包セット（¥5,400相当/箱）</div></div>
+    <div class="card"><div class="cl">トライアル平均単価</div><div class="cv warn">¥1,731</div><div class="cs">試し価格（大幅ディスカウント）</div></div>
+    <div class="card"><div class="cl">トライアル総CV数</div><div class="cv">2,174件</div><div class="cs">全MINERALion CVの60%以上</div></div>
+    <div class="card"><div class="cl">トライアル転換率</div><div class="cv dn">8.0%</div><div class="cs">1年以内の転換</div></div>
+    <div class="card"><div class="cl">定期稼働率（BQ）</div><div class="cv up">92.8%</div><div class="cs">ただしACTIVE件数は少ない</div></div>
+    <div class="card"><div class="cl">新規adebis定期転換率</div><div class="cv dn">24.1%</div><div class="cs">通常購入者のうち定期化</div></div>
+  </div>
+
+  <div class="g2">
+    <div class="panel">
+      <div class="pt">「92.8%稼働率」と「8%転換率」の矛盾の真相</div>
+      <div class="insight amber">
+        <strong>矛盾しているように見えるが実は構造が違う：</strong><br>
+        ・「92.8%稼働率」= 定期に入った人のうち92.8%が継続中（192件中178件）<br>
+        ・「8%転換率」= トライアル購入者のうち通常版に移行したのが8%（2,174件中150件）<br><br>
+        つまり「一度定期に入ったら止まらないが、トライアルから定期に入る人がほとんどいない」という構造。問題は定期の維持ではなく、定期への入口設計にある。
+      </div>
+      <div class="insight red">
+        <strong>トライアルが「お試しで終わる商品」になっている</strong><br>
+        ¥1,731というトライアル価格で体験させ、通常¥5,400/箱（30包）への転換を期待しているが、3倍以上の価格差を乗り越えさせる説得力が不足。「試した→効果わからない→通常版を買う理由がない」というフローになっている可能性。
+      </div>
+    </div>
+    <div class="panel">
+      <div class="pt">MINERALionトライアル改善施策</div>
+      <div class="insight green">
+        <strong>施策①：トライアル後のステップメール（5通設計）</strong><br>
+        Day1：「飲み始め方の案内（水に混ぜるコツ）」<br>
+        Day7：「1週間後、なんとなく体の変化ありましたか？」<br>
+        Day14：「鉄分不足チェックリストで今の状態を確認」<br>
+        Day21：「継続が大切な理由（3ヶ月目安）」<br>
+        Day28：「通常版への移行で○○%お得」
+      </div>
+      <div class="insight">
+        <strong>施策②：トライアル→定期の価格差を縮める</strong><br>
+        現状：トライアル¥1,731→通常30包¥5,400（+212%）<br>
+        改善案：「トライアル購入者限定30日以内の定期初月割引」でギャップを縮める。またはトライアル後の「15包セット（¥2,700程度）」という中間ステップを設計。
+      </div>
+      <div class="insight amber">
+        <strong>施策③：「何ヶ月飲むと効果が出るか」の設定</strong><br>
+        MINERALionの鉄補給は即効性ではなく蓄積型の効果。「1ヶ月のトライアルで効果がわかりにくい」のは製品特性上仕方がない。「最低3ヶ月継続推奨」という期待値設定をトライアル時から行い、3ヶ月定期セット（3箱）を初回購入オプションとして提示する。
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ④ 流入経路 -->
+<div id="s-channel" class="sec">
+  <div class="al al-b">adebis CV first_touch_channel_typeによる流入経路分析。新規顧客・既存顧客のそれぞれがどの経路で購買に至っているかを確認（2025年10月〜2026年3月）。</div>
+
+  <div class="lbl">新規顧客（false）の流入経路 — ブランド別</div>
+  <table>
+    <thead>
+      <tr><th>ブランド</th><th>広告クリック（有料）</th><th>ダイレクト（指名・ブックマーク）</th><th>自然検索（SEO）</th><th>外部リンク（SNS・記事等）</th><th>インサイト</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="dot" style="background:#378ADD;"></span>VC</td>
+        <td class="warn">66.0%<br><span class="ch-badge ad">広告主導</span></td>
+        <td>17.3%</td>
+        <td>13.4%</td>
+        <td>3.3%</td>
+        <td style="font-size:11px;color:#73726c;">新規の2/3が広告経由。広告費依存度が高い。</td>
+      </tr>
+      <tr>
+        <td><span class="dot" style="background:#1D9E75;"></span>C+D</td>
+        <td class="warn">67.0%<br><span class="ch-badge ad">広告主導</span></td>
+        <td>16.6%</td>
+        <td>13.6%</td>
+        <td>2.8%</td>
+        <td style="font-size:11px;color:#73726c;">VCと同構造。広告→新規獲得型。自然検索は今後の育てどころ。</td>
+      </tr>
+      <tr>
+        <td><span class="dot" style="background:#D85A30;"></span>C+Cera</td>
+        <td class="warn">66.5%<br><span class="ch-badge ad">広告主導</span></td>
+        <td>17.9%</td>
+        <td>13.3%</td>
+        <td>2.3%</td>
+        <td style="font-size:11px;color:#73726c;">ほぼVC・C+Dと同じ比率。新製品ゆえ当然。SEO育成で広告依存を下げる余地。</td>
+      </tr>
+      <tr>
+        <td><span class="dot" style="background:#D85A30;"></span>SKINBEAUTY</td>
+        <td>66.6%</td>
+        <td>20.6%</td>
+        <td>9.6%<br><span style="font-size:10px;color:#E24B4A;">⬇低い</span></td>
+        <td>3.2%</td>
+        <td style="font-size:11px;color:#E24B4A;">自然検索9.6%が他ブランドより低い。まだ検索で「見つけてもらえない」ブランド。</td>
+      </tr>
+      <tr>
+        <td><span class="dot" style="background:#BA7517;"></span>MINERALion</td>
+        <td>63.1%</td>
+        <td>20.7%</td>
+        <td>12.7%</td>
+        <td>3.5%</td>
+        <td style="font-size:11px;color:#73726c;">ダイレクト20.7%が比較的高い＝指名検索や口コミでの来訪が一定数ある。</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="lbl">既存顧客（true）の流入経路 — 新規との比較</div>
+  <table>
+    <thead>
+      <tr><th>ブランド</th><th>広告クリック</th><th>ダイレクト</th><th>自然検索</th><th>外部リンク</th><th>新規との最大の違い</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="dot" style="background:#378ADD;"></span>VC</td>
+        <td>60.0%<br><span style="font-size:10px;color:#1D9E75;">▼6pt（新規より低い）</span></td>
+        <td>13.1%</td>
+        <td class="up"><strong>23.6%</strong></td>
+        <td>3.4%</td>
+        <td style="font-size:11px;color:#1D9E75;">既存はSEO経由が倍増（13.4%→23.6%）。「Lypo-C」指名検索で戻ってくる。</td>
+      </tr>
+      <tr>
+        <td><span class="dot" style="background:#1D9E75;"></span>C+D</td>
+        <td>56.8%<br><span style="font-size:10px;color:#1D9E75;">▼10pt</span></td>
+        <td>14.4%</td>
+        <td class="up"><strong>25.5%</strong></td>
+        <td>3.3%</td>
+        <td style="font-size:11px;color:#1D9E75;">既存のSEO25.5%が最高。「C+D」指名検索で直接戻ってくる優良層。</td>
+      </tr>
+      <tr>
+        <td><span class="dot" style="background:#D85A30;"></span>C+Cera</td>
+        <td>41.8%<br><span style="font-size:10px;color:#1D9E75;">▼25pt！</span></td>
+        <td>13.3%</td>
+        <td class="up"><strong>34.7%</strong></td>
+        <td>10.2%</td>
+        <td style="font-size:11px;color:#1D9E75;">既存のSEO34.7%・外部リンク10.2%が突出。口コミ・記事で来るファン層がいる。</td>
+      </tr>
+      <tr>
+        <td><span class="dot" style="background:#D85A30;"></span>SKINBEAUTY</td>
+        <td>49.1%<br><span style="font-size:10px;color:#1D9E75;">▼18pt</span></td>
+        <td>13.4%</td>
+        <td class="up"><strong>31.3%</strong></td>
+        <td>6.2%</td>
+        <td style="font-size:11px;color:#1D9E75;">既存のSEO31.3%＝ファンが指名検索で戻る。新規SEO9.6%との差が大きい。</td>
+      </tr>
+      <tr>
+        <td><span class="dot" style="background:#BA7517;"></span>MINERALion</td>
+        <td>38.5%<br><span style="font-size:10px;color:#1D9E75;">▼25pt</span></td>
+        <td>19.5%</td>
+        <td class="up"><strong>34.5%</strong></td>
+        <td>7.5%</td>
+        <td style="font-size:11px;color:#1D9E75;">既存はSEO34.5%・外部リンク7.5%。ファン層は口コミ・検索で来ている。</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="g2" style="margin-top:1rem;">
+    <div class="panel">
+      <div class="pt">流入経路分析の最重要インサイト</div>
+      <div class="insight green">
+        <strong>既存顧客は「広告がなくても戻ってくる」</strong><br>
+        全ブランドで既存顧客は広告クリック比率が新規より10〜25%低く、自然検索・ダイレクトの比率が高い。特にC+Cera・SKINBEAUTY・MINERALionの既存顧客は「広告なしでも指名検索・口コミで来る」。既存顧客のCACはほぼゼロに近い。
+      </div>
+      <div class="insight amber">
+        <strong>SKINBEAUTYとMINERALionの「新規SEOが低い問題」</strong><br>
+        SKINBEAUTY新規SEO9.6%・MINERALion新規SEO12.7%は、まだ「検索で見つけられない」状態を示す。これは「ビタミンC スキンケア サプリ」「ミネラル 液体 鉄分」などの検索意図マッチコンテンツが不足している。SEO記事・比較記事の投資で広告依存を下げられる余地が最も大きいのがこの2ブランド。
+      </div>
+    </div>
+    <div class="panel">
+      <div class="pt">流入経路最適化施策</div>
+      <div class="insight green">
+        <strong>C+Cera既存の「SEO34.7%・外部リンク10.2%」を活かす</strong><br>
+        C+Ceraの既存顧客は口コミ・記事経由が多い。これはSKINBEAUTYとのセット訴求コンテンツを作ることで、SKINBEAUTY新規獲得の外部リンク経由CVを増やせることを意味する。
+      </div>
+      <div class="insight">
+        <strong>VC既存の「SEO23.6%」を定期停止者への接触に活かす</strong><br>
+        停止者が「Lypo-C 定期 再開」「リポC 再購入」などのキーワードで検索した時に確実にヒットするSEOページが必要。現在この「再開意向を持った停止者向けLanding Page」が存在するか確認すべき。
+      </div>
+      <div class="insight amber">
+        <strong>MINERALion：ダイレクト20.7%（新規）は何者か？</strong><br>
+        新規なのにダイレクトで来ている20.7%は「Lypo-Cのサイトを既に知っている既存Lypo-Cユーザーがブックマークから新製品を買いに来た」可能性が高い。VC/C+D既存顧客が公式サイトを直接訪問してMINERALionを発見している。EC内でのMINERALion露出（トップページ・VCサンクスページ）強化が有効。
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ⑤ 月次CV推移 -->
+<div id="s-monthly" class="sec">
+  <div class="al al-b">adebis CVデータ（2025年4月〜2026年3月）の月次新規・既存CV数の推移。2025年7〜8月にVCの既存CVが急増しているのはキャンペーンまたはSNSバズの可能性がある。</div>
+
+  <div class="lbl">月次 新規CV数推移（adebis ブランド別）</div>
+
+  <div style="overflow-x:auto;">
+    <table>
+      <thead>
+        <tr>
+          <th>月</th>
+          <th>VC新規</th>
+          <th>VC既存</th>
+          <th>C+D新規</th>
+          <th>C+D既存</th>
+          <th>SB新規</th>
+          <th>MION新規</th>
+          <th>CCera新規</th>
+          <th>注目イベント</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>2025-04</td><td>1,751</td><td>1,136</td><td>1,095</td><td>459</td><td>—</td><td>—</td><td>—</td><td></td></tr>
+        <tr><td>2025-05</td><td>1,527</td><td>1,040</td><td>813</td><td>315</td><td>—</td><td>—</td><td>—</td><td></td></tr>
+        <tr><td>2025-06</td><td>2,116</td><td>1,538</td><td>1,067</td><td>414</td><td>—</td><td>—</td><td>—</td><td></td></tr>
+        <tr style="background:#fffbf0;">
+          <td><strong>2025-07</strong></td>
+          <td>3,220</td>
+          <td class="warn"><strong>25,362</strong></td>
+          <td>1,249</td><td>370</td><td>—</td><td>—</td><td>—</td>
+          <td style="font-size:11px;color:#E24B4A;">⚠ VC既存が25,362と異常値。大型キャンペーンか？</td>
+        </tr>
+        <tr style="background:#fffbf0;">
+          <td><strong>2025-08</strong></td>
+          <td>3,535</td>
+          <td class="warn"><strong>15,305</strong></td>
+          <td>1,265</td><td>305</td><td>—</td><td>—</td><td>—</td>
+          <td style="font-size:11px;color:#EF9F27;">VC既存依然高水準。定期大量獲得月。</td>
+        </tr>
+        <tr>
+          <td>2025-09</td><td>2,556</td><td>6,048</td><td>1,107</td><td>312</td><td>—</td><td>—</td><td>—</td>
+          <td style="font-size:11px;color:#73726c;">VC既存が正常化。夏の大型獲得が落ち着く。</td>
+        </tr>
+        <tr><td>2025-10</td><td>1,737</td><td>756</td><td>1,023</td><td>352</td><td>452</td><td>—</td><td>—</td><td style="font-size:11px;">SKINBEAUTY adebis計測開始</td></tr>
+        <tr><td>2025-11</td><td>1,445</td><td>545</td><td>1,050</td><td>306</td><td>292</td><td>149</td><td>—</td><td style="font-size:11px;">MINERALion adebis計測開始</td></tr>
+        <tr><td>2025-12</td><td>1,262</td><td>476</td><td>1,538</td><td>344</td><td>432</td><td>307</td><td>—</td><td style="font-size:11px;">C+D年末強化。MION急増。</td></tr>
+        <tr style="background:#f0f7fe;"><td>2026-01</td><td>1,265</td><td>581</td><td>831</td><td>325</td><td>250</td><td>468</td><td>—</td><td style="font-size:11px;">MION 468件（急増）</td></tr>
+        <tr style="background:#f0f7fe;"><td>2026-02</td><td>1,049</td><td>600</td><td>902</td><td>326</td><td>232</td><td>414</td><td class="up"><strong>235</strong></td><td style="font-size:11px;">CCera adebis計測開始！</td></tr>
+        <tr style="background:#f0f7fe;"><td>2026-03</td><td>753</td><td>326</td><td>557</td><td>207</td><td>101</td><td>278</td><td class="up"><strong>278</strong></td><td style="font-size:11px;">CCeraが早くも月278件</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="g2" style="margin-top:1rem;">
+    <div class="panel">
+      <div class="pt">2025年7〜8月のVC既存CV急増（25,362件・15,305件）</div>
+      <div class="insight amber">
+        通常月の既存CV（500〜1,500件/月）に対し、7月25,362件・8月15,305件は10〜50倍のスパイク。これは通常の定期課金CVが一括カウントされたか、大型キャンペーン（特定月割引・期間限定セール）によってadebisのCV計測タイミングが集中した可能性がある。「既存顧客のリエンゲージメントキャンペーン」が実施されていたとすれば、その効果測定データとして活用できる。
+      </div>
+      <div class="insight green">
+        逆に言えば、このような「既存顧客向け大型キャンペーン」を意図的に設計すれば、定期停止中9,076件への一括アプローチが可能。2026年夏（7〜8月）に同様の施策を仕掛けることで、VCの停止顧客再起動を狙える。
+      </div>
+    </div>
+    <div class="panel">
+      <div class="pt">C+Ceraの急成長と今後の注目点</div>
+      <div class="insight green">
+        C+CeraはadebisのCV計測が2026年2月から始まり、2月235件・3月278件と立ち上がり好調。月次新規CVがMINERALion（278件）と同水準に並んだ。ただし定期転換率29.6%（adebis実績）を維持できるかが4月以降の焦点。
+      </div>
+      <div class="insight">
+        MINERALionは2025年12月から急激に新規CVが増加（12月307件→1月468件→2月414件→3月278件）。これはMINERALionトライアルキャンペーンが機能していることを示す。ただし前述通り転換率8%の問題が解決されなければ「試して終わる商品」のままになる。
+      </div>
+      <div class="insight amber">
+        VC新規CVが2025年末から減少傾向（12月1,262件・1月1,265件・2月1,049件・3月753件）。これは自然な季節性（年初〜春は購買意欲が落ちる）の可能性があるが、C+D・SKINBEAUTYも同様に減少しているため、adebis経由の広告を春先に絞っている可能性がある。4月以降の新年度立ち上がりでVC新規が回復するか注視が必要。
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+<script>
+function sw(id, el) {
+  document.querySelectorAll('.sec').forEach(s => { s.style.display='none'; s.classList.remove('on'); });
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('s-' + id).style.display = 'block';
+  document.getElementById('s-' + id).classList.add('on');
+  el.classList.add('active');
+}
+document.querySelectorAll('.sec').forEach((s, i) => { s.style.display = i===0 ? 'block' : 'none'; });
+</script>
+</body>
+</html>

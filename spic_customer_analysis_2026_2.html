@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>SPIC 顧客行動分析 2026</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 14px; color: #1a1a18; background: #f5f4f0; }
+.hdr { background: #fff; border-bottom: 1px solid #d3d1c7; padding: 1rem 1.5rem; position: sticky; top: 0; z-index: 10; }
+h1 { font-size: 16px; font-weight: 500; }
+.sub { font-size: 11px; color: #73726c; margin-top: 2px; }
+.body { padding: 1.25rem 1.5rem; }
+.tabs { display: flex; gap: 3px; border-bottom: 1px solid #d3d1c7; margin-bottom: 1.25rem; overflow-x: auto; }
+.tab { padding: 7px 12px; font-size: 12px; cursor: pointer; border: none; border-bottom: 2px solid transparent; color: #73726c; background: none; white-space: nowrap; }
+.tab.active { color: #1a1a18; border-bottom-color: #1a1a18; font-weight: 500; }
+.sec { display: none; }
+.sec.on { display: block; }
+
+/* Cards */
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; margin-bottom: 1.25rem; }
+.card { background: #fff; border: 1px solid #d3d1c7; border-radius: 10px; padding: 12px 14px; }
+.card-l { font-size: 11px; color: #73726c; margin-bottom: 4px; line-height: 1.3; }
+.card-v { font-size: 22px; font-weight: 500; line-height: 1; }
+.card-s { font-size: 11px; color: #73726c; margin-top: 3px; }
+.up { color: #1D9E75; } .dn { color: #E24B4A; } .warn { color: #EF9F27; } .info { color: #378ADD; }
+
+/* Alert */
+.al { border-radius: 8px; padding: 10px 14px; font-size: 13px; margin-bottom: 12px; border: 1px solid; line-height: 1.6; }
+.al-g { background: #eaf3de; border-color: #97c459; color: #173404; }
+.al-b { background: #e6f1fb; border-color: #85b7eb; color: #042c53; }
+.al-w { background: #faeeda; border-color: #f9cb42; color: #412402; }
+.al-r { background: #fcebeb; border-color: #f09595; color: #501313; }
+
+.lbl { font-size: 12px; font-weight: 500; color: #73726c; margin: 1rem 0 0.5rem; border-bottom: 1px solid #e8e7e2; padding-bottom: 4px; }
+
+/* Brand comparison table */
+table { width: 100%; border-collapse: collapse; font-size: 12px; }
+th { text-align: left; font-size: 11px; color: #73726c; padding: 6px 8px; border-bottom: 1px solid #d3d1c7; font-weight: 500; white-space: nowrap; }
+td { padding: 7px 8px; border-bottom: 1px solid #f0efe9; vertical-align: middle; }
+tr:last-child td { border-bottom: none; }
+.bg-new { background: #eaf3de; }
+.bg-ret { background: #e6f1fb; }
+.brand-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 5px; vertical-align: middle; }
+
+/* Stacked bar */
+.sbar { display: flex; height: 20px; border-radius: 4px; overflow: hidden; }
+.sbar-seg { display: flex; align-items: center; justify-content: center; font-size: 10px; color: #fff; font-weight: 500; transition: width .4s; }
+
+/* Flow diagram */
+.flow { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 0.75rem; }
+.fbox { background: #fff; border: 1px solid #d3d1c7; border-radius: 8px; padding: 10px 14px; text-align: center; min-width: 100px; }
+.fbox-l { font-size: 11px; color: #73726c; margin-bottom: 3px; }
+.fbox-v { font-size: 18px; font-weight: 500; }
+.fbox-s { font-size: 11px; color: #73726c; }
+.farrow { font-size: 18px; color: #d3d1c7; flex-shrink: 0; }
+
+/* Cross-sell matrix */
+.matrix { display: grid; grid-template-columns: 140px repeat(4, 1fr); gap: 1px; background: #d3d1c7; border: 1px solid #d3d1c7; border-radius: 8px; overflow: hidden; margin-bottom: 1rem; font-size: 12px; }
+.mx-cell { background: #fff; padding: 8px 10px; }
+.mx-head { background: #f5f4f0; font-size: 11px; font-weight: 500; color: #73726c; }
+.mx-heat-1 { background: #e6f1fb; }
+.mx-heat-2 { background: #b5d4f4; }
+.mx-heat-3 { background: #378ADD; color: #fff; }
+.mx-heat-4 { background: #185FA5; color: #fff; }
+.mx-heat-5 { background: #042c53; color: #fff; }
+
+/* Insight card */
+.insight { background: #f9f8f5; border-left: 3px solid #378ADD; padding: 9px 12px; border-radius: 0 7px 7px 0; font-size: 12px; color: #3d3d3a; margin-bottom: 8px; line-height: 1.6; }
+.insight.green { border-color: #1D9E75; }
+.insight.amber { border-color: #EF9F27; }
+.insight.red { border-color: #E24B4A; }
+
+/* Progress bars */
+.prog { display: flex; align-items: center; gap: 8px; margin-bottom: 7px; font-size: 12px; }
+.prog-l { width: 130px; color: #73726c; font-size: 11px; flex-shrink: 0; }
+.prog-t { flex: 1; background: #f0efe9; height: 16px; border-radius: 3px; overflow: hidden; position: relative; }
+.prog-f { height: 100%; display: flex; align-items: center; padding-left: 5px; font-size: 10px; color: #fff; font-weight: 500; border-radius: 3px; }
+.prog-v { width: 45px; text-align: right; font-size: 11px; color: #73726c; }
+
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.panel { background: #fff; border: 1px solid #d3d1c7; border-radius: 10px; padding: 14px 16px; }
+.panel-t { font-size: 13px; font-weight: 500; margin-bottom: 0.75rem; }
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <h1>SPIC 顧客行動分析 2026 — 新規/既存・転換・クロスセル・年齢層</h1>
+  <div class="sub">BigQuery実データ（Shopify注文タグ・adebis CVデータ）2025年4月〜2026年3月</div>
+</div>
+
+<div class="body">
+<div class="tabs">
+  <button class="tab active" onclick="sw('overview',this)">① 新規/既存サマリ</button>
+  <button class="tab" onclick="sw('ccera',this)">② C+Cera 転換分析</button>
+  <button class="tab" onclick="sw('cross',this)">③ クロスセル行動</button>
+  <button class="tab" onclick="sw('age',this)">④ 年齢層分析</button>
+  <button class="tab" onclick="sw('cbd',this)">⑤ CBD Shopify制約</button>
+</div>
+
+<!-- ① 新規/既存サマリ -->
+<div id="s-overview" class="sec on">
+
+  <div class="al al-b">データソース：adebis CVデータ（LPからのCV）× Shopify注文タグ。adebisの is_returning_customer（true=既存顧客、false=新規顧客）でブランド別新規/既存比率を確認。</div>
+
+  <div class="lbl">ブランド別 新規 vs 既存 購入比率（adebis CV 2025年4月〜2026年3月）</div>
+
+  <table style="margin-bottom:1rem;">
+    <thead>
+      <tr>
+        <th>ブランド</th>
+        <th>CV総数</th>
+        <th class="bg-new">新規（false）</th>
+        <th class="bg-ret">既存（true）</th>
+        <th>新規率</th>
+        <th>既存率</th>
+        <th>うち定期CV率</th>
+        <th>新規/既存比率（棒）</th>
+        <th>インサイト</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="brand-dot" style="background:#378ADD;"></span><strong>VC</strong></td>
+        <td>76,140</td>
+        <td class="bg-new">22,427件</td>
+        <td class="bg-ret">53,713件</td>
+        <td>29.5%</td>
+        <td class="up"><strong>70.5%</strong></td>
+        <td>13.6%</td>
+        <td>
+          <div class="sbar">
+            <div class="sbar-seg" style="width:29.5%;background:#1D9E75;">新規30%</div>
+            <div class="sbar-seg" style="width:70.5%;background:#378ADD;">既存71%</div>
+          </div>
+        </td>
+        <td style="font-size:11px;color:#73726c;">既存主導。リピーター基盤が非常に厚い。</td>
+      </tr>
+      <tr>
+        <td><span class="brand-dot" style="background:#1D9E75;"></span><strong>C+D</strong></td>
+        <td>16,688</td>
+        <td class="bg-new">12,623件</td>
+        <td class="bg-ret">4,035件</td>
+        <td class="up"><strong>75.6%</strong></td>
+        <td>24.2%</td>
+        <td>32.3%</td>
+        <td>
+          <div class="sbar">
+            <div class="sbar-seg" style="width:75.6%;background:#1D9E75;">新規76%</div>
+            <div class="sbar-seg" style="width:24.4%;background:#378ADD;">既存24%</div>
+          </div>
+        </td>
+        <td style="font-size:11px;color:#73726c;">新規獲得が主役。定期転換率32%は高水準。</td>
+      </tr>
+      <tr>
+        <td><span class="brand-dot" style="background:#D85A30;"></span><strong>C+Cera</strong></td>
+        <td>611</td>
+        <td class="bg-new">513件</td>
+        <td class="bg-ret">98件</td>
+        <td class="up"><strong>84.0%</strong></td>
+        <td>16.0%</td>
+        <td>30.1%</td>
+        <td>
+          <div class="sbar">
+            <div class="sbar-seg" style="width:84%;background:#D85A30;">新規84%</div>
+            <div class="sbar-seg" style="width:16%;background:#378ADD;">既存16%</div>
+          </div>
+        </td>
+        <td style="font-size:11px;color:#73726c;">新規開拓型。VC既存転換が34%含まれる。</td>
+      </tr>
+      <tr>
+        <td><span class="brand-dot" style="background:#EF9F27;"></span><strong>SKINBEAUTY</strong></td>
+        <td>2,260</td>
+        <td class="bg-new">1,759件</td>
+        <td class="bg-ret">501件</td>
+        <td class="up"><strong>77.8%</strong></td>
+        <td>22.2%</td>
+        <td>18.6%</td>
+        <td>
+          <div class="sbar">
+            <div class="sbar-seg" style="width:77.8%;background:#D85A30;">新規78%</div>
+            <div class="sbar-seg" style="width:22.2%;background:#378ADD;">既存22%</div>
+          </div>
+        </td>
+        <td style="font-size:11px;color:#73726c;">新規開拓型。定期転換率18.6%は改善余地あり。</td>
+      </tr>
+      <tr>
+        <td><span class="brand-dot" style="background:#BA7517;"></span><strong>MINERALion</strong></td>
+        <td>1,790</td>
+        <td class="bg-new">1,621件</td>
+        <td class="bg-ret">174件</td>
+        <td class="up"><strong>90.5%</strong></td>
+        <td>9.7%</td>
+        <td>6.3%</td>
+        <td>
+          <div class="sbar">
+            <div class="sbar-seg" style="width:90.5%;background:#D85A30;">新規91%</div>
+            <div class="sbar-seg" style="width:9.5%;background:#378ADD;">既存10%</div>
+          </div>
+        </td>
+        <td style="font-size:11px;color:#73726c;">ほぼ全員が新規。定期転換率6.3%が最大課題。</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="grid2">
+    <div class="panel">
+      <div class="panel-t">VC：既存70.5%の構造的意味</div>
+      <div class="insight green">VCのCVの70.5%が既存顧客によるもの。これは「新規獲得広告」よりも「既存顧客の継続購入」がVC売上を支えていることを意味する。adebisのLPからのCV全体で見ると、VCは新規29.5%のみが獲得コストのかかる領域で、残り70.5%は継続的なリピート購入。</div>
+      <div class="insight amber">裏返すと：VCの新規率29.5%が低下している可能性がある。定期停止（PAUSED 9,076件）が続くと既存70.5%の母数自体が減少し、自然減が始まる。この構造的リスクへの対処がVC最大課題。</div>
+    </div>
+    <div class="panel">
+      <div class="panel-t">C+D vs VC：真逆の新規/既存構造</div>
+      <div class="insight">C+Dは新規76%・既存24%。VCとは正反対の獲得型。ただし定期転換率32.3%はVC（13.6%）の2.4倍。「獲得→定期への転換率」がVCより高く、取得コストを早期に回収できる構造になっている。C+Dに投資を集中させる論拠がデータで支持される。</div>
+      <div class="insight green">MINERALionは新規91%・定期転換6.3%という組み合わせが問題。獲得はできているが定期化できていない。まず「なぜ定期にならないか」の解明が最優先。</div>
+    </div>
+  </div>
+</div>
+
+<!-- ② C+Cera転換分析 -->
+<div id="s-ccera" class="sec">
+
+  <div class="al al-g">BQ実証：C+Cera購入者の34.4%がVC既存顧客からの転換。仮説を事実として確認。ただし「VC単独購入者のC+Cera転換率」は3.1%と低く、転換の総量的な伸び代は大きい。</div>
+
+  <div class="lbl">C+Cera購入者の購買前歴（Shopifyタグ分析・2025年4月〜2026年3月）</div>
+
+  <div class="flow">
+    <div class="fbox">
+      <div class="fbox-l">C+Cera購入者総数</div>
+      <div class="fbox-v">1,818名</div>
+      <div class="fbox-s">Shopify公式EC</div>
+    </div>
+    <div class="farrow">→</div>
+    <div class="fbox" style="border-color:#D85A30; border-width:1.5px;">
+      <div class="fbox-l">VC→C+Cera転換</div>
+      <div class="fbox-v up">625名</div>
+      <div class="fbox-s">34.4%（VC既存顧客）</div>
+    </div>
+    <div class="farrow">+</div>
+    <div class="fbox" style="border-color:#BA7517; border-width:1.5px;">
+      <div class="fbox-l">VC+C+Cera同時購入</div>
+      <div class="fbox-v warn">71名</div>
+      <div class="fbox-s">3.9%（セット購入）</div>
+    </div>
+    <div class="farrow">+</div>
+    <div class="fbox">
+      <div class="fbox-l">C+Cera単独（VC歴なし）</div>
+      <div class="fbox-v">1,122名</div>
+      <div class="fbox-s">61.7%（新規）</div>
+    </div>
+  </div>
+
+  <div class="lbl">VC購入者からの各ブランド転換率（VC初回購入者 15,090名）</div>
+
+  <div class="prog"><div class="prog-l">→ C+D への転換</div><div class="prog-t"><div class="prog-f" style="width:9.9%;background:#1D9E75;">9.9%</div></div><div class="prog-v">1,489名</div></div>
+  <div class="prog"><div class="prog-l">→ MINERALion</div><div class="prog-t"><div class="prog-f" style="width:5.3%;background:#BA7517;">5.3%</div></div><div class="prog-v">802名</div></div>
+  <div class="prog"><div class="prog-l">→ SKINBEAUTY</div><div class="prog-t"><div class="prog-f" style="width:3.7%;background:#D85A30;">3.7%</div></div><div class="prog-v">562名</div></div>
+  <div class="prog"><div class="prog-l">→ C+Cera</div><div class="prog-t"><div class="prog-f" style="width:3.1%;background:#993C1D;">3.1%</div></div><div class="prog-v">467名</div></div>
+
+  <div class="grid2" style="margin-top:1rem;">
+    <div class="panel">
+      <div class="panel-t">転換率の意味と改善余地</div>
+      <div class="insight green">C+DへのVC転換が最多（9.9%・1,489名）。「ビタミンD不足」という明確な訴求軸があることで、VC購入者が自発的にC+Dに移行している。この転換を仕組み化（マイページのC+D提案ボタン）するとさらに伸びる。</div>
+      <div class="insight">MINERALion転換（5.3%）はC+Ceraより高い。「Lypo-Cユーザーの鉄分補給ニーズ」が既に存在しており、EC内のレコメンド強化で拡大余地がある。</div>
+      <div class="insight amber">C+Ceraの3.1%は仮説通り「VC→C+Cera転換がある」ことを確認。ただし転換率自体はC+DやMINERALionより低い。「セラミドを飲む」という概念がVC購入者には伝わりにくい可能性→LPや同梱物での説明強化が必要。</div>
+    </div>
+    <div class="panel">
+      <div class="panel-t">C+Cera戦略への示唆</div>
+      <div class="insight green"><strong>34.4%がVC→C+Cera転換</strong>という事実は、C+Ceraの新規獲得LPをVC既存顧客向けに特化したものとして再設計する根拠になる。現在のLPが「新規顧客向け」であれば、「VC利用者向けのステップアップLP」を別途用意することで転換率を引き上げられる。</div>
+      <div class="insight">61.7%がVC歴なし新規で購入している事実も重要。C+Ceraは「美容セラミドの入口」として独立した集客力を持っており、VC経由だけに依存しない需要がある。インナービューティ市場からの独自流入を強化できる。</div>
+      <div class="insight amber">adebisデータではC+CeraのCVの84%が新規。Shopifyタグでは34.4%がVC→転換。この差はadebisがLPからのCV（初回接触）を記録し、Shopifyタグが購買履歴を参照するため。両方正しい。「初めて買う人の84%は新規」だが「その中の34.4%はVCを既に持っている人」。</div>
+    </div>
+  </div>
+</div>
+
+<!-- ③ クロスセル行動 -->
+<div id="s-cross" class="sec">
+
+  <div class="al al-b">VC初回購入者15,090名のうち、その後他ブランドを購入した顧客の行動パターン。「最初にVCを買った顧客が、どのブランドに拡張するか」をBQで確認。</div>
+
+  <div class="lbl">VC購入者のマルチブランド転換ヒートマップ（転換件数と転換率）</div>
+
+  <div class="matrix">
+    <div class="mx-cell mx-head">VC購入者 → 他ブランドへ</div>
+    <div class="mx-cell mx-head" style="text-align:center;">C+D</div>
+    <div class="mx-cell mx-head" style="text-align:center;">MINERALion</div>
+    <div class="mx-cell mx-head" style="text-align:center;">SKINBEAUTY</div>
+    <div class="mx-cell mx-head" style="text-align:center;">C+Cera</div>
+
+    <div class="mx-cell" style="background:#f9f8f5;font-weight:500;font-size:11px;">VC初回購入者<br>15,090名</div>
+    <div class="mx-cell mx-heat-3" style="text-align:center;">
+      <div style="font-size:16px;font-weight:500;">1,489名</div>
+      <div style="font-size:11px;margin-top:2px;">転換率 9.9%</div>
+    </div>
+    <div class="mx-cell mx-heat-2" style="text-align:center;">
+      <div style="font-size:16px;font-weight:500;">802名</div>
+      <div style="font-size:11px;margin-top:2px;">転換率 5.3%</div>
+    </div>
+    <div class="mx-cell mx-heat-2" style="text-align:center;">
+      <div style="font-size:16px;font-weight:500;">562名</div>
+      <div style="font-size:11px;margin-top:2px;">転換率 3.7%</div>
+    </div>
+    <div class="mx-cell mx-heat-1" style="text-align:center;">
+      <div style="font-size:16px;font-weight:500;">467名</div>
+      <div style="font-size:11px;margin-top:2px;">転換率 3.1%</div>
+    </div>
+  </div>
+
+  <div class="lbl">ブランド別 購入者のLTV構造（Shopify adebis 新規/既存×定期比率）</div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>ブランド</th>
+        <th>新規のうち定期転換</th>
+        <th>既存のうち定期購入</th>
+        <th>全体定期転換率</th>
+        <th>LTV構造の特徴</th>
+        <th>最重要施策</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="brand-dot" style="background:#378ADD;"></span>VC</td>
+        <td>31.5%<br><span style="font-size:10px;color:#73726c;">（新規のうち定期購入した割合）</span></td>
+        <td>6.0%<br><span style="font-size:10px;color:#73726c;">（既存の追加定期購入）</span></td>
+        <td>13.6%</td>
+        <td style="font-size:11px;color:#73726c;">既存の継続購入が主軸。新規の定期転換で積み上げる構造。</td>
+        <td style="font-size:11px;">既存の停止防止＋新規定期転換率の向上</td>
+      </tr>
+      <tr>
+        <td><span class="brand-dot" style="background:#1D9E75;"></span>C+D</td>
+        <td>28.5%</td>
+        <td>44.2%</td>
+        <td class="up">32.3%</td>
+        <td style="font-size:11px;color:#73726c;">新規も既存も定期転換率が高い。最も健全なLTV構造。</td>
+        <td style="font-size:11px;">新規獲得継続＋既存のアップセル（C+D+K）</td>
+      </tr>
+      <tr>
+        <td><span class="brand-dot" style="background:#D85A30;"></span>C+Cera</td>
+        <td>29.6%</td>
+        <td>32.7%</td>
+        <td>30.1%</td>
+        <td style="font-size:11px;color:#73726c;">BQの91%稼働率と一致。一度始めたら継続する製品。</td>
+        <td style="font-size:11px;">初回購入ハードルの低下（7包試用の拡大）</td>
+      </tr>
+      <tr>
+        <td><span class="brand-dot" style="background:#D85A30;"></span>SKINBEAUTY</td>
+        <td>20.3%</td>
+        <td>12.6%</td>
+        <td>18.6%</td>
+        <td style="font-size:11px;color:#73726c;">新規定期転換は改善余地あり。まだ「試す段階」の顧客が多い。</td>
+        <td style="font-size:11px;">7包→28包への転換設計の強化</td>
+      </tr>
+      <tr>
+        <td><span class="brand-dot" style="background:#BA7517;"></span>MINERALion</td>
+        <td>6.3%</td>
+        <td>8.6%</td>
+        <td class="dn">6.3%</td>
+        <td style="font-size:11px;color:#73726c;">新規91%獲得できているが定期化率が極端に低い。LTV設計の課題。</td>
+        <td style="font-size:11px;">定期化の動機設計（価格差・利便性訴求）</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="lbl" style="margin-top:1.25rem;">クロスセル優先度マトリクス（転換率 × LTV向上インパクト）</div>
+  <div class="grid2">
+    <div class="panel">
+      <div class="panel-t" style="color:#1D9E75;">高優先度：VC→C+D（転換率9.9%・LTV+28.8%）</div>
+      <div class="insight green">転換率・LTV向上効果ともに最高。マイページのC+D切替ボタン・離脱ポップアップ・ステップメールを整備するだけで即効性のある売上貢献が見込める。VC停止顧客1,663件（90日以内）へのデフォルト再開候補をC+Dにする施策が最短経路。</div>
+    </div>
+    <div class="panel">
+      <div class="panel-t" style="color:#BA7517;">中優先度：VC→MINERALion（転換率5.3%）</div>
+      <div class="insight">802名がVC購入後にMINERALionを購入している。「Lypo-Cユーザーは健康意識が高くミネラルへの関心もある」。MINERALionの楽天・Amazon出店時に「Lypo-C購入者向けMINERALion」のクロスセルページを作ることで転換数を積み増せる。</div>
+    </div>
+    <div class="panel">
+      <div class="panel-t" style="color:#D85A30;">育成中：VC→C+Cera（転換率3.1%）</div>
+      <div class="insight amber">34.4%がVC既存顧客であることを確認。ただし転換率3.1%は伸び代がある。「セラミドを飲む」という概念はVC購入者には説明が必要→VCの同梱物・ステップメールでのC+Cera説明コンテンツを充実させる。C+D転換（9.9%）の3分の1まで引き上げが中期目標。</div>
+    </div>
+    <div class="panel">
+      <div class="panel-t" style="color:#D85A30;">特殊：VC→SKINBEAUTY（転換率3.7%）</div>
+      <div class="insight">562名がVC購入後にSKINBEAUTYも購入。「飲むVCユーザーが塗るVCにも興味を持つ」という仮説が証明された。コスメキッチン展開で「飲むLypo-C持っている人に塗るLypo-C」訴求が刺さる。リアル接点でのクロスセルに特に有効。</div>
+    </div>
+  </div>
+</div>
+
+<!-- ④ 年齢層分析 -->
+<div id="s-age" class="sec">
+
+  <div class="al al-r">⚠ BQ内に年齢属性データは存在しません。Shopifyの注文データ・adebis CVデータ・サブスクリプションデータのいずれにも年齢・生年月日フィールドはありません。年齢層分析のためには別途データソースの追加が必要です。</div>
+
+  <div class="lbl">現在利用可能なBQデータの限界と代替アプローチ</div>
+
+  <div class="grid2">
+    <div class="panel">
+      <div class="panel-t">存在しないデータ（BQ確認済）</div>
+      <div style="font-size:12px;color:#5f5e5a;line-height:1.8;">
+        <div style="padding:4px 0;border-bottom:1px solid #f0efe9;">❌ Shopify注文テーブル — 年齢・生年月日フィールドなし</div>
+        <div style="padding:4px 0;border-bottom:1px solid #f0efe9;">❌ Shopify顧客テーブル — ランク名・作成日のみ</div>
+        <div style="padding:4px 0;border-bottom:1px solid #f0efe9;">❌ adebis CVテーブル — 新規/既存・ブランドのみ</div>
+        <div style="padding:4px 0;border-bottom:1px solid #f0efe9;">❌ B2Bカスタマーテーブル — 法人情報のみ</div>
+        <div style="padding:4px 0;">❌ 注文メモ属性 — 配送日時のみ</div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-t">年齢層データを取得する方法（推奨順）</div>
+      <div style="font-size:12px;color:#5f5e5a;line-height:1.8;">
+        <div style="padding:4px 0;border-bottom:1px solid #f0efe9;"><span style="color:#1D9E75;font-weight:500;">① Meta広告マネージャー</span>（即時）<br>年齢・性別×ブランド別のCV数・CPA・ROAS。Metaに出稿していれば最速で取得可能。</div>
+        <div style="padding:4px 0;border-bottom:1px solid #f0efe9;"><span style="color:#378ADD;font-weight:500;">② Google Analytics 4</span>（即時）<br>GA4のオーディエンスレポートで年齢・性別×LP×購入完了の分析が可能。</div>
+        <div style="padding:4px 0;border-bottom:1px solid #f0efe9;"><span style="color:#EF9F27;font-weight:500;">③ 購入時アンケート</span>（3〜6ヶ月）<br>Shopifyチェックアウト後に「年代を教えてください」を追加。BQへの同期を設定。</div>
+        <div style="padding:4px 0;"><span style="color:#888780;font-weight:500;">④ @cosme・LIPS クチコミデータ</span><br>公開されているレビュワーの年代プロファイルでブランド別の年齢層の目安が取得可能。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lbl">間接的な年齢層推定（利用可能なデータから）</div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>ブランド</th>
+        <th>推定主要年齢層</th>
+        <th>根拠（間接データ）</th>
+        <th>確信度</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="brand-dot" style="background:#378ADD;"></span>VC</td>
+        <td><strong>30〜50代女性</strong>中心</td>
+        <td style="font-size:11px;">@cosme健康サプリ16位・田中みな実等30-40代インフルエンサー効果。「美容×免疫」の文脈が30代以上に刺さる。既存客70.5%＝長期継続者が多く一定年齢以上の特性。</td>
+        <td class="warn">中（間接推定）</td>
+      </tr>
+      <tr>
+        <td><span class="brand-dot" style="background:#1D9E75;"></span>C+D</td>
+        <td><strong>40〜60代</strong>中心</td>
+        <td style="font-size:11px;">ビタミンD需要は高齢化・骨密度・免疫文脈で40代以上に集中（市場調査）。妊活需要（20-30代）も一定数。C+Dの医療機関経由は50代以上の患者層。</td>
+        <td class="warn">中（間接推定）</td>
+      </tr>
+      <tr>
+        <td><span class="brand-dot" style="background:#D85A30;"></span>C+Cera</td>
+        <td><strong>20〜40代女性</strong>中心</td>
+        <td style="font-size:11px;">「飲むセラミド」「インナービューティ」は若年層〜中年の美容意識層に訴求。新規84%＝まだ若いブランドで若年層流入が多い可能性。コスメキッチン展開の高感度層と一致。</td>
+        <td class="warn">低〜中（推定）</td>
+      </tr>
+      <tr>
+        <td><span class="brand-dot" style="background:#D85A30;"></span>SKINBEAUTY</td>
+        <td><strong>20〜40代女性</strong>中心</td>
+        <td style="font-size:11px;">スキンケア×ビタミンC訴求はZ世代〜ミレニアル女性に強い。コスメキッチン・LIPS・@cosmeの主要ユーザー層と一致。医療機関経由は30-40代。</td>
+        <td class="warn">中（間接推定）</td>
+      </tr>
+      <tr>
+        <td><span class="brand-dot" style="background:#BA7517;"></span>MINERALion</td>
+        <td><strong>30〜50代</strong>（性別不問）</td>
+        <td style="font-size:11px;">「鉄不足×現代人」訴求は30-40代の働く女性に加え、健康意識の高い40-50代にも広がる。新規91%＝まだ年齢層が固まっていない可能性。</td>
+        <td class="dn">低（推定のみ）</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="al al-b" style="margin-top:1rem;">
+    <strong>推奨アクション：</strong>GA4またはMeta広告データをBigQueryに接続する（BigQuery Export機能またはWIndsor.aiのMetaコネクタを活用）ことで、年齢・性別×ブランド×チャネルの多次元分析が可能になります。「Windsor.ai」はすでに接続済みとのことですので、Metaの年齢データをWIndsorで引き込んで今後の分析に活用することをお勧めします。
+  </div>
+</div>
+
+<!-- ⑤ CBD Shopify制約 -->
+<div id="s-cbd" class="sec">
+
+  <div class="al al-r">✓ 確認：CBDのShopify公式EC比率がBQでほぼゼロという事実は、Shopifyがプラットフォームポリシー上CBD製品の直接販売を制限していることで説明される。これはプラットフォームリスクであり、チャネル設計を根本的に再考する必要がある。</div>
+
+  <div class="lbl">CBD チャネル構造の実態（BQ確認済）</div>
+
+  <div class="cards">
+    <div class="card"><div class="card-l">公式EC(LypoC)売上</div><div class="card-v dn">ほぼ0円</div><div class="card-s">Shopify規定で取扱不可</div></div>
+    <div class="card"><div class="card-l">コダワリEC</div><div class="card-v">67%</div><div class="card-s">7,171万円/年</div></div>
+    <div class="card"><div class="card-l">楽天+Amazon</div><div class="card-v">32%</div><div class="card-s">3,668万円/年</div></div>
+    <div class="card"><div class="card-l">全チャネル合計</div><div class="card-v">1.25億円</div><div class="card-s">toC年間（2025年度）</div></div>
+    <div class="card"><div class="card-l">定期契約</div><div class="card-v dn">なし</div><div class="card-s">単品購入が中心</div></div>
+    <div class="card"><div class="card-l">市場成長率</div><div class="card-v up">+20%超</div><div class="card-s">国内市場300億円</div></div>
+  </div>
+
+  <div class="grid2">
+    <div class="panel">
+      <div class="panel-t">Shopify制約が引き起こす3つの構造的問題</div>
+      <div class="insight red"><strong>①顧客データが蓄積されない</strong><br>Lypo-C公式ECの購入者データ（CRM・顧客履歴・定期設計）がVC/C+D顧客と統合できない。CBD購入者へのVC/C+Dクロスセルが実質不可能。</div>
+      <div class="insight red"><strong>②定期設計ができない</strong><br>Shopifyのサブスクリプション機能（Recharge等）もCBD製品は使用不可。定期化ができないため単品LTVが低く、CAC回収が難しい。</div>
+      <div class="insight red"><strong>③広告連携が制限される</strong><br>Meta（Facebook/Instagram）広告ポリシーでもCBD製品の広告は制限・不承認になるケースが多い。コダワリEC主力は「検索流入・口コミ」に依存している可能性が高い。</div>
+    </div>
+    <div class="panel">
+      <div class="panel-t">CBD戦略の現実的な再設計（Shopify制約を前提に）</div>
+      <div class="insight amber"><strong>コダワリECをCBDの「公式ハブ」として再定義</strong><br>ShopifyではなくコダワリECがCBDの本来の本店。コダワリECで顧客会員化・リピート設計・メルマガ登録を整備する。現状の「偶然コダワリに集中している」状態を「意図的にコダワリを育てる」に転換。</div>
+      <div class="insight green"><strong>楽天・Amazonの「本物CBDの砦」化</strong><br>大正製薬（2mg）参入後の市場で「10mg高濃度液体×臨床研究会推奨」のポジションを楽天・Amazon上で確立。検索上位獲得に注力。</div>
+      <div class="insight"><strong>医療機関チャネルのみをtoB化する</strong><br>Shopify制約はtoB展開には無関係。コンシュ（医療機関大口）への販売を継続・拡大する。スポーツクリニック・統合医療施設への「本物CBD」提案はShopifyを経由しないため制約を受けない。</div>
+      <div class="insight red"><strong>Shopify以外のEC基盤の検討</strong><br>将来的にCBDを公式ECの中核製品として育てる場合、Shopify以外のカート（例：futureshop・ecforce）への移行か、専用ドメインでの独自EC構築を検討すべき。ただし短期の施策ではなく中長期の選択肢として。</div>
+    </div>
+  </div>
+
+  <div class="lbl">CBD 2026年度チャネル戦略（Shopify制約を織り込んだ現実的計画）</div>
+  <table>
+    <thead><tr><th>Quarter</th><th>コダワリEC</th><th>楽天・Amazon</th><th>医療機関(toB)</th><th>規制対応</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><strong>Q1</strong></td>
+        <td style="font-size:11px;">コダワリをCBD本店と再定義。会員化・メルマガ整備。THC表記を全ページに統一。</td>
+        <td style="font-size:11px;">「CBD 10mg 高濃度 安全」キーワードでSEO最適化。大正製薬との差別化訴求。</td>
+        <td style="font-size:11px;">CBN規制影響を法務確認後に医院向け提案継続。臨床CBDオイル研究会推奨を前面に。</td>
+        <td style="font-size:11px;">CBN規制（2026年2月施行可能性）の自社製品への影響を即確認。THC基準適合の再確認。</td>
+      </tr>
+      <tr>
+        <td><strong>Q2</strong></td>
+        <td style="font-size:11px;">コダワリでの購買後フォロー（メール・LINE）整備。リピート率測定開始。</td>
+        <td style="font-size:11px;">for SPORTS C+Dとのセット訴求。「アスリートリカバリー」市場を楽天で開拓。</td>
+        <td style="font-size:11px;">スポーツクリニック・整形外科への「リカバリーCBD」提案を開始。</td>
+        <td style="font-size:11px;">Meta広告の制限を確認しながら代替媒体（LINE広告・Google）でのテスト運用。</td>
+      </tr>
+      <tr>
+        <td><strong>Q3-Q4</strong></td>
+        <td style="font-size:11px;">睡眠・ストレスシーズン（10〜12月）に向けコダワリでのコンテンツ強化。定期設計代替案の検討。</td>
+        <td style="font-size:11px;">年末の「疲弊×睡眠需要」に合わせた楽天スーパーセール・Amazon冬セール最大活用。</td>
+        <td style="font-size:11px;">Q4 63M予算のうちtoB分（コンシュ・エクスチェ）を医療機関への新規開拓に配分。</td>
+        <td style="font-size:11px;">来期のCBDチャネル再設計（専用EC検討）の要否をQ4末に判断。</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+</div>
+<script>
+function sw(id, el) {
+  document.querySelectorAll('.sec').forEach(s => { s.style.display='none'; s.classList.remove('on'); });
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('s-' + id).style.display = 'block';
+  document.getElementById('s-' + id).classList.add('on');
+  el.classList.add('active');
+}
+document.querySelectorAll('.sec').forEach((s, i) => { s.style.display = i===0 ? 'block' : 'none'; });
+</script>
+</body>
+</html>
