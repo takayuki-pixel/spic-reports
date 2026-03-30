@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SPIC 2026年度 ブランド別四半期戦略</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 14px; color: #1a1a18; background: #f5f4f0; }
+.hdr { background: #fff; border-bottom: 1px solid #d3d1c7; padding: 1rem 1.5rem; }
+h1 { font-size: 17px; font-weight: 500; }
+.sub { font-size: 12px; color: #73726c; margin-top: 2px; }
+.body { padding: 1.25rem 1.5rem; }
+
+.tabs { display: flex; gap: 4px; border-bottom: 1px solid #d3d1c7; margin-bottom: 1.5rem; overflow-x: auto; }
+.tab { padding: 8px 12px; font-size: 12px; cursor: pointer; border: none; border-bottom: 2px solid transparent; color: #73726c; background: none; white-space: nowrap; transition: all .15s; }
+.tab:hover { color: #1a1a18; }
+.tab.active { color: #1a1a18; border-bottom-color: #1a1a18; font-weight: 500; }
+.sec { display: none; }
+.sec.on { display: block; }
+
+/* Metrics */
+.metrics { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; margin-bottom: 1.25rem; }
+.m { background: #ededea; border-radius: 8px; padding: 10px 12px; }
+.ml { font-size: 11px; color: #73726c; margin-bottom: 4px; line-height: 1.3; }
+.mv { font-size: 20px; font-weight: 500; }
+.ms { font-size: 11px; color: #73726c; margin-top: 2px; }
+.up { color: #1D9E75; } .dn { color: #E24B4A; } .warn { color: #EF9F27; } .info { color: #378ADD; }
+
+/* Alerts */
+.al { border-radius: 8px; padding: 10px 14px; font-size: 13px; margin-bottom: 12px; border: 1px solid; line-height: 1.6; }
+.al-w { background: #faeeda; border-color: #f9cb42; color: #412402; }
+.al-i { background: #e6f1fb; border-color: #85b7eb; color: #042c53; }
+.al-s { background: #eaf3de; border-color: #97c459; color: #173404; }
+
+/* Bar charts */
+.bar-section { margin-top: 1.25rem; }
+.bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 13px; }
+.bar-label { width: 110px; color: #73726c; text-align: right; font-size: 12px; flex-shrink: 0; }
+.bar-track { flex: 1; height: 8px; background: #d3d1c7; border-radius: 4px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 4px; }
+.bar-val { width: 70px; font-size: 12px; color: #73726c; }
+
+/* Quarter cards */
+.qtr-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 1rem; }
+.qcard { background: #fff; border: 1px solid #d3d1c7; border-radius: 12px; padding: 14px 16px; }
+.qlabel { font-size: 11px; font-weight: 500; color: #73726c; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 3px; }
+.qtitle { font-size: 13px; font-weight: 500; margin-bottom: 8px; color: #1a1a18; }
+.qbody { font-size: 12px; color: #5f5e5a; line-height: 1.75; }
+.qbody span { display: block; padding-left: 12px; position: relative; margin-bottom: 2px; }
+.qbody span::before { content: "·"; position: absolute; left: 3px; color: #1a1a18; }
+
+/* Section label */
+.seclabel { font-size: 12px; color: #73726c; font-weight: 500; margin: 1rem 0 0.5rem; border-bottom: 1px solid #d3d1c7; padding-bottom: 4px; }
+
+/* Insight */
+.insight { background: #f9f8f5; border-left: 3px solid #378ADD; border-radius: 0 7px 7px 0; padding: 9px 12px; font-size: 12px; color: #3d3d3a; margin-bottom: 8px; line-height: 1.6; }
+.insight.green { border-color: #1D9E75; }
+.insight.amber { border-color: #EF9F27; }
+.insight.red { border-color: #E24B4A; }
+
+/* Sig cards */
+.sig-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px; margin-bottom: 1rem; }
+.sig { background: #fff; border: 1px solid #d3d1c7; border-radius: 8px; padding: 10px 12px; }
+.sig-title { font-size: 12px; font-weight: 500; margin-bottom: 4px; }
+.sig-body { font-size: 11px; color: #73726c; line-height: 1.5; }
+.trend { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 10px; margin-bottom: 4px; }
+.t-up { background: #eaf3de; color: #173404; }
+.t-dn { background: #fcebeb; color: #501313; }
+.t-mid { background: #faeeda; color: #412402; }
+.t-new { background: #e6f1fb; color: #042c53; }
+
+/* Ch bars */
+.ch-row { display: flex; align-items: center; gap: 8px; margin-bottom: 7px; }
+.ch-label { width: 90px; color: #73726c; text-align: right; font-size: 11px; flex-shrink: 0; }
+.ch-bar { flex: 1; background: #d3d1c7; height: 16px; border-radius: 3px; overflow: hidden; }
+.ch-fill { height: 100%; border-radius: 3px; display: flex; align-items: center; padding-left: 5px; font-size: 10px; color: #fff; font-weight: 500; }
+.ch-val { width: 58px; font-size: 11px; color: #73726c; text-align: right; }
+
+/* Table */
+.tbl { width: 100%; border-collapse: collapse; font-size: 12px; }
+.tbl th { text-align: left; font-size: 11px; color: #73726c; padding: 6px 8px; border-bottom: 1px solid #d3d1c7; font-weight: 500; }
+.tbl td { padding: 7px 8px; border-bottom: 1px solid #eeede8; }
+.tbl tr:last-child td { border-bottom: none; }
+
+.priority-s { border: 2px solid #E24B4A !important; }
+.priority-a { border: 2px solid #378ADD !important; }
+.priority-b { border: 2px solid #1D9E75 !important; }
+.priority-c { border: 2px solid #EF9F27 !important; }
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <h1>SPIC 2026年度 ブランド別四半期戦略</h1>
+  <div class="sub">予算データ × BigQuery実績 × 定期購入分析 × 市場動向 統合版（2026年3月30日）</div>
+</div>
+
+<div class="body">
+
+<div class="tabs">
+  <div class="tab active" onclick="sw('overview',this)">全社サマリ</div>
+  <div class="tab" onclick="sw('vc',this)">Lypo-C VC</div>
+  <div class="tab" onclick="sw('cd',this)">Lypo-C C+D</div>
+  <div class="tab" onclick="sw('skinbeauty',this)">SKINBEAUTY</div>
+  <div class="tab" onclick="sw('ccera',this)">C+Cera</div>
+  <div class="tab" onclick="sw('mineral',this)">MINERALion</div>
+  <div class="tab" onclick="sw('cbd',this)">CBD</div>
+</div>
+
+<!-- OVERVIEW -->
+<div id="s-overview" class="sec on">
+  <div class="al al-i">
+    2026年度予算 83.6億円（前年比 +26.0%）。自然増着地74〜76億円に対し、定期再アクティブ化 +4.86億円・C+D意図的拡張 +5〜8億円が上積みの要。BQ実データで定期ACTIVE 22,064件・稼働率44.8%を確認。
+  </div>
+
+  <div class="bar-section">
+    <div class="seclabel">製品別年間予算（百万円）と成長戦略の位置づけ</div>
+    <div class="bar-row"><div class="bar-label">Lypo-C VC</div><div class="bar-track"><div class="bar-fill" style="width:100%; background:#378ADD;"></div></div><div class="bar-val">4,000M <span style="font-size:10px;padding:1px 5px;background:#e6f1fb;color:#042c53;border-radius:6px;">基盤</span></div></div>
+    <div class="bar-row"><div class="bar-label">Lypo-C C+D</div><div class="bar-track"><div class="bar-fill" style="width:59%; background:#1D9E75;"></div></div><div class="bar-val">2,366M <span style="font-size:10px;padding:1px 5px;background:#eaf3de;color:#173404;border-radius:6px;">主役</span></div></div>
+    <div class="bar-row"><div class="bar-label">C+D+K</div><div class="bar-track"><div class="bar-fill" style="width:3.6%; background:#5DCAA5;"></div></div><div class="bar-val">144M</div></div>
+    <div class="bar-row"><div class="bar-label">SKINBEAUTY</div><div class="bar-track"><div class="bar-fill" style="width:10.7%; background:#EF9F27;"></div></div><div class="bar-val">429M <span style="font-size:10px;padding:1px 5px;background:#faeeda;color:#412402;border-radius:6px;">後半急増</span></div></div>
+    <div class="bar-row"><div class="bar-label">C+Cera</div><div class="bar-track"><div class="bar-fill" style="width:7.8%; background:#D85A30;"></div></div><div class="bar-val">312M</div></div>
+    <div class="bar-row"><div class="bar-label">MINERALion</div><div class="bar-track"><div class="bar-fill" style="width:5.2%; background:#888780;"></div></div><div class="bar-val">208M</div></div>
+    <div class="bar-row"><div class="bar-label">CBD</div><div class="bar-track"><div class="bar-fill" style="width:4.3%; background:#534AB7;"></div></div><div class="bar-val">170M</div></div>
+  </div>
+
+  <div class="qtr-grid" style="margin-top:1.25rem;">
+    <div class="qcard">
+      <div class="qlabel">Q1 Apr–Jun | 19.7億円</div>
+      <div class="qtitle">定期再アクティブ化・新製品着火</div>
+      <div class="qbody">
+        <span>定期停止▲1,683件/月（BQ実証）を止める施策始動</span>
+        <span>VC初期ACTIVE率23.6%→30%：2回目前の間隔変更オファー実装</span>
+        <span>C+D構成比 37.6%→42%へ引き上げ（公式ECマイページ改修）</span>
+        <span>コスメキッチン5月展開準備・スタッフ教育完成</span>
+        <span>MINERALion楽天・Amazon出店準備（Q2ローンチ目標）</span>
+      </div>
+    </div>
+    <div class="qcard">
+      <div class="qlabel">Q2 Jul–Sep | 20.9億円</div>
+      <div class="qtitle">コスメキッチン初速・toBシーズン強化</div>
+      <div class="qbody">
+        <span>コスメキッチン4〜8週消化率測定・棚確保</span>
+        <span>夏バテ×C+D「室内冷房→日光不足→D欠乏」訴求で季節需要を取る</span>
+        <span>SKINBEAUTY「塗るLypo-C」UV後訴求本格化</span>
+        <span>MINERALion楽天初出店→鉄不足×夏バテ訴求</span>
+        <span>toB医療チャネルでのVC→C+D転換提案開始</span>
+      </div>
+    </div>
+    <div class="qcard">
+      <div class="qlabel">Q3 Oct–Dec | 21.3億円</div>
+      <div class="qtitle">SKINBEAUTY急拡大・年末大型施策</div>
+      <div class="qbody">
+        <span>SKINBEAUTY予算がQ1比2倍超（123M）：前半の認知蓄積が効く変換点</span>
+        <span>年末ギフト：C+D×SKINBEAUTYの「飲む×塗る」ペアセット化</span>
+        <span>CBD Q3から1.5倍増（41M）：睡眠・ストレス訴求の最需要期</span>
+        <span>定期停止理由取得率0%→70%のマイページ改修を完成させる</span>
+        <span>ロイヤル停止顧客（決済11回以上・1,051件）への人対応開始</span>
+      </div>
+    </div>
+    <div class="qcard">
+      <div class="qlabel">Q4 Jan–Mar | 21.7億円</div>
+      <div class="qtitle">SKINBEAUTY着地・CBD立ち上げ完成</div>
+      <div class="qbody">
+        <span>SKINBEAUTY Q4 169M（通期最大規模）：年末→新年「肌リセット」訴求</span>
+        <span>CBD Q4 63M（通期の37%をQ4に集中）：年末疲弊×睡眠需要</span>
+        <span>来期予算：定期LTV×コホート別維持率でボトムアップ試算</span>
+        <span>コスメキッチン指名検索・自然流入KPIの年間検証</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="al al-w" style="margin-top:1rem;">
+    ⚠ 予算達成の最大リスク：SKINBEAUTYとCBDは後半偏重設計（Q3+Q4に全体の68%・37%集中）。Q1-Q2での認知蓄積が後半の予算達成を規定する。定期純減（BQ実証：月▲1,683件）が続く場合のVC下振れリスクにも要注意。
+  </div>
+</div>
+
+<!-- VC -->
+<div id="s-vc" class="sec">
+  <div class="al al-i">BQ実績（2026年1-2月）: 8.23億円 | 定期ACTIVE 10,811件・稼働率39.5% | 初期(1-2回)ACTIVE率23.6%（4人中3人が2回以内に離脱）</div>
+  <div class="metrics">
+    <div class="m"><div class="ml">2026年度予算</div><div class="mv">40.0億円</div><div class="ms">広告費 2.4億円/年</div></div>
+    <div class="m"><div class="ml">1-2月 YoY</div><div class="mv up">+10.3%</div><div class="ms">予算射程内</div></div>
+    <div class="m"><div class="ml">定期ACTIVE</div><div class="mv warn">10,811件</div><div class="ms">稼働率 39.5%</div></div>
+    <div class="m"><div class="ml">PAUSED停止中</div><div class="mv dn">9,076件</div><div class="ms">平均278日停止</div></div>
+    <div class="m"><div class="ml">初期ACTIVE率</div><div class="mv dn">23.6%</div><div class="ms">全ブランド最低</div></div>
+    <div class="m"><div class="ml">主要チャネル</div><div class="mv info">公式EC</div><div class="ms">38%を占める</div></div>
+  </div>
+
+  <div class="seclabel">チャネル構成（2026年1-3月 BQ実績）</div>
+  <div class="ch-row"><div class="ch-label">公式EC</div><div class="ch-bar"><div class="ch-fill" style="width:38%;background:#378ADD;">38%</div></div><div class="ch-val">3.26億円</div></div>
+  <div class="ch-row"><div class="ch-label">コダワリEC</div><div class="ch-bar"><div class="ch-fill" style="width:24%;background:#5DCAA5;">24%</div></div><div class="ch-val">2.03億円</div></div>
+  <div class="ch-row"><div class="ch-label">Amazon</div><div class="ch-bar"><div class="ch-fill" style="width:18%;background:#EF9F27;">18%</div></div><div class="ch-val">1.50億円</div></div>
+  <div class="ch-row"><div class="ch-label">楽天</div><div class="ch-bar"><div class="ch-fill" style="width:10%;background:#E24B4A;">10%</div></div><div class="ch-val">0.89億円</div></div>
+
+  <div class="seclabel">オンライン動向・外部環境シグナル</div>
+  <div class="sig-grid">
+    <div class="sig"><div class="trend t-up">↑ 拡大</div><div class="sig-title">リポソーム型VC需要 急拡大</div><div class="sig-body">富士経済2026年：リポソーム化VC着目のサプリが若年層で市場拡大を牽引。新形態参入も活発化。競合激化局面。</div></div>
+    <div class="sig"><div class="trend t-mid">≒ 横ばい</div><div class="sig-title">@cosme健康サプリ16位</div><div class="sig-body">2023年ベストコスメ3位からランキング維持。田中みな実等インフルエンサー効果は継続。</div></div>
+    <div class="sig"><div class="trend t-dn">↓ 注意</div><div class="sig-title">LivOn等海外ブランドの追撃</div><div class="sig-body">LivOn Labs日本展開で楽天・Amazonに参入。「国産製造×DSM原料×無添加」の差別化訴求が急務。</div></div>
+    <div class="sig"><div class="trend t-new">NEW</div><div class="sig-title">コスメキッチン5月展開</div><div class="sig-body">100店舗への展開でVC→C+D導線の起点となるリアル接点。「プロが選ぶ本物」訴求で信頼性確立。</div></div>
+  </div>
+
+  <div class="seclabel">2026年度 四半期戦略</div>
+  <div class="qtr-grid">
+    <div class="qcard">
+      <div class="qlabel">Q1 予算 9.77億円</div>
+      <div class="qtitle">「初期離脱23.6%」を止める設計改修</div>
+      <div class="qbody">
+        <span>2回目課金前に「30日→60日間隔変更」自動オファーを実装（BQ根拠：1ヶ月課金が最多停止8,607件）</span>
+        <span>停止90日以内1,663件へ「C+D切替 or 箱数減量」設計変更メール即日配信</span>
+        <span>コスメキッチン5月展開：C+Dへの自然誘導スクリプト整備</span>
+        <span>LivOn対抗：「国産×DSM原料×無添加」比較コンテンツを公式LP・モールに明記</span>
+      </div>
+    </div>
+    <div class="qcard">
+      <div class="qlabel">Q2 予算 10.30億円</div>
+      <div class="qtitle">7月ピーク（予算351M）を夏の免疫訴求で最大化</div>
+      <div class="qbody">
+        <span>夏バテ×免疫×VC：7月に広告月20Mを厚く配分</span>
+        <span>公式EC「VC単品LP」に離脱ポップアップ：C+D比較LP誘導</span>
+        <span>91〜365日停止4,215件に夏の免疫訴求で復帰メール（割引なし）</span>
+        <span>コスメキッチン4〜8週消化率を計測：棚確保KPIとして管理</span>
+      </div>
+    </div>
+    <div class="qcard">
+      <div class="qlabel">Q3 予算 10.22億円</div>
+      <div class="qtitle">ロイヤル層（21回以上4,510件）への深耕</div>
+      <div class="qbody">
+        <span>決済11回以上のVC停止者1,051件への人対応（電話・LINE個別）</span>
+        <span>VC購入者へのC+D追加提案：LTV+28.8%のデータを根拠に自動化</span>
+        <span>年末ギフト：VC28包の贈答パッケージ化（熨斗対応・ギフトカード付）</span>
+        <span>@cosmeレビュー強化：秋の新規購入層に口コミ投稿を促進</span>
+      </div>
+    </div>
+    <div class="qcard">
+      <div class="qlabel">Q4 予算 9.71億円</div>
+      <div class="qtitle">「定期純減を止めた」実績確認と来期設計</div>
+      <div class="qbody">
+        <span>初期ACTIVE率 23.6%→30%超を今期の定量目標として検証</span>
+        <span>停止理由取得率 0%→70%のマイページ改修完成</span>
+        <span>コスメキッチン指名検索増加・公式ショップ自然流入改善を測定</span>
+        <span>来期VC予算根拠：定期LTV×コホート別維持率でボトムアップ試算</span>
+      </div>
+    </div>
+  </div>
+  <div class="al al-w" style="margin-top:1rem;">⚠ 予算対比の緊張点：2026年2月実績260.2M（予算313M）で▼17%の乖離。定期純減が続く場合の下振れリスクあり。定期再アクティブ化施策のQ1着手が最優先。</div>
+</div>
+
+<!-- C+D -->
+<div id="s-cd" class="sec">
+  <div class="al al-s">BQ実績: 2026年1-2月 3.69億円（+49.0% YoY）| 定期ACTIVE 10,071件・稼働率49.1% | VC比LTV +28.8%・リピート率+8.2pt</div>
+  <div class="metrics">
+    <div class="m"><div class="ml">2026年度予算</div><div class="mv">23.66億円</div><div class="ms">前年比 +22.8%</div></div>
+    <div class="m"><div class="ml">1-2月 YoY</div><div class="mv up">+49.0%</div><div class="ms">予算超過ペース</div></div>
+    <div class="m"><div class="ml">定期ACTIVE</div><div class="mv info">10,071件</div><div class="ms">稼働率 49.1%</div></div>
+    <div class="m"><div class="ml">VC比LTV差</div><div class="mv up">+28.8%</div><div class="ms">リピート率+8.2pt</div></div>
+    <div class="m"><div class="ml">初期ACTIVE率</div><div class="mv warn">29.3%</div><div class="ms">改善余地大</div></div>
+    <div class="m"><div class="ml">広告予算</div><div class="mv">1.18億円</div><div class="ms">年間</div></div>
+  </div>
+
+  <div class="seclabel">チャネル構成（2026年1-3月 BQ実績）</div>
+  <div class="ch-row"><div class="ch-label">公式EC</div><div class="ch-bar"><div class="ch-fill" style="width:44%;background:#1D9E75;">44%</div></div><div class="ch-val">2.15億円</div></div>
+  <div class="ch-row"><div class="ch-label">Amazon</div><div class="ch-bar"><div class="ch-fill" style="width:22%;background:#EF9F27;">22%</div></div><div class="ch-val">1.07億円</div></div>
+  <div class="ch-row"><div class="ch-label">コダワリEC</div><div class="ch-bar"><div class="ch-fill" style="width:16%;background:#5DCAA5;">16%</div></div><div class="ch-val">0.79億円</div></div>
+  <div class="ch-row"><div class="ch-label">楽天</div><div class="ch-bar"><div class="ch-fill" style="width:12%;background:#E24B4A;">12%</div></div><div class="ch-val">0.59億円</div></div>
+
+  <div class="seclabel">オンライン動向・外部環境シグナル</div>
+  <div class="sig-grid">
+    <div class="sig"><div class="trend t-up">↑ 急拡大</div><div class="sig-title">ビタミンD市場 CAGR 8.79%（〜2030）</div><div class="sig-body">世界市場2025年52億ドル→2030年80億ドル予測。日本でも高齢化・室内勤務によるD欠乏が深刻化。</div></div>
+    <div class="sig"><div class="trend t-up">↑ 増加</div><div class="sig-title">「ビタミンD 欠乏」検索急増</div><div class="sig-body">妊活・骨密度・免疫文脈で需要多様化。C+Dの訴求軸が広がる絶好のタイミング。</div></div>
+    <div class="sig"><div class="trend t-new">機会</div><div class="sig-title">VC→C+D クロスセル設計が最優先</div><div class="sig-body">公式ECのVC定期顧客へのC+D提案で年間+0.7億円増収効果（戦略書試算）。</div></div>
+    <div class="sig"><div class="trend t-mid">競合注意</div><div class="sig-title">VC+D製品への大手参入</div><div class="sig-body">ディアナチュラ等大手がビタミンD市場に参入。「リポソーム×液体×同時摂取」の優位性訴求継続が差別化の核心。</div></div>
+  </div>
+
+  <div class="seclabel">2026年度 四半期戦略</div>
+  <div class="qtr-grid">
+    <div class="qcard">
+      <div class="qlabel">Q1 予算 5.72億円</div>
+      <div class="qtitle">「VC顧客のC+D化」を仕組みとして実装</div>
+      <div class="qbody">
+        <span>公式ECマイページ：「次回のVCをC+Dに替える」ボタンをトップに設置（Q1中完成）</span>
+        <span>VC停止90日以内1,663件のデフォルト再開候補を「C+D 1箱」に変更</span>
+        <span>Amazonの「VC商品ページ」にC+D導線を追加（A+コンテンツ改修）</span>
+        <span>「ビタミンD欠乏チェックリスト」SEO記事を4月に公開</span>
+      </div>
+    </div>
+    <div class="qcard">
+      <div class="qlabel">Q2 予算 6.12億円</div>
+      <div class="qtitle">「夏＝ビタミンD不足の季節」訴求を確立</div>
+      <div class="qbody">
+        <span>7月予算206.5M：夏の室内冷房→日光不足→D欠乏訴求に広告9.8M/月を集中</span>
+        <span>楽天：「ビタミンD サプリ」カテゴリでの露出強化</span>
+        <span>コスメキッチン：「守る力を届ける」接客スクリプト展開・初速測定</span>
+        <span>C+D初期離脱（1-2回）対策：3回目特典設計・実装</span>
+      </div>
+    </div>
+    <div class="qcard">
+      <div class="qlabel">Q3 予算 6.08億円</div>
+      <div class="qtitle">年末×免疫でロイヤル層を深耕</div>
+      <div class="qbody">
+        <span>C+D購入者へC+D+K（医院専用）のアップセル：LTV最大化の最短ルート</span>
+        <span>年末ギフト：C+D×SKINBEAUTYの「飲む×塗る」ペアセット化</span>
+        <span>toBミドル層：「ビタミンD不足×パフォーマンス低下」訴求で法人販売を強化</span>
+        <span>C+D定期の6ヶ月継続率をBQで初計測</span>
+      </div>
+    </div>
+    <div class="qcard">
+      <div class="qlabel">Q4 予算 5.74億円</div>
+      <div class="qtitle">「ストレッチ90億」への最大貢献源として着地</div>
+      <div class="qbody">
+        <span>年間ポテンシャル：月平均180M×12ヶ月=21.6億円が最低ライン。25億円超を狙う</span>
+        <span>Amazon：「リポソーム ビタミンD」で1位維持が必達KPI</span>
+        <span>C+D定期初期ACTIVE率 29.3%→38%を今期目標として来期予算根拠に</span>
+        <span>来期C+D予算30億円台の根拠データをBQで構築</span>
+      </div>
+    </div>
+  </div>
+  <div class="al al-s" style="margin-top:1rem;">✓ 上振れ余地：1-2月実績ペース（月平均180M）×12ヶ月=21.6億円は予算23.66億円の91%。Q1からの積極的な構成比改善施策により予算超過（25〜28億円）も射程内。</div>
+</div>
+
+<!-- SKINBEAUTY -->
+<div id="s-skinbeauty" class="sec">
+  <div class="al al-i">BQ実績: 2025年8月本格発売→2026年1-2月 3.25億円 | 定期ACTIVE 356件（稼働率70.6%）| 停止71件は全件90日以内＝即回収可能 | 平均課金1.6回</div>
+  <div class="metrics">
+    <div class="m"><div class="ml">2026年度予算</div><div class="mv">4.29億円</div><div class="ms">Q3-Q4が68%集中</div></div>
+    <div class="m"><div class="ml">定期ACTIVE</div><div class="mv up">356件</div><div class="ms">稼働率70.6%</div></div>
+    <div class="m"><div class="ml">停止71件</div><div class="mv up">全件90日内</div><div class="ms">即回収可能</div></div>
+    <div class="m"><div class="ml">BQ月次最高</div><div class="mv">2.19億円</div><div class="ms">2025年12月</div></div>
+    <div class="m"><div class="ml">解約理由1位</div><div class="mv warn">実感なし</div><div class="ms">21.4%（他ブランドの2倍）</div></div>
+    <div class="m"><div class="ml">広告予算</div><div class="mv">4.2千万円</div><div class="ms">年間</div></div>
+  </div>
+
+  <div class="seclabel">オンライン動向・外部環境シグナル</div>
+  <div class="sig-grid">
+    <div class="sig"><div class="trend t-up">↑ 急拡大</div><div class="sig-title">「インナービューティ」×VC 市場急成長</div><div class="sig-body">富士経済：リポソーム化VC着目の化粧品が若年層で注目拡大。「飲むスキンケア」の概念普及が最大の追い風。</div></div>
+    <div class="sig"><div class="trend t-new">機会</div><div class="sig-title">コスメキッチン・ビープル 5月展開</div><div class="sig-body">100店舗の高感度層リアル接点。試用キット（7包¥3,410）でのハードル低下設計が重要。</div></div>
+    <div class="sig"><div class="trend t-up">↑</div><div class="sig-title">医療機関コラボ訴求の差別化力</div><div class="sig-body">エレクトロポレーション（美容導入）での使用実績は他社にない差別化軸。医師・ナースのSNS口コミ獲得が最短ルート。</div></div>
+    <div class="sig"><div class="trend t-mid">注意</div><div class="sig-title">Q3-Q4が予算の68%</div><div class="sig-body">Q1-Q2の認知蓄積が後半の予算達成を規定する。「試したことがある」層の広さが10月以降の伸びを直接左右する。</div></div>
+  </div>
+
+  <div class="seclabel">2026年度 四半期戦略</div>
+  <div class="qtr-grid">
+    <div class="qcard">
+      <div class="qlabel">Q1 予算 58M</div>
+      <div class="qtitle">「塗るLypo-C」を知ってもらう認知蓄積期</div>
+      <div class="qbody">
+        <span>コスメキッチン5月展開：スタッフ向け教育資料を4月中に完成</span>
+        <span>停止71件（全件90日以内）を即時メール1通で回収</span>
+        <span>7包お試しキット（¥3,410）をEC・コスメキッチンの試し口に配置</span>
+        <span>医療機関向けDM：エレクトロポレーション実績のある医院へアプローチ</span>
+        <span>定期開始後30・60日フォローメール設計（「実感なし21%」対策）</span>
+      </div>
+    </div>
+    <div class="qcard">
+      <div class="qlabel">Q2 予算 78M</div>
+      <div class="qtitle">夏UV×VC補給で「塗る必然性」を作る</div>
+      <div class="qbody">
+        <span>「UV後のビタミンC外用補給」Instagram・TikTok広告に集中投下</span>
+        <span>コスメキッチン4〜8週消化率を初測定：棚維持判断のKPIとして管理</span>
+        <span>「C+Ceraと一緒に」訴求：飲む×塗るのセット定期を試験的に提案</span>
+        <span>楽天：「ビタミンC 化粧品 無添加」カテゴリでの検索最適化</span>
+      </div>
+    </div>
+    <div class="qcard">
+      <div class="qlabel">Q3 予算 123M</div>
+      <div class="qtitle">認知→購入→定期転換を一気に加速</div>
+      <div class="qbody">
+        <span>Q3から予算がQ1比2倍超：前半の認知蓄積が直接効いてくる変換点</span>
+        <span>28包定期（¥12,320）への移行率を最重要KPIに</span>
+        <span>年末ギフト：C+Dとのペアセット「飲む×塗るコース」化でLTV向上</span>
+        <span>@cosme・LIPSで口コミ数増加施策（体験モニター活用）</span>
+      </div>
+    </div>
+    <div class="qcard">
+      <div class="qlabel">Q4 予算 169M</div>
+      <div class="qtitle">「新製品」から「定番品」への転換を完成</div>
+      <div class="qbody">
+        <span>Q4が全体の39%：年末→新年の「肌リセット」訴求とピークを合わせる</span>
+        <span>レフィル（30包）への定期移行促進：継続コスト意識を下げ脱落防止</span>
+        <span>定期ACTIVE 356件→800件超を今期目標として設定・検証</span>
+        <span>コスメキッチン100店舗の消化実績・指名検索増加でブランド資産を定量化</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- C+CERA -->
+<div id="s-ccera" class="sec">
+  <div class="al al-s">BQ実績: 2026年1-2月 4.03億円（予算を上回るペース）| 定期ACTIVE 634件・稼働率91.0%（全ブランド最高）| VC→C+Cera転換率34.4%（BQ実証）| 解約理由「味が苦手22.7%」に注意</div>
+  <div class="metrics">
+    <div class="m"><div class="ml">2026年度予算</div><div class="mv">3.12億円</div><div class="ms">月20→30M均等成長</div></div>
+    <div class="m"><div class="ml">定期稼働率</div><div class="mv up">91.0%</div><div class="ms">全ブランド最高</div></div>
+    <div class="m"><div class="ml">1-2月実績</div><div class="mv up">4.03億円</div><div class="ms">予算を上回るペース</div></div>
+    <div class="m"><div class="ml">VC→Cera転換</div><div class="mv info">34.4%</div><div class="ms">625名（BQ確認）</div></div>
+    <div class="m"><div class="ml">主要チャネル</div><div class="mv">公式EC 56%</div><div class="ms">コダワリ31%</div></div>
+    <div class="m"><div class="ml">解約率</div><div class="mv up">3.7%</div><div class="ms">圧倒的低解約</div></div>
+  </div>
+
+  <div class="seclabel">オンライン動向・外部環境シグナル</div>
+  <div class="sig-grid">
+    <div class="sig"><div class="trend t-up">↑ 特筆</div><div class="sig-title">「飲むセラミド」カテゴリ急拡大中</div><div class="sig-body">富士経済：コラーゲン・ヒアルロン酸に次ぐ美容サプリ成分としてセラミドへの関心急増。乾燥対策広告が2025年急増。市場形成期と完全一致。</div></div>
+    <div class="sig"><div class="trend t-new">全社施策</div><div class="sig-title">91%稼働モデルをVC/C+Dに転用せよ</div><div class="sig-body">BQデータで全ブランド最高。VC初期23.6%との差の要因を定性調査し転用することが全社で最もレバレッジの高い施策。</div></div>
+    <div class="sig"><div class="trend t-up">↑</div><div class="sig-title">国産米ぬか由来×サステナブル訴求</div><div class="sig-body">コスメキッチン・ビープル顧客層（環境意識高い高感度層）と完全一致。「廃棄される米ぬかをアップサイクル」ストーリーはリアル接点での訴求力が高い。</div></div>
+    <div class="sig"><div class="trend t-mid">連携</div><div class="sig-title">SKINBEAUTYとの「飲む×塗る」連携</div><div class="sig-body">C+Ceraで内側からセラミドを補充、SKINBEAUTYで外側からVCを届ける。このインナー×アウター訴求セットがSPICの最も強力な差別化ストーリー。</div></div>
+  </div>
+
+  <div class="seclabel">2026年度 四半期戦略</div>
+  <div class="qtr-grid">
+    <div class="qcard">
+      <div class="qlabel">Q1 予算 60M</div>
+      <div class="qtitle">「91%稼働モデル」の解剖とVC/C+Dへの転用</div>
+      <div class="qbody">
+        <span>C+Cera定期継続顧客への定性調査（5〜10件インタビュー）：なぜ止まらないかを明文化→VC転用</span>
+        <span>コスメキッチン：「国産米ぬか×サステナブル×セラミドを飲む」をメインストーリーに</span>
+        <span>VC/C+D既存顧客への「C+Ceraを追加」クロスセルメール設計</span>
+        <span>飲み方コンテンツ強化（「味が苦手22.7%」解消：冷水・ジュース混合提案）</span>
+      </div>
+    </div>
+    <div class="qcard">
+      <div class="qlabel">Q2 予算 75M</div>
+      <div class="qtitle">夏の肌ダメージ×セラミド需要を取る</div>
+      <div class="qbody">
+        <span>「UV後のセラミド補給」×SKINBEAUTYとの「飲む×塗る」Instagram展開</span>
+        <span>楽天・Amazon：「乾燥対策 サプリ セラミド」カテゴリ検索最適化</span>
+        <span>富士経済の「乾燥対策広告増加トレンド」に乗り、秋冬先取りコンテンツを7月に仕込む</span>
+        <span>C+Cera定期の3回突破者データを抽出：ロイヤル化の予兆指標設計</span>
+      </div>
+    </div>
+    <div class="qcard">
+      <div class="qlabel">Q3 予算 87M</div>
+      <div class="qtitle">秋冬乾燥シーズンに全力投球</div>
+      <div class="qbody">
+        <span>秋冬乾燥×セラミド×VC：C+Cera最大需要期に広告集中</span>
+        <span>「C+Cera+SKINBEAUTY」定期セット商品を10月に正式ローンチ</span>
+        <span>年末ギフト：C+Cera×SKINBEAUTYのビューティセット展開</span>
+        <span>28包定期移行率と解約率を中間測定し離脱予防施策を追加実装</span>
+      </div>
+    </div>
+    <div class="qcard">
+      <div class="qlabel">Q4 予算 90M</div>
+      <div class="qtitle">「スキンライン定番化」の礎を作る</div>
+      <div class="qbody">
+        <span>通期312M達成でSKINBEAUTYと合わせた「スキンライン2ブランド」として来期予算組み立て</span>
+        <span>C+Cera定期ACTIVE 634件→1,000件超を今期目標として設定・検証</span>
+        <span>稼働率91%モデルの転用：Q1定性調査の知見をVCの定期改修に組み込む</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MINERALION -->
+<div id="s-mineral" class="sec">
+  <div class="al al-i">BQ実績: 2026年1-2月 1.36億円 | 定期ACTIVE 192件・稼働率92.8%（全ブランド1位）| 楽天・Amazon実績ゼロ（BQ確認済・未進出）| トライアル転換率わずか8%（BQ実証）</div>
+  <div class="metrics">
+    <div class="m"><div class="ml">2026年度予算</div><div class="mv">2.08億円</div><div class="ms">均等成長型</div></div>
+    <div class="m"><div class="ml">定期稼働率</div><div class="mv up">92.8%</div><div class="ms">全ブランド1位</div></div>
+    <div class="m"><div class="ml">楽天・Amazon</div><div class="mv dn">実績ゼロ</div><div class="ms">BQ確認済 未進出</div></div>
+    <div class="m"><div class="ml">トライアル転換率</div><div class="mv dn">8.0%</div><div class="ms">2,174件→150件のみ</div></div>
+    <div class="m"><div class="ml">月次最高</div><div class="mv">1,330万円</div><div class="ms">2025年11月</div></div>
+    <div class="m"><div class="ml">広告予算</div><div class="mv">4.2千万円</div><div class="ms">年間</div></div>
+  </div>
+
+  <div class="seclabel">オンライン動向・外部環境シグナル</div>
+  <div class="sig-grid">
+    <div class="sig"><div class="trend t-up">↑</div><div class="sig-title">液体ミネラルサプリ市場が成長</div><div class="sig-body">グローバルミネラルサプリ市場でカプセル・錠剤が主流の中、液体形態が新たな成長カテゴリに。MINERALionの液体形態はトレンドと完全に合致。</div></div>
+    <div class="sig"><div class="trend t-new">大機会</div><div class="sig-title">楽天・Amazon未進出＝巨大な未開拓ポテンシャル</div><div class="sig-body">BQで楽天・Amazon実績ゼロを確認。VC・C+Dが楽天で月6,000件超受注する中、MINERALionのモール展開は即座の売上上乗せになる可能性が高い。</div></div>
+    <div class="sig"><div class="trend t-dn">↓ 課題</div><div class="sig-title">トライアル転換率8%の構造的問題</div><div class="sig-body">2,174件のトライアル購入者のうち92%がそのまま終了。¥1,731→¥5,400の価格ギャップを埋める中間ステップと、トライアル後ステップメール設計が急務。</div></div>
+    <div class="sig"><div class="trend t-mid">余地</div><div class="sig-title">「鉄不足×女性×現代人」検索急増</div><div class="sig-body">「花崗岩由来×イオン化×50年研究」というユニークストーリーは比較記事での差別化余地がある。</div></div>
+  </div>
+
+  <div class="seclabel">2026年度 四半期戦略</div>
+  <div class="qtr-grid">
+    <div class="qcard">
+      <div class="qlabel">Q1 予算 39M</div>
+      <div class="qtitle">「モール初進出」準備とトライアル転換改善</div>
+      <div class="qbody">
+        <span>楽天・Amazon出店準備：Q2ローンチ目標で商品ページ・A+コンテンツを4月中に整備</span>
+        <span>トライアル後ステップメール5通設計（Day1→7→14→21→28）</span>
+        <span>トライアル後30日以内の定期移行促進：「3ヶ月継続推奨」の期待値設定</span>
+        <span>BQで購入者プロファイル分析：コアターゲット（年齢層・性別）を特定</span>
+      </div>
+    </div>
+    <div class="qcard">
+      <div class="qlabel">Q2 予算 49M</div>
+      <div class="qtitle">楽天・Amazon初出店で新規顧客層を獲得</div>
+      <div class="qbody">
+        <span>楽天：「ミネラル サプリ 鉄 液体」カテゴリで新規出店（Q2ローンチ）</span>
+        <span>夏の疲労×ミネラル補給：「夏バテ×鉄不足×MINERALion」訴求コンテンツ展開</span>
+        <span>Lypo-CシリーズとのEC内クロスセル：VC/C+D購入者へのレコメンド設定</span>
+        <span>トライアル→定期の「中間ステップ（15包セット）」を設計・導入</span>
+      </div>
+    </div>
+    <div class="qcard">
+      <div class="qlabel">Q3 予算 55M</div>
+      <div class="qtitle">モール軌道化と定期転換率測定</div>
+      <div class="qbody">
+        <span>楽天・AmazonのROI評価：継続投資か最適化かを判断</span>
+        <span>単品→定期転換率の計測と施策設計（adebis: 既存の定期転換12.9%を改善）</span>
+        <span>秋：「鉄補給×骨強化×免疫」マルチ訴求コンテンツ展開</span>
+        <span>トライアル転換率：8%→15%超を今期の中間目標として設定</span>
+      </div>
+    </div>
+    <div class="qcard">
+      <div class="qlabel">Q4 予算 65M</div>
+      <div class="qtitle">「年間2億円ブランド」の実績を確定させる</div>
+      <div class="qbody">
+        <span>Q4 65M（通期最大）：年末の健康意識向上×モール年末商戦に最大投下</span>
+        <span>定期ACTIVE 192件→400件超が今期目標：モール展開と定期転換施策が鍵</span>
+        <span>Gelsome等海外展開での活用可能性検討（「日本の花崗岩×50年研究」はアジア圏差別化軸に）</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CBD -->
+<div id="s-cbd" class="sec">
+  <div class="al al-w">⚠ 重要：Shopifyのプラットフォームポリシー上CBD製品は公式EC（LypoC）で取り扱えないことをBQで確認（公式EC売上ほぼゼロ・定期契約なし）。2025年9月サントリーHD元会長CBD問題・2024年12月大麻取締法改正・CBN規制（2026年2月以降施行の可能性）。法規制対応と代替チャネル設計が最優先。</div>
+  <div class="metrics">
+    <div class="m"><div class="ml">2026年度予算</div><div class="mv">1.70億円</div><div class="ms">Q4集中型（37%）</div></div>
+    <div class="m"><div class="ml">1-2月実績</div><div class="mv info">2.16億円</div><div class="ms">単品中心・定期なし</div></div>
+    <div class="m"><div class="ml">公式EC比率</div><div class="mv dn">ほぼ0%</div><div class="ms">Shopify制約による</div></div>
+    <div class="m"><div class="ml">コダワリEC</div><div class="mv">67%</div><div class="ms">CBD実質的な本店</div></div>
+    <div class="m"><div class="ml">国内市場規模</div><div class="mv">300億円</div><div class="ms">2024年推定</div></div>
+    <div class="m"><div class="ml">市場成長率</div><div class="mv up">+20%超</div><div class="ms">年率成長継続中</div></div>
+  </div>
+
+  <div class="seclabel">オンライン動向・外部環境シグナル</div>
+  <div class="sig-grid">
+    <div class="sig"><div class="trend t-up">↑ 成長継続</div><div class="sig-title">2026年：CBD市場が違法大麻市場を超える</div><div class="sig-body">Euromonitor予測。大正製薬が2mgカプセルで参入。Lypo-Cの10mg高濃度液体形態の差別化価値が高まっている。</div></div>
+    <div class="sig"><div class="trend t-dn">↓ 最大リスク</div><div class="sig-title">サントリー元会長問題の余波</div><div class="sig-body">「CBD=法的グレーゾーン」という社会的印象が強化。全チャネルで「THC<1ppm・日本法基準適合」の明記が必須条件。</div></div>
+    <div class="sig"><div class="trend t-dn">↓ 注意</div><div class="sig-title">Shopifyプラットフォーム制約</div><div class="sig-body">公式ECでの販売・定期設計・顧客データ統合が不可。コダワリECを「CBDの公式ハブ」として意図的に育てる戦略への転換が必要。</div></div>
+    <div class="sig"><div class="trend t-new">機会</div><div class="sig-title">「本物のCBD」訴求で比較優位確立</div><div class="sig-body">大正製薬2mgに対しLypo-Cは10mg高濃度液体形態。「臨床CBDオイル研究会700名推奨×毎ロット粒度分布測定」の差別化が市場拡大期に価値を持つ。</div></div>
+  </div>
+
+  <div class="seclabel">2026年度 四半期戦略</div>
+  <div class="qtr-grid">
+    <div class="qcard">
+      <div class="qlabel">Q1 予算 33M（月11M）</div>
+      <div class="qtitle">規制確認×コダワリ「本店化」</div>
+      <div class="qbody">
+        <span>CBN規制（2026年2月以降施行可能性）のLypo-C CBD商品への影響を法務と即確認</span>
+        <span>全チャネルの「THC&lt;1ppm・日本法基準適合」表記を統一</span>
+        <span>コダワリECをCBD本店と再定義：会員化・メルマガ・リピート設計を整備</span>
+        <span>BQで購入者プロファイル：「睡眠・ストレス・スポーツ」どれが最多かを特定</span>
+      </div>
+    </div>
+    <div class="qcard">
+      <div class="qlabel">Q2 予算 33M（月11M）</div>
+      <div class="qtitle">公式EC代替の定期設計×スポーツ連携</div>
+      <div class="qbody">
+        <span>コダワリECにCBD定期コースをQ2中に設計・実装（Shopify制約の代替）</span>
+        <span>for SPORTS C+Dとの「アスリート向けリカバリースタック」訴求テスト</span>
+        <span>「舌下1〜2分含む」体験訴求のSNSコンテンツ：競合と差別化された使い方の認知向上</span>
+        <span>大正製薬参入後の市場で「10mg高濃度液体=本物CBD」訴求を確立</span>
+      </div>
+    </div>
+    <div class="qcard">
+      <div class="qlabel">Q3 予算 41M（月13〜15M）</div>
+      <div class="qtitle">Q4大型投下前の「定期候補層」特定</div>
+      <div class="qbody">
+        <span>コダワリEC定期の初期稼働率を測定（Q2実装後の3ヶ月実績）</span>
+        <span>睡眠・ストレス市場：秋の繁忙期前「休養×CBD」コンテンツを量産</span>
+        <span>Q4投下63Mを「定期候補層」「リピーター層」に分けて設計</span>
+        <span>医療機関チャネル：スポーツクリニック・整形外科への提案開始</span>
+      </div>
+    </div>
+    <div class="qcard">
+      <div class="qlabel">Q4 予算 63M（月18〜24M）</div>
+      <div class="qtitle">年末疲弊×睡眠需要で通期最大月を実現</div>
+      <div class="qbody">
+        <span>Q4は通期の37%集中：年末〜年始の「ストレス×睡眠の乱れ」訴求と完全一致</span>
+        <span>27包（大容量）への移行促進でLTV最大化</span>
+        <span>来期投資規模判断：規制動向・競合状況・コダワリ定期実績をQ4末に評価</span>
+        <span>来期のCBDチャネル再設計（Shopify以外のEC検討）の要否を判断</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="al al-w" style="margin-top:1rem;">⚠ 最大の不確実性：CBD市場は規制・社会的受容度の変化が最も速いカテゴリ。Q4の63M（月21〜24M）達成には「認知・信頼・規制環境」の3つが揃う必要がある。Q1-Q2の訴求テストで「どの訴求軸が有効か」を早期に特定することが、Q4投下の精度を決める。</div>
+</div>
+
+</div>
+
+<script>
+function sw(id, el) {
+  document.querySelectorAll('.sec').forEach(s => { s.style.display='none'; s.classList.remove('on'); });
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('s-' + id).style.display = 'block';
+  document.getElementById('s-' + id).classList.add('on');
+  el.classList.add('active');
+}
+document.querySelectorAll('.sec').forEach((s, i) => { s.style.display = i===0 ? 'block' : 'none'; });
+</script>
+</body>
+</html>
