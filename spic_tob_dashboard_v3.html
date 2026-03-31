@@ -1,0 +1,111 @@
+
+<div style="padding:1rem 0;">
+<div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:1.5rem;">
+  <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:1rem;">
+    <div style="font-size:13px;color:var(--color-text-secondary);margin-bottom:4px;">toB年間売上</div>
+    <div style="font-size:24px;font-weight:500;">15.31億円</div>
+    <div style="font-size:12px;color:var(--color-text-secondary);">2025/4〜2026/3 出荷ベース</div>
+  </div>
+  <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:1rem;">
+    <div style="font-size:13px;color:var(--color-text-secondary);margin-bottom:4px;">取引先数</div>
+    <div style="font-size:24px;font-weight:500;">2,568社</div>
+    <div style="font-size:12px;color:var(--color-text-secondary);">除：閉店・転売・空欄</div>
+  </div>
+  <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:1rem;">
+    <div style="font-size:13px;color:var(--color-text-secondary);margin-bottom:4px;">平均取引額/社</div>
+    <div style="font-size:24px;font-weight:500;">59.6万円</div>
+    <div style="font-size:12px;color:var(--color-text-secondary);">上位44社で25.6%を占有</div>
+  </div>
+  <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:1rem;">
+    <div style="font-size:13px;color:var(--color-text-secondary);margin-bottom:4px;">C+D採用率</div>
+    <div style="font-size:24px;font-weight:500;">67.0%</div>
+    <div style="font-size:12px;color:var(--color-text-secondary);">併用1,229 + C+Dのみ491</div>
+  </div>
+</div>
+<div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;margin-bottom:1.5rem;">
+  <div>
+    <div style="font-size:14px;font-weight:500;margin-bottom:8px;">売上ティア別分布</div>
+    <div style="position:relative;height:280px;"><canvas id="c1"></canvas></div>
+  </div>
+  <div>
+    <div style="font-size:14px;font-weight:500;margin-bottom:8px;">ランク別売上構成</div>
+    <div style="position:relative;height:260px;"><canvas id="c2"></canvas></div>
+    <div id="c2l" style="display:flex;flex-wrap:wrap;gap:8px 12px;font-size:11px;margin-top:6px"></div>
+  </div>
+</div>
+<div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;margin-bottom:1.5rem;">
+  <div>
+    <div style="font-size:14px;font-weight:500;margin-bottom:8px;">発注頻度別分布</div>
+    <div style="position:relative;height:260px;"><canvas id="c3"></canvas></div>
+  </div>
+  <div>
+    <div style="font-size:14px;font-weight:500;margin-bottom:8px;">商品採用パターン別</div>
+    <div style="position:relative;height:260px;"><canvas id="c4"></canvas></div>
+  </div>
+</div>
+<div style="margin-bottom:1.5rem;">
+  <div style="font-size:14px;font-weight:500;margin-bottom:8px;">月次売上推移（ランク別 / 3月はA1→SP, A2→SA統合）</div>
+  <div style="position:relative;height:300px;"><canvas id="c5"></canvas></div>
+  <div id="c5l" style="display:flex;gap:16px;font-size:12px;margin-top:6px"></div>
+</div>
+<div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;margin-bottom:1.5rem;">
+  <div>
+    <div style="font-size:14px;font-weight:500;margin-bottom:8px;">H1→H2 成長トレンド</div>
+    <div style="position:relative;height:260px;"><canvas id="c6"></canvas></div>
+    <div id="c6l" style="display:flex;gap:16px;font-size:12px;margin-top:6px"></div>
+  </div>
+  <div>
+    <div style="font-size:14px;font-weight:500;margin-bottom:8px;">業種別構成</div>
+    <div style="position:relative;height:260px;"><canvas id="c7"></canvas></div>
+    <div id="c7l" style="display:flex;flex-wrap:wrap;gap:8px 12px;font-size:11px;margin-top:6px"></div>
+  </div>
+</div>
+<div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;">
+  <div>
+    <div style="font-size:14px;font-weight:500;margin-bottom:8px;">商品別売上</div>
+    <div style="position:relative;height:320px;"><canvas id="c8"></canvas></div>
+    <div id="c8l" style="display:flex;flex-wrap:wrap;gap:8px 12px;font-size:11px;margin-top:6px"></div>
+  </div>
+  <div>
+    <div style="font-size:14px;font-weight:500;margin-bottom:8px;">地域別売上（上位10）</div>
+    <div style="position:relative;height:320px;"><canvas id="c9"></canvas></div>
+  </div>
+</div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const dk=matchMedia('(prefers-color-scheme:dark)').matches;
+const t2=dk?'#9c9a92':'#73726c';
+const gd=dk?'rgba(255,255,255,.06)':'rgba(0,0,0,.06)';
+Chart.defaults.color=t2;Chart.defaults.borderColor=gd;
+const fmt=v=>(v/100000000).toFixed(1)+'億';
+const fmtM=v=>Math.round(v/10000)+'万';
+const leg=(id,items)=>{document.getElementById(id).innerHTML=items.map(([l,c])=>`<span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:2px;background:${c}"></span>${l}</span>`).join('')};
+const P={vc:'#E8771A',cd:'#8DD48D',cdk:'#4CAF50',cbd:'#1B6B1F',ccera:'#E875A0',sb:'#A67C52',mio:'#3B8BD4',cb:'#E24B4A',lypo:'#F5B070',gel:'#F5B070',stemc:'#888780'};
+new Chart(document.getElementById('c1'),{type:'bar',data:{labels:['上位(500万+)\n44社','準上位(100-500万)\n281社','ミドル(50-100万)\n355社','小口(10-50万)\n1,302社','零細(10万-)\n586社'],datasets:[{data:[391497602,535091025,244493502,328385049,31918146],backgroundColor:['#D85A30','#EF9F27','#1D9E75','#378ADD','#888780'],borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>fmt(c.raw)+' ('+['25.6%','34.9%','16.0%','21.4%','2.1%'][c.dataIndex]+')'}}},scales:{x:{ticks:{callback:v=>fmt(v)},grid:{display:false}},y:{ticks:{font:{size:10}}}}}});
+const clsD=[['SA(含A2)',491147447,'#D85A30'],['AB',359739328,'#EF9F27'],['C以下',495547947,'#378ADD'],['新規',95771008,'#1D9E75'],['SP(含A1)',64192509,'#7F77DD'],['福利厚生',22967571,'#888780']];
+new Chart(document.getElementById('c2'),{type:'doughnut',data:{labels:clsD.map(d=>d[0]),datasets:[{data:clsD.map(d=>d[1]),backgroundColor:clsD.map(d=>d[2])}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.label+': '+fmt(c.raw)}}}}});
+leg('c2l',clsD.map(d=>[d[0]+' '+fmt(d[1]),d[2]]));
+new Chart(document.getElementById('c3'),{type:'bar',data:{labels:['毎月(10-12M)','安定(7-9M)','不定期(4-6M)','低頻度(2-3M)','単発(1M)'],datasets:[{label:'売上',data:[446500907,319202576,391328652,286919117,87434072],backgroundColor:'#1D9E75',borderRadius:4,yAxisID:'y'},{label:'社数',data:[105,226,619,931,687],backgroundColor:'#378ADD',borderRadius:4,barPercentage:0.5,yAxisID:'y1'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{ticks:{callback:v=>fmt(v)},grid:{display:false}},y1:{position:'right',ticks:{callback:v=>v+'社'},grid:{display:false}},x:{ticks:{font:{size:10},maxRotation:45}}}}});
+new Chart(document.getElementById('c4'),{type:'bar',data:{labels:['VC+C+D併用','VCのみ','C+Dのみ','その他のみ'],datasets:[{data:[1194037371,208363825,121410464,7573664],backgroundColor:['#DBA347',P.vc,P.cd,'#888780'],borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>fmt(c.raw)+' ('+[1229,750,491,98][c.dataIndex]+'社, 平均'+fmtM([971552,277818,247272,77282][c.dataIndex])+'円)'}}},scales:{y:{ticks:{callback:v=>fmt(v)},grid:{display:false}},x:{ticks:{font:{size:11}}}}}});
+const ms=['4月','5月','6月','7月','8月','9月','10月','11月','12月','1月','2月','3月'];
+new Chart(document.getElementById('c5'),{type:'line',data:{labels:ms,datasets:[
+{label:'SA(含A2)',data:[40249798,33320855,55546077,38285728,39961517,42791467,47022208,41738799,48055890,40902149,38958950,24314009],borderColor:'#D85A30',backgroundColor:'rgba(216,90,48,0.1)',fill:true,tension:.3,pointRadius:3},
+{label:'AB',data:[33596594,23571775,39405988,34246686,32745745,32128506,25502497,32547339,37538333,30531270,28999613,8924982],borderColor:'#EF9F27',backgroundColor:'rgba(239,159,39,0.1)',fill:true,tension:.3,pointRadius:3},
+{label:'C以下',data:[36560749,32376508,40602333,38108988,32578312,38082066,39093098,41111767,50696193,40443554,36396686,69497693],borderColor:'#378ADD',backgroundColor:'rgba(55,138,221,0.1)',fill:true,tension:.3,pointRadius:3},
+{label:'SP(含A1)',data:[0,0,0,0,6782527,8204941,5338870,7154978,10003988,6851870,7404316,12451019],borderColor:'#7F77DD',backgroundColor:'rgba(127,119,221,0.1)',fill:true,tension:.3,pointRadius:3},
+{label:'新規',data:[6346782,8341067,13686912,14529379,7416449,8163124,8814902,4991455,4175790,6964481,5449925,6890742],borderColor:'#1D9E75',tension:.3,pointRadius:3}
+]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{ticks:{callback:v=>(v/10000000).toFixed(0)+'千万'},grid:{color:gd}},x:{grid:{display:false}}}}});
+leg('c5l',[['SA(含A2)','#D85A30'],['AB','#EF9F27'],['C以下','#378ADD'],['SP(含A1)','#7F77DD'],['新規','#1D9E75']]);
+new Chart(document.getElementById('c6'),{type:'bar',data:{labels:['急成長\n+50%超','成長\n+10-50%','横ばい\n±10%','縮小\n-10~-50%','大幅縮小\n-50%超'],datasets:[
+{label:'H1(4-9月)',data:[86564702,109253383,149853419,180295148,125853632],backgroundColor:'rgba(55,138,221,0.5)',borderRadius:4},
+{label:'H2(10-3月)',data:[212987376,138535345,150273963,128997629,44361005],backgroundColor:'#D85A30',borderRadius:4}
+]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.dataset.label+': '+fmt(c.raw)}}},scales:{y:{ticks:{callback:v=>fmt(v)},grid:{display:false}},x:{ticks:{font:{size:9},maxRotation:0}}}}});
+leg('c6l',[['H1(4-9月)','rgba(55,138,221,0.5)'],['H2(10-3月)','#D85A30']]);
+const indD=[['非医療 50.2%',772768110,'#1D9E75'],['医療 45.0%',691843454,'#378ADD'],['企業 2.7%',41135747,'#7F77DD'],['福利 1.5%',22967571,'#888780']];
+new Chart(document.getElementById('c7'),{type:'doughnut',data:{labels:indD.map(d=>d[0]),datasets:[{data:indD.map(d=>d[1]),backgroundColor:indD.map(d=>d[2])}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.label+': '+fmt(c.raw)}}}}});
+leg('c7l',indD.map(d=>[d[0],d[2]]));
+new Chart(document.getElementById('c8'),{type:'bar',data:{labels:['VC 30包','C+D 30包','CBD 27包','SKINBEAUTY','C+Cera','C+D+K','MINERALion','Stem-C'],datasets:[{data:[940131992,367390864,72551297,48734760,26864894,25737000,22266875,13872352],backgroundColor:[P.vc,P.cd,P.cbd,P.sb,P.ccera,P.cdk,P.mio,P.stemc],borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>fmt(c.raw)}}},scales:{x:{ticks:{callback:v=>fmt(v)},grid:{display:false}},y:{ticks:{font:{size:10}}}}}});
+leg('c8l',[['VC',P.vc],['C+D',P.cd],['C+D+K',P.cdk],['CBD',P.cbd],['C+Cera',P.ccera],['SKINBEAUTY',P.sb],['MINERALion',P.mio],['Stem-C',P.stemc]]);
+new Chart(document.getElementById('c9'),{type:'bar',data:{labels:['東京','大阪','愛知','福岡','神奈川','兵庫','長野','静岡','石川','茨城'],datasets:[{data:[362981553,178463124,154199883,144177221,73141541,45024786,37970275,36368098,32930223,32829224],backgroundColor:'#378ADD',borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>fmt(c.raw)+' ('+[540,220,254,222,176,97,36,78,41,37][c.dataIndex]+'社)'}}},scales:{x:{ticks:{callback:v=>fmt(v)},grid:{display:false}},y:{ticks:{font:{size:10}}}}}});
+</script>
