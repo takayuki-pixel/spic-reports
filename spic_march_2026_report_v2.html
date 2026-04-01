@@ -30,7 +30,7 @@
 <div class="rh"><div class="container"><h1>SPIC Corporation Monthly Sales Report</h1><div class="sub">株式会社スピック ｜ 全ブランド月次販売レポート</div><div class="period">2026年3月（3/1〜3/31）確定版</div></div></div>
 <div class="container">
 
-<div class="nb"><strong>データソース：</strong>全売上データはBigQuery <code>order_main_table</code>（3/31確定値）に統一。出荷売上（<code>calc_send_receive_order_row_sub_total_ex_tax</code>）を基準指標とし、受注売上も併記。新ブランド受注速報はRanking Stadium（TooSPIC）を参照。SNSデータはSocial Insight。予算はFY2026予算書。</div>
+<div class="nb"><strong>データソース：</strong>全売上データはBigQuery <code>order_main_table</code>（3/31確定値）に統一。出荷売上（<code>calc_send_receive_order_row_sub_total_ex_tax</code>）を基準指標とし、受注売上も併記。新ブランド受注もBQ <code>order_main_table</code>（<code>calc_ord</code>, <code>receive_order_date</code>基準）に統一。Ranking Stadiumとの差率は全体+0.9%で整合確認済。SNSデータはSocial Insight。予算はFY2026予算書。</div>
 
 <div class="kr">
 <div class="kc"><div class="l">全社出荷売上（税抜）</div><div class="v">5.54<span class="u">億円</span></div><div class="ch up">BQ確定（toB+toC）</div></div>
@@ -60,8 +60,8 @@
 <tr><td><span class="dot" style="background:var(--mion)"></span>MINERALion</td><td>¥4,756,400</td><td>¥4,384,500</td><td>¥9,140,900</td><td>¥21,000,000</td><td><span class="pct u">43.5%</span></td><td><span class="pct o">+45.7%</span></td><td>—</td></tr>
 <tr><td><span class="dot" style="background:var(--cbd)"></span>CBD</td><td>¥4,912,136</td><td>¥3,088,100</td><td>¥8,000,236</td><td>¥24,200,000</td><td><span class="pct u">33.1%</span></td><td><span class="pct u">-30.4%</span></td><td>—</td></tr>
 <tr><td><span class="dot" style="background:var(--cdk)"></span>C+D+K</td><td>¥0</td><td>¥2,728,750</td><td>¥2,728,750</td><td>¥12,000,000</td><td><span class="pct u">22.7%</span></td><td><span class="pct u">-62.4%</span></td><td>—</td></tr>
-<tr><td><span class="dot" style="background:var(--lypo)"></span>LypoSpheric</td><td>¥396,167</td><td>¥6,227,177</td><td>¥6,623,344</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
-<tr><td><span class="dot" style="background:#999"></span>SPORTS / LPB / Other</td><td>¥2,074,538</td><td>¥2,319,662</td><td>¥4,394,200</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><span class="dot" style="background:var(--lypo)"></span>LypoSpheric</td><td>¥1,718,038</td><td>—</td><td>¥1,718,038</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><span class="dot" style="background:#999"></span>LPB / SPORTS / Other</td><td>¥752,667</td><td>¥8,546,839</td><td>¥9,299,506</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
 <tr class="tr"><td>合計</td><td>¥420,324,141</td><td>¥133,660,358</td><td>¥553,984,499</td><td>¥756,900,000</td><td><span class="pct w">73.2%</span></td><td><span class="pct o">+6.0%</span></td><td><span class="pct o">110.6%</span></td></tr>
 </tbody></table></div></div>
 
@@ -99,27 +99,28 @@
 <tr><td><span class="dot" style="background:var(--skb)"></span>SKINBEAUTY</td><td>¥10,511,494</td><td>¥9,971,356</td><td><span class="pct o">+5.4%</span></td><td>—</td><td>—</td><td>960</td></tr>
 <tr><td><span class="dot" style="background:var(--cbd)"></span>CBD</td><td>¥4,912,136</td><td>¥4,313,069</td><td><span class="pct o">+13.9%</span></td><td>—</td><td>—</td><td>587</td></tr>
 <tr><td><span class="dot" style="background:var(--mion)"></span>MINERALion</td><td>¥4,756,400</td><td>¥3,634,200</td><td><span class="pct o">+30.9%</span></td><td>—</td><td>—</td><td>1,382</td></tr>
-<tr><td><span class="dot" style="background:#999"></span>LPB / SPORTS / Other</td><td>¥2,470,705</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><span class="dot" style="background:var(--lypo)"></span>LypoSpheric</td><td>¥1,718,038</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><span class="dot" style="background:#999"></span>LPB / SPORTS / Other</td><td>¥752,667</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
 <tr class="tr"><td>toC合計</td><td>¥420,324,141</td><td>¥396,589,616</td><td><span class="pct o">+6.0%</span></td><td>¥393,000,323</td><td><span class="pct o">+6.9%</span></td><td>42,302</td></tr>
 </tbody></table></div></div>
 
 <!-- NEW BRAND RANKING -->
-<div class="sec"><div class="st">新ブランド 受注売上ランキング <span class="tag">受注ベース・TooSPIC 3/31確定</span></div>
+<div class="sec"><div class="st">新ブランド 受注売上ランキング <span class="tag g">受注ベース・BQ確定</span></div>
 <ul class="rl">
-<li><div class="rk" style="color:#b8860b">👑</div><div class="bi"><div class="nm" style="color:var(--ccera)">C+Cera</div><div class="dt">toB ¥7,089,960 / toC ¥19,175,920</div></div><div class="am">¥26,265,880</div></li>
-<li><div class="rk" style="color:#808080">🥈</div><div class="bi"><div class="nm" style="color:var(--skb)">SKINBEAUTY</div><div class="dt">toB ¥5,225,040 / toC ¥10,570,986</div></div><div class="am">¥15,796,026</div></li>
-<li><div class="rk" style="color:#cd7f32">🥉</div><div class="bi"><div class="nm" style="color:var(--mion)">MINERALion</div><div class="dt">toB ¥4,352,019 / toC ¥4,977,800</div></div><div class="am">¥9,329,819</div></li>
-<li><div class="rk">4</div><div class="bi"><div class="nm" style="color:var(--cbd)">CBD</div><div class="dt">toB ¥3,082,500 / toC ¥5,054,382</div></div><div class="am">¥8,136,882</div></li>
-<li><div class="rk">5</div><div class="bi"><div class="nm" style="color:var(--cdk)">C+D+K</div><div class="dt">toB ¥2,288,038 / toC ¥0</div></div><div class="am">¥2,288,038</div></li>
+<li><div class="rk" style="color:#b8860b">👑</div><div class="bi"><div class="nm" style="color:var(--ccera)">C+Cera</div><div class="dt">toB ¥7,097,430 / toC ¥19,297,029</div></div><div class="am">¥26,394,459</div></li>
+<li><div class="rk" style="color:#808080">🥈</div><div class="bi"><div class="nm" style="color:var(--skb)">SKINBEAUTY</div><div class="dt">toB ¥5,173,404 / toC ¥10,614,162</div></div><div class="am">¥15,787,566</div></li>
+<li><div class="rk" style="color:#cd7f32">🥉</div><div class="bi"><div class="nm" style="color:var(--mion)">MINERALion</div><div class="dt">toB ¥4,453,019 / toC ¥5,087,400</div></div><div class="am">¥9,540,419</div></li>
+<li><div class="rk">4</div><div class="bi"><div class="nm" style="color:var(--cbd)">CBD</div><div class="dt">toB ¥3,088,100 / toC ¥5,062,359</div></div><div class="am">¥8,150,459</div></li>
+<li><div class="rk">5</div><div class="bi"><div class="nm" style="color:var(--cdk)">C+D+K</div><div class="dt">toB ¥2,499,550 / toC ¥0</div></div><div class="am">¥2,499,550</div></li>
 </ul>
-<div class="cc" style="margin-top:16px"><h3>新ブランド受注売上 月次推移（RS）</h3><div class="tw" style="border:none"><table class="dt"><thead><tr><th>ブランド</th><th>1月</th><th>2月</th><th>3月</th><th>前月比</th></tr></thead>
+<div class="cc" style="margin-top:16px"><h3>新ブランド受注売上 月次推移（BQ確定）</h3><div class="tw" style="border:none"><table class="dt"><thead><tr><th>ブランド</th><th>1月</th><th>2月</th><th>3月</th><th>前月比</th></tr></thead>
 <tbody>
-<tr><td><span class="dot" style="background:var(--ccera)"></span>C+Cera</td><td>¥14,690,271</td><td>¥23,409,752</td><td>¥26,265,880</td><td><span class="pct o">+12.2%</span></td></tr>
-<tr><td><span class="dot" style="background:var(--skb)"></span>SKINBEAUTY</td><td>¥14,492,845</td><td>¥15,564,363</td><td>¥15,796,026</td><td><span class="pct o">+1.5%</span></td></tr>
-<tr><td><span class="dot" style="background:var(--mion)"></span>MINERALion</td><td>¥6,375,200</td><td>¥6,708,575</td><td>¥9,329,819</td><td><span class="pct o">+39.1%</span></td></tr>
-<tr><td><span class="dot" style="background:var(--cbd)"></span>CBD</td><td>¥8,776,721</td><td>¥11,699,809</td><td>¥8,136,882</td><td><span class="pct u">-30.5%</span></td></tr>
-<tr><td><span class="dot" style="background:var(--cdk)"></span>C+D+K</td><td>¥7,182,600</td><td>¥7,170,700</td><td>¥2,288,038</td><td><span class="pct u">-68.1%</span></td></tr>
-<tr class="tr"><td>合計</td><td>¥51,517,637</td><td>¥64,553,199</td><td>¥61,816,645</td><td><span class="pct u">-4.2%</span></td></tr>
+<tr><td><span class="dot" style="background:var(--ccera)"></span>C+Cera</td><td>¥14,690,271</td><td>¥23,388,363</td><td>¥26,394,459</td><td><span class="pct o">+12.9%</span></td></tr>
+<tr><td><span class="dot" style="background:var(--skb)"></span>SKINBEAUTY</td><td>¥14,467,911</td><td>¥15,538,216</td><td>¥15,787,566</td><td><span class="pct o">+1.6%</span></td></tr>
+<tr><td><span class="dot" style="background:var(--mion)"></span>MINERALion</td><td>¥6,382,600</td><td>¥6,708,575</td><td>¥9,540,419</td><td><span class="pct o">+42.2%</span></td></tr>
+<tr><td><span class="dot" style="background:var(--cbd)"></span>CBD</td><td>¥8,812,859</td><td>¥11,644,009</td><td>¥8,150,459</td><td><span class="pct u">-30.0%</span></td></tr>
+<tr><td><span class="dot" style="background:var(--cdk)"></span>C+D+K</td><td>¥7,585,800</td><td>¥7,170,700</td><td>¥2,499,550</td><td><span class="pct u">-65.1%</span></td></tr>
+<tr class="tr"><td>合計</td><td>¥51,939,441</td><td>¥64,449,863</td><td>¥62,372,453</td><td><span class="pct u">-3.2%</span></td></tr>
 </tbody></table></div></div></div>
 
 <!-- BRAND CARDS -->
@@ -127,12 +128,12 @@
 <div class="bg">
 <div class="bc" data-b="vc"><div class="bn" style="color:var(--vc)">Lypo-C VC</div><div class="mr"><span class="ml">toC出荷</span><span class="mv">¥222,567,651</span></div><div class="mr"><span class="ml">toB出荷</span><span class="mv">¥71,883,182</span></div><div class="mr"><span class="ml">合計出荷</span><span class="mv">¥294,450,833</span></div><div class="mr"><span class="ml">予算達成率</span><span class="mv">88.2%</span></div><div class="mr"><span class="ml">前月比</span><span class="mv" style="color:var(--positive)">+13.3%</span></div><div class="mr"><span class="ml">toC前年比</span><span class="mv" style="color:var(--positive)">+1.9%</span></div><div class="mr"><span class="ml">toB取引先/toC件数</span><span class="mv">402社 / 24,284件</span></div></div>
 <div class="bc" data-b="cd"><div class="bn" style="color:var(--cd)">Lypo-C C+D</div><div class="mr"><span class="ml">toC出荷</span><span class="mv">¥156,043,083</span></div><div class="mr"><span class="ml">toB出荷</span><span class="mv">¥30,888,933</span></div><div class="mr"><span class="ml">合計出荷</span><span class="mv">¥186,932,016</span></div><div class="mr"><span class="ml">予算達成率</span><span class="mv">94.2%</span></div><div class="mr"><span class="ml">前月比</span><span class="mv" style="color:var(--positive)">+13.4%</span></div><div class="mr"><span class="ml">toC前年比</span><span class="mv" style="color:var(--positive)">+41.3%</span></div><div class="mr"><span class="ml">toB取引先/toC件数</span><span class="mv">353社 / 16,460件</span></div></div>
-<div class="bc" data-b="ccera"><div class="bn" style="color:var(--ccera)">Lypo-C C+Cera</div><div class="mr"><span class="ml">toC出荷</span><span class="mv">¥19,062,672</span></div><div class="mr"><span class="ml">toB出荷</span><span class="mv">¥6,810,494</span></div><div class="mr"><span class="ml">合計出荷</span><span class="mv">¥25,873,166</span></div><div class="mr"><span class="ml">予算達成率</span><span class="mv">86.2%</span></div><div class="mr"><span class="ml">新ブランド順位</span><span class="mv">🥇 1位</span></div><div class="mr"><span class="ml">RS受注前月比</span><span class="mv" style="color:var(--positive)">+12.2%</span></div></div>
+<div class="bc" data-b="ccera"><div class="bn" style="color:var(--ccera)">Lypo-C C+Cera</div><div class="mr"><span class="ml">toC出荷</span><span class="mv">¥19,062,672</span></div><div class="mr"><span class="ml">toB出荷</span><span class="mv">¥6,810,494</span></div><div class="mr"><span class="ml">合計出荷</span><span class="mv">¥25,873,166</span></div><div class="mr"><span class="ml">予算達成率</span><span class="mv">86.2%</span></div><div class="mr"><span class="ml">新ブランド順位</span><span class="mv">🥇 1位</span></div><div class="mr"><span class="ml">受注前月比</span><span class="mv" style="color:var(--positive)">+12.9%</span></div></div>
 <div class="bc" data-b="skb"><div class="bn" style="color:var(--skb)">SKINBEAUTY</div><div class="mr"><span class="ml">toC出荷</span><span class="mv">¥10,511,494</span></div><div class="mr"><span class="ml">toB出荷</span><span class="mv">¥5,329,560</span></div><div class="mr"><span class="ml">合計出荷</span><span class="mv">¥15,841,054</span></div><div class="mr"><span class="ml">予算達成率</span><span class="mv" style="color:var(--negative)">25.9%</span></div><div class="mr"><span class="ml">新ブランド順位</span><span class="mv">🥈 2位</span></div><div class="mr"><span class="ml">備考</span><span class="mv" style="font-size:11px">予算は後半加速型設計</span></div></div>
 <div class="bc" data-b="mion"><div class="bn" style="color:var(--mion)">MINERALion</div><div class="mr"><span class="ml">toC出荷</span><span class="mv">¥4,756,400</span></div><div class="mr"><span class="ml">toB出荷</span><span class="mv">¥4,384,500</span></div><div class="mr"><span class="ml">合計出荷</span><span class="mv">¥9,140,900</span></div><div class="mr"><span class="ml">予算達成率</span><span class="mv" style="color:var(--negative)">43.5%</span></div><div class="mr"><span class="ml">前月比</span><span class="mv" style="color:var(--positive)">+45.7%</span></div><div class="mr"><span class="ml">新ブランド順位</span><span class="mv">🥉 3位</span></div></div>
 <div class="bc" data-b="cbd"><div class="bn" style="color:var(--cbd)">Lypo-C CBD</div><div class="mr"><span class="ml">toC出荷</span><span class="mv">¥4,912,136</span></div><div class="mr"><span class="ml">toB出荷</span><span class="mv">¥3,088,100</span></div><div class="mr"><span class="ml">合計出荷</span><span class="mv">¥8,000,236</span></div><div class="mr"><span class="ml">予算達成率</span><span class="mv" style="color:var(--negative)">33.1%</span></div><div class="mr"><span class="ml">前月比</span><span class="mv" style="color:var(--negative)">-30.4%</span></div><div class="mr"><span class="ml">toB前月比</span><span class="mv" style="color:var(--negative)">-57.0%</span></div></div>
 <div class="bc" data-b="cdk"><div class="bn" style="color:var(--cdk)">Lypo-C C+D+K</div><div class="mr"><span class="ml">toB出荷</span><span class="mv">¥2,728,750</span></div><div class="mr"><span class="ml">予算達成率</span><span class="mv" style="color:var(--negative)">22.7%</span></div><div class="mr"><span class="ml">前月比</span><span class="mv" style="color:var(--negative)">-62.4%</span></div><div class="mr"><span class="ml">備考</span><span class="mv" style="font-size:11px">toBのみ販売。需要喚起策が急務</span></div></div>
-<div class="bc" data-b="lypo"><div class="bn" style="color:var(--lypo)">LypoSpheric</div><div class="mr"><span class="ml">toC出荷</span><span class="mv">¥396,167</span></div><div class="mr"><span class="ml">toB出荷</span><span class="mv">¥6,227,177</span></div><div class="mr"><span class="ml">合計出荷</span><span class="mv">¥6,623,344</span></div><div class="mr"><span class="ml">状況</span><span class="mv" style="font-size:11px">終売移行中</span></div></div>
+<div class="bc" data-b="lypo"><div class="bn" style="color:var(--lypo)">LypoSpheric</div><div class="mr"><span class="ml">toC出荷</span><span class="mv">¥1,718,038</span></div><div class="mr"><span class="ml">toB出荷</span><span class="mv">—（toC専売）</span></div><div class="mr"><span class="ml">合計出荷</span><span class="mv">¥1,718,038</span></div><div class="mr"><span class="ml">状況</span><span class="mv" style="font-size:11px">終売移行中（toC在庫販売のみ）</span></div></div>
 </div></div>
 
 <!-- SNS -->
@@ -166,21 +167,21 @@
 <p>• C+D toC出荷が前年同月比<strong>+41.3%</strong>の大幅伸長、toC件数16,460件</p>
 <p>• VC toC出荷も前年比+1.9%とプラス転換、前月比+13.8%で回復基調</p>
 <p>• MINERALion全体出荷が前月比+45.7%の急伸（toB +66.2%, toC +30.9%）</p>
-<p>• C+Ceraが受注ベース新ブランド首位を維持、3ヶ月連続成長（¥14.7M→¥23.4M→¥26.3M）</p>
+<p>• C+Ceraが受注ベース新ブランド首位を維持、3ヶ月連続成長（¥14.7M→¥23.4M→¥26.4M）</p>
 <p>• toB新規70社獲得、全体700社（前月+61社）</p>
 <p>• 自社ECがtoC売上53.5%を占めチャネルミックス健全</p>
 <p>• LINE 280,885人（+1,306）、@mineralion_ が+84.6%急伸</p>
 <br>
 <p><strong style="color:var(--negative)">▼ 要注意事項</strong></p>
-<p>• C+D+K 全チャネル急落（toB出荷-62.4%、RS受注-68.1%）。toBのみ販売のため需要喚起策が急務</p>
-<p>• CBD toB出荷-57.0%、受注-30.5%。2月高水準からの反動の可能性あるが注視</p>
+<p>• C+D+K 全チャネル急落（toB出荷-62.4%、受注-65.1%）。toBのみ販売のため需要喚起策が急務</p>
+<p>• CBD toB出荷-57.0%、受注-30.0%。2月高水準からの反動の可能性あるが注視</p>
 <p>• SKINBEAUTY・MINERALion・CBD・C+D+K予算達成率が25〜44%水準</p>
 <p>• VC予算達成率88.2%、C+D 94.2%。主力2ブランド未達が全社73.2%の主因</p>
 <p>• X @lypocapsuleフォロワー減少継続（-152）。IG月3投稿と投稿頻度不足</p>
 <p>• C+Cera toC出荷前月比-15.9%。季節要因か要分析</p>
 </div></div></div>
 
-<div class="ft">SPIC Corporation Monthly Report — 2026年3月（確定版）<br>BigQuery <code>order_main_table</code> (toB+toC出荷確定) / <code>prod_btob_business_month_fixed</code> (toB detail) / Ranking Stadium (新ブランド受注) / Social Insight (SNS)</div>
+<div class="ft">SPIC Corporation Monthly Report — 2026年3月（確定版）<br>BigQuery <code>order_main_table</code> (toB+toC出荷確定) / <code>prod_btob_business_month_fixed</code> (toB detail) / order_main_table calc_ord (新ブランド受注 / RS差率+0.9%で整合確認済) / Social Insight (SNS)</div>
 </div>
 
 <script>
@@ -188,7 +189,7 @@ const fmt=v=>'¥'+(v/1e6).toFixed(1)+'M';
 const bc=['#FF7A30','#7ED8A0','#FF6B9D','#C4934A','#1E3A8A','#1B7A4A','#A8E6C0','#FFB070','#999'];
 const bl=['VC','C+D','C+Cera','SKB','Mion','CBD','C+D+K','LypoS','Other'];
 
-new Chart(document.getElementById('c1'),{type:'doughnut',data:{labels:bl,datasets:[{data:[294450833,186932016,25873166,15841054,9140900,8000236,2728750,6623344,4394200],backgroundColor:bc,borderWidth:0}]},options:{responsive:true,plugins:{legend:{position:'right',labels:{font:{family:"'DM Sans'",size:11},padding:10}},tooltip:{callbacks:{label:c=>{const t=c.dataset.data.reduce((a,b)=>a+b,0);return fmt(c.parsed)+' ('+(c.parsed/t*100).toFixed(1)+'%)';}}}}}});
+new Chart(document.getElementById('c1'),{type:'doughnut',data:{labels:bl,datasets:[{data:[294450833,186932016,25873166,15841054,9140900,8000236,2728750,1718038,9299506],backgroundColor:bc,borderWidth:0}]},options:{responsive:true,plugins:{legend:{position:'right',labels:{font:{family:"'DM Sans'",size:11},padding:10}},tooltip:{callbacks:{label:c=>{const t=c.dataset.data.reduce((a,b)=>a+b,0);return fmt(c.parsed)+' ('+(c.parsed/t*100).toFixed(1)+'%)';}}}}}});
 
 new Chart(document.getElementById('c2'),{type:'bar',data:{labels:['VC','C+D','C+Cera','SKB','Mion','CBD','C+D+K'],datasets:[{label:'toC出荷',data:[222567651,156043083,19062672,10511494,4756400,4912136,0],backgroundColor:bc.map(c=>c+'cc'),borderRadius:4},{label:'toB出荷',data:[71883182,30888933,6810494,5329560,4384500,3088100,2728750],backgroundColor:bc.map(c=>c+'55'),borderRadius:4}]},options:{responsive:true,plugins:{legend:{labels:{font:{size:11}}},tooltip:{callbacks:{label:c=>fmt(c.parsed.y)}}},scales:{y:{stacked:true,ticks:{callback:v=>fmt(v),font:{size:10}},grid:{color:'#f0eeea'}},x:{stacked:true,grid:{display:false}}}}});
 
