@@ -1,0 +1,78 @@
+
+<h2 class="sr-only">SPIC age-salary distribution chart with career curves and employee scatter plot</h2>
+<div style="padding: 0.5rem 0;">
+<div style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:8px;font-size:12px;color:var(--color-text-secondary);">
+<span style="display:flex;align-items:center;gap:4px;"><span style="width:20px;height:3px;background:#2F5496;"></span>標準コース</span>
+<span style="display:flex;align-items:center;gap:4px;"><span style="width:20px;height:3px;background:#FF7A30;border-top:1px dashed #FF7A30;"></span>上位コース</span>
+<span style="display:flex;align-items:center;gap:4px;"><span style="width:20px;height:3px;background:#7ED8A0;border-top:1px dashed #7ED8A0;"></span>堅実コース</span>
+<span style="font-weight:500;margin-left:12px;">等級:</span>
+<span style="display:flex;align-items:center;gap:3px;"><span style="width:8px;height:8px;border-radius:50%;background:#999;"></span>3-4</span>
+<span style="display:flex;align-items:center;gap:3px;"><span style="width:8px;height:8px;border-radius:50%;background:#FF7A30;"></span>5</span>
+<span style="display:flex;align-items:center;gap:3px;"><span style="width:8px;height:8px;border-radius:50%;background:#7ED8A0;"></span>6</span>
+<span style="display:flex;align-items:center;gap:3px;"><span style="width:8px;height:8px;border-radius:50%;background:#FFC107;"></span>7</span>
+<span style="display:flex;align-items:center;gap:3px;"><span style="width:8px;height:8px;border-radius:50%;background:#1E88E5;"></span>8</span>
+<span style="display:flex;align-items:center;gap:3px;"><span style="width:8px;height:8px;border-radius:50%;background:#E91E63;"></span>9</span>
+<span style="display:flex;align-items:center;gap:3px;"><span style="width:8px;height:8px;border-radius:50%;background:#9C27B0;"></span>10</span>
+</div>
+<div style="position:relative;width:100%;height:480px;">
+<canvas id="ageChart" role="img" aria-label="年齢別給与分布と年齢カーブ基準の比較散布図">年齢別の給与分布を年齢カーブ基準と比較した散布図です。</canvas>
+</div>
+<p style="font-size:11px;color:var(--color-text-tertiary);margin-top:4px;">※大瀬戸(51歳/¥5.8M)・西守(47歳/¥3.5M)・片峰(61歳/¥3.4M)は表示範囲外（役員報酬含む）</p>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const g3=[{x:30,y:314949},{x:27,y:314949},{x:23,y:319673},{x:23,y:314949}];
+const g4=[{x:24,y:302500}];
+const g5=[{x:54,y:454593},{x:49,y:445680},{x:43,y:327706},{x:42,y:472959},{x:38,y:428373},{x:37,y:395751},{x:36,y:395751},{x:35,y:358443},{x:33,y:480131},{x:33,y:395751},{x:32,y:452439},{x:32,y:461487},{x:31,y:419244},{x:30,y:426343},{x:30,y:395751},{x:30,y:395703},{x:29,y:411023},{x:29,y:358443},{x:28,y:468687},{x:28,y:337769},{x:27,y:483412},{x:27,y:478062},{x:27,y:400028},{x:27,y:393875},{x:27,y:408028},{x:26,y:464641},{x:26,y:400028},{x:31,y:337769}];
+const g6=[{x:54,y:598680},{x:53,y:465022},{x:50,y:746208},{x:48,y:534164},{x:41,y:493485},{x:41,y:381480},{x:38,y:474322},{x:38,y:455904},{x:37,y:455904},{x:36,y:493485},{x:34,y:526411},{x:34,y:446965},{x:31,y:467437},{x:31,y:476786},{x:27,y:504347}];
+const g7=[{x:65,y:472915},{x:64,y:543231},{x:63,y:511898},{x:62,y:522136},{x:59,y:472915},{x:58,y:565177},{x:58,y:573231},{x:54,y:618010},{x:54,y:857878},{x:53,y:543231},{x:50,y:573231},{x:49,y:573231},{x:48,y:565177},{x:48,y:554095},{x:48,y:565177},{x:48,y:463642},{x:47,y:554095},{x:46,y:599771},{x:45,y:565177},{x:42,y:605478},{x:38,y:582711},{x:35,y:576086},{x:32,y:537285},{x:32,y:511534},{x:32,y:466900},{x:31,y:572477},{x:31,y:385942}];
+const g8=[{x:50,y:1010483},{x:49,y:1346166},{x:49,y:642500},{x:47,y:748075},{x:43,y:1961119},{x:41,y:642500},{x:36,y:919369},{x:32,y:707500},{x:32,y:642500}];
+const g9=[{x:59,y:1587928},{x:59,y:1334185}];
+const g10=[{x:59,y:926689}];
+const stdLine=[{x:22,y:256667},{x:23,y:265834},{x:24,y:279584},{x:25,y:302500},{x:26,y:324653},{x:27,y:337769},{x:28,y:351415},{x:29,y:365612},{x:30,y:366667},{x:31,y:381480},{x:32,y:396892},{x:33,y:412926},{x:34,y:428334},{x:35,y:436900},{x:36,y:454551},{x:37,y:463642},{x:38,y:482373},{x:39,y:492021},{x:40,y:511898},{x:41,y:507500},{x:42,y:523740},{x:43,y:540499},{x:44,y:557795},{x:45,y:575645},{x:46,y:594065},{x:47,y:613075},{x:48,y:632694},{x:49,y:652940},{x:50,y:673834},{x:51,y:733334},{x:52,y:756800},{x:53,y:781018},{x:54,y:806010},{x:55,y:831803},{x:56,y:834167},{x:57,y:834167},{x:58,y:879212},{x:59,y:879212},{x:60,y:926689},{x:61,y:926689},{x:62,y:976730},{x:63,y:976730},{x:64,y:1029474},{x:65,y:1029474}];
+const fastLine=[{x:22,y:256667},{x:23,y:265834},{x:24,y:279584},{x:25,y:302500},{x:26,y:324653},{x:27,y:344525},{x:28,y:366667},{x:29,y:389109},{x:30,y:428334},{x:31,y:445638},{x:32,y:463642},{x:33,y:482373},{x:34,y:501861},{x:35,y:507500},{x:36,y:523740},{x:37,y:557795},{x:38,y:575645},{x:39,y:613075},{x:40,y:632694},{x:41,y:673834},{x:42,y:695397},{x:43,y:733334},{x:44,y:756800},{x:45,y:781018},{x:46,y:806010},{x:47,y:831803},{x:48,y:885890},{x:49,y:834167},{x:50,y:834167},{x:51,y:879212},{x:52,y:926689},{x:53,y:976730},{x:54,y:1029474},{x:55,y:1029474},{x:56,y:1085065},{x:57,y:1143659},{x:58,y:1205416},{x:59,y:1270509},{x:60,y:1270509},{x:61,y:1339116},{x:62,y:1411429},{x:63,y:1487646},{x:64,y:1567979},{x:65,y:1567979}];
+const slowLine=[{x:22,y:256667},{x:23,y:265834},{x:24,y:279584},{x:25,y:283777},{x:26,y:290000},{x:27,y:296351},{x:28,y:324653},{x:29,y:331146},{x:30,y:337769},{x:31,y:344525},{x:32,y:351415},{x:33,y:358443},{x:34,y:365612},{x:35,y:366667},{x:36,y:374000},{x:37,y:381480},{x:38,y:389109},{x:39,y:396892},{x:40,y:404829},{x:41,y:412926},{x:42,y:421185},{x:43,y:428334},{x:44,y:436900},{x:45,y:445638},{x:46,y:454551},{x:47,y:463642},{x:48,y:472915},{x:49,y:482373},{x:50,y:492021},{x:51,y:501861},{x:52,y:511898},{x:53,y:522136},{x:54,y:532579},{x:55,y:543231},{x:56,y:507500},{x:57,y:507500},{x:58,y:523740},{x:59,y:523740},{x:60,y:540499},{x:61,y:540499},{x:62,y:557795},{x:63,y:557795},{x:64,y:575645},{x:65,y:575645}];
+
+const fmt = v => '¥' + Math.round(v/10000) + '万';
+
+new Chart(document.getElementById('ageChart'), {
+  type: 'scatter',
+  data: {
+    datasets: [
+      {type:'line',label:'標準コース',data:stdLine,borderColor:'#2F5496',borderWidth:3,pointRadius:0,fill:false,order:10,tension:0.3},
+      {type:'line',label:'上位コース',data:fastLine,borderColor:'#FF7A30',borderWidth:2,borderDash:[8,4],pointRadius:0,fill:false,order:11,tension:0.3},
+      {type:'line',label:'堅実コース',data:slowLine,borderColor:'#7ED8A0',borderWidth:2,borderDash:[8,4],pointRadius:0,fill:false,order:12,tension:0.3},
+      {label:'3-4等級',data:[...g3,...g4],backgroundColor:'rgba(153,153,153,0.7)',pointRadius:5,pointStyle:'circle',order:1},
+      {label:'5等級',data:g5,backgroundColor:'rgba(255,122,48,0.7)',pointRadius:5,pointStyle:'circle',order:2},
+      {label:'6等級',data:g6,backgroundColor:'rgba(126,216,160,0.7)',pointRadius:6,pointStyle:'triangle',order:3},
+      {label:'7等級',data:g7,backgroundColor:'rgba(255,193,7,0.7)',pointRadius:6,pointStyle:'rect',order:4},
+      {label:'8等級',data:g8,backgroundColor:'rgba(30,136,229,0.8)',pointRadius:7,pointStyle:'rectRot',order:5},
+      {label:'9等級',data:g9,backgroundColor:'rgba(233,30,99,0.8)',pointRadius:8,pointStyle:'star',order:6},
+      {label:'10等級',data:g10,backgroundColor:'rgba(156,39,176,0.8)',pointRadius:8,pointStyle:'star',order:7},
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    layout: { padding: { top: 10, right: 20 } },
+    scales: {
+      x: { min: 21, max: 66, title: { display: true, text: '年齢', font: { size: 13 } },
+        ticks: { stepSize: 5, callback: v => v + '歳' } },
+      y: { min: 200000, max: 2100000, title: { display: true, text: '月額給与（税抜）', font: { size: 13 } },
+        ticks: { callback: v => fmt(v), stepSize: 200000 } }
+    },
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: ctx => {
+            const ds = ctx.dataset.label;
+            if (ds.includes('コース')) return ds + ': ' + fmt(ctx.parsed.y);
+            return ds + ' ' + ctx.parsed.x + '歳 ' + fmt(ctx.parsed.y);
+          }
+        }
+      }
+    }
+  }
+});
+</script>
