@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>toB パートナー分析 | SPIC</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=DM+Mono:wght@400;500&display=swap');
+:root {
+  --bg: #0f0f10;
+  --surface: #18181b;
+  --surface2: #1f1f23;
+  --border: #2a2a30;
+  --text: #f0f0f2;
+  --muted: #71717a;
+  --green: #4ade80;
+  --red: #f87171;
+  --yellow: #fbbf24;
+  --blue: #60a5fa;
+  --purple: #a78bfa;
+  --orange: #fb923c;
+  --multi: #a78bfa;
+  --new: #34d399;
+  --cross: #4ade80;
+  --vconly: #60a5fa;
+  --cdonly: #fbbf24;
+  --dormant: #f87171;
+  --other: #71717a;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Noto Sans JP',sans-serif; background:var(--bg); color:var(--text); line-height:1.6; padding:24px; }
+.mono { font-family:'DM Mono',monospace; }
+
+/* Header */
+.hdr { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:32px; padding-bottom:16px; border-bottom:1px solid var(--border); }
+.hdr-left h1 { font-size:22px; font-weight:700; letter-spacing:-0.5px; }
+.hdr-left p { font-size:12px; color:var(--muted); margin-top:2px; }
+.hdr-right { font-size:11px; color:var(--muted); text-align:right; }
+.tag { display:inline-block; background:var(--surface2); border:1px solid var(--border); border-radius:4px; padding:2px 8px; font-size:11px; margin-top:4px; }
+
+/* Segment Cards */
+.seg-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:10px; margin-bottom:28px; }
+.seg-card { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:14px 12px; position:relative; overflow:hidden; }
+.seg-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; }
+.seg-card.multi::before { background:var(--multi); }
+.seg-card.new::before { background:var(--new); }
+.seg-card.vconly::before { background:var(--vconly); }
+.seg-card.cdonly::before { background:var(--cdonly); }
+.seg-card.cross::before { background:var(--cross); }
+.seg-card.dormant::before { background:var(--dormant); }
+.seg-card.other::before { background:var(--other); }
+.seg-label { font-size:10px; color:var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px; }
+.seg-rev { font-size:20px; font-weight:700; font-family:'DM Mono',monospace; letter-spacing:-0.5px; }
+.seg-rev .unit { font-size:11px; font-weight:400; color:var(--muted); }
+.seg-partners { font-size:11px; color:var(--muted); margin-top:3px; }
+.seg-growth { font-size:12px; font-weight:600; margin-top:4px; font-family:'DM Mono',monospace; }
+.seg-growth.up { color:var(--green); }
+.seg-growth.dn { color:var(--red); }
+.seg-growth.na { color:var(--muted); }
+.seg-brands { font-size:10px; color:var(--muted); margin-top:2px; }
+
+/* Insight row */
+.insight-row { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:28px; }
+.insight-box { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:16px 18px; }
+.insight-box h3 { font-size:12px; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:10px; }
+.insight-item { display:flex; justify-content:space-between; align-items:center; padding:6px 0; border-bottom:1px solid var(--border); font-size:13px; }
+.insight-item:last-child { border-bottom:none; }
+.insight-val { font-family:'DM Mono',monospace; font-size:13px; font-weight:500; }
+.insight-val.up { color:var(--green); }
+.insight-val.dn { color:var(--red); }
+
+/* Top partners tabs */
+.tabs { display:flex; gap:4px; margin-bottom:12px; }
+.tab { padding:6px 14px; border-radius:6px; font-size:12px; font-weight:500; cursor:pointer; border:1px solid var(--border); background:var(--surface); color:var(--muted); transition:all .15s; }
+.tab.active { background:var(--surface2); color:var(--text); border-color:var(--border); }
+.tab:hover { color:var(--text); }
+
+/* Table */
+.tbl-wrap { background:var(--surface); border:1px solid var(--border); border-radius:10px; overflow:hidden; }
+table { width:100%; border-collapse:collapse; font-size:12px; }
+thead th { background:var(--surface2); padding:8px 12px; text-align:right; color:var(--muted); font-weight:600; font-size:10.5px; text-transform:uppercase; letter-spacing:0.3px; border-bottom:1px solid var(--border); white-space:nowrap; }
+thead th:first-child { text-align:left; }
+thead th:nth-child(2) { text-align:left; }
+tbody td { padding:7px 12px; text-align:right; border-bottom:1px solid #1e1e22; vertical-align:middle; }
+tbody td:first-child { text-align:left; font-weight:500; max-width:220px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+tbody td:nth-child(2) { text-align:left; }
+tbody tr:last-child td { border-bottom:none; }
+tbody tr:hover { background:var(--surface2); }
+.seg-dot { display:inline-block; width:6px; height:6px; border-radius:50%; margin-right:5px; vertical-align:middle; }
+.dot-multi { background:var(--multi); }
+.dot-new { background:var(--new); }
+.dot-cross { background:var(--cross); }
+.dot-vconly { background:var(--vconly); }
+.dot-cdonly { background:var(--cdonly); }
+.dot-dormant { background:var(--dormant); }
+.dot-other { background:var(--other); }
+.brands-pill { display:inline-flex; flex-wrap:wrap; gap:2px; }
+.bp { display:inline-block; padding:1px 5px; border-radius:3px; font-size:10px; font-weight:600; font-family:'DM Mono',monospace; }
+.bp-vc { background:#1e3a5f; color:#93c5fd; }
+.bp-cd { background:#1a3a24; color:#86efac; }
+.bp-ccera { background:#3b1f3a; color:#f0abfc; }
+.bp-sb { background:#3a2a14; color:#fcd34d; }
+.bp-mi { background:#1a2a3a; color:#7dd3fc; }
+.bp-cdk { background:#1a3a2a; color:#6ee7b7; }
+.bp-cbd { background:#1a3324; color:#4ade80; }
+.gp { color:var(--green); font-weight:600; font-family:'DM Mono',monospace; }
+.gn { color:var(--red); font-weight:600; font-family:'DM Mono',monospace; }
+.gmuted { color:var(--muted); font-family:'DM Mono',monospace; }
+
+/* Bar */
+.bar-w { width:60px; height:5px; background:var(--border); border-radius:3px; display:inline-block; vertical-align:middle; }
+.bar-f { height:100%; border-radius:3px; }
+
+/* Tab panels */
+.tab-panel { display:none; }
+.tab-panel.active { display:block; }
+
+/* Dormant notice */
+.dormant-notice { background:#1f1015; border:1px solid #4a1020; border-radius:10px; padding:14px 18px; margin-bottom:28px; font-size:13px; }
+.dormant-notice strong { color:#f87171; }
+
+/* Footer */
+.footer { margin-top:24px; font-size:11px; color:var(--muted); display:flex; justify-content:space-between; padding-top:12px; border-top:1px solid var(--border); }
+
+/* Pagination */
+.page-info { font-size:11px; color:var(--muted); padding:8px 12px; }
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="hdr-left">
+    <h1>toB パートナー分析</h1>
+    <p>直近3ヶ月 vs 前3ヶ月 ｜ ブランド構成 × 伸び率 ｜ 集計対象: shop_id 7,8,12,18,20,23,26,27,42,43</p>
+  </div>
+  <div class="hdr-right">
+    <div>2026年4月9日時点</div>
+    <div><span class="tag">過去180日 / 税抜</span></div>
+  </div>
+</div>
+
+<!-- ===== Segment Summary ===== -->
+<div class="seg-grid">
+  <div class="seg-card multi">
+    <div class="seg-label">⭐ マルチブランド</div>
+    <div class="seg-rev mono">155.7<span class="unit">M</span></div>
+    <div class="seg-partners">235社</div>
+    <div class="seg-growth up">+15.8%</div>
+    <div class="seg-brands">平均3.6ブランド</div>
+  </div>
+  <div class="seg-card new">
+    <div class="seg-label">🆕 新規</div>
+    <div class="seg-rev mono">77.8<span class="unit">M</span></div>
+    <div class="seg-partners">490社</div>
+    <div class="seg-growth na">— 新規</div>
+    <div class="seg-brands">平均2.2ブランド</div>
+  </div>
+  <div class="seg-card vconly">
+    <div class="seg-label">🔵 VC単品</div>
+    <div class="seg-rev mono">64.6<span class="unit">M</span></div>
+    <div class="seg-partners">293社</div>
+    <div class="seg-growth dn">-8.5%</div>
+    <div class="seg-brands">C+D未導入</div>
+  </div>
+  <div class="seg-card cdonly">
+    <div class="seg-label">🟡 C+D単品</div>
+    <div class="seg-rev mono">22.9<span class="unit">M</span></div>
+    <div class="seg-partners">188社</div>
+    <div class="seg-growth dn">-13.8%</div>
+    <div class="seg-brands">VC未導入</div>
+  </div>
+  <div class="seg-card cross">
+    <div class="seg-label">🟢 VC+C+D</div>
+    <div class="seg-rev mono">22.7<span class="unit">M</span></div>
+    <div class="seg-partners">76社</div>
+    <div class="seg-growth up">+37.1%</div>
+    <div class="seg-brands">クロスセル済み</div>
+  </div>
+  <div class="seg-card other">
+    <div class="seg-label">📦 その他</div>
+    <div class="seg-rev mono">10.0<span class="unit">M</span></div>
+    <div class="seg-partners">96社</div>
+    <div class="seg-growth dn">-56.5%</div>
+    <div class="seg-brands">特殊構成</div>
+  </div>
+  <div class="seg-card dormant">
+    <div class="seg-label">🔴 休眠</div>
+    <div class="seg-rev mono">82.1<span class="unit">M</span></div>
+    <div class="seg-partners">496社</div>
+    <div class="seg-growth dn">-100%</div>
+    <div class="seg-brands">前期売上 → 消滅</div>
+  </div>
+</div>
+
+<!-- ===== Insights ===== -->
+<div class="insight-row">
+  <div class="insight-box">
+    <h3>📊 セグメント別 成長率の読み方</h3>
+    <div class="insight-item"><span>VC+C+Dクロスセル済み</span><span class="insight-val up">+37.1% ↑↑</span></div>
+    <div class="insight-item"><span>マルチブランド（3+）</span><span class="insight-val up">+15.8% ↑</span></div>
+    <div class="insight-item"><span>新規（比較不可）</span><span class="insight-val" style="color:var(--new)">¥77.8M 新規獲得</span></div>
+    <div class="insight-item"><span>VC単品</span><span class="insight-val dn">-8.5% ↓</span></div>
+    <div class="insight-item"><span>C+D単品</span><span class="insight-val dn">-13.8% ↓</span></div>
+    <div class="insight-item"><span>休眠（前期¥82.1M流失）</span><span class="insight-val dn">復帰施策が急務</span></div>
+  </div>
+  <div class="insight-box">
+    <h3>🎯 営業アクションの優先度</h3>
+    <div class="insight-item"><span>① VC単品293社へのC+D提案</span><span class="insight-val up">クロスセル化で+37%期待</span></div>
+    <div class="insight-item"><span>② C+D単品188社へのVC追加</span><span class="insight-val up">同上</span></div>
+    <div class="insight-item"><span>③ 休眠496社へのリアクティブ</span><span class="insight-val" style="color:var(--yellow)">¥82M回収ポテンシャル</span></div>
+    <div class="insight-item"><span>④ 新規490社への第2ブランド展開</span><span class="insight-val" style="color:var(--new)">平均2.2 → 3+へ育成</span></div>
+    <div class="insight-item"><span>⑤ マルチ235社の深耕・維持</span><span class="insight-val up">最優良層を守る</span></div>
+  </div>
+</div>
+
+<!-- ===== Dormant Notice ===== -->
+<div class="dormant-notice">
+  ⚠️ <strong>休眠パートナー496社・前期¥82.1M</strong> が直近3ヶ月ゼロ発注。片山（toB担当）との確認で最終発注日・離脱原因を特定し、優先度順にリカバリー接触を推奨。
+</div>
+
+<!-- ===== Partner Table ===== -->
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('all')">全セグメント TOP50</div>
+  <div class="tab" onclick="switchTab('multi')">⭐ マルチブランド</div>
+  <div class="tab" onclick="switchTab('cross')">🟢 VC+C+D</div>
+  <div class="tab" onclick="switchTab('vc_only')">🔵 VC単品</div>
+  <div class="tab" onclick="switchTab('new')">🆕 新規</div>
+</div>
+
+<div class="tbl-wrap">
+  <!-- ALL TAB -->
+  <div id="tab-all" class="tab-panel active">
+    <table>
+      <thead>
+        <tr>
+          <th>取引先名</th>
+          <th>都道府県</th>
+          <th>セグメント</th>
+          <th>直近ブランド構成</th>
+          <th>前3M売上</th>
+          <th>直近3M売上</th>
+          <th>成長率</th>
+          <th>最終発注</th>
+        </tr>
+      </thead>
+      <tbody id="tbody-all"></tbody>
+    </table>
+  </div>
+  <!-- MULTI TAB -->
+  <div id="tab-multi" class="tab-panel">
+    <table>
+      <thead>
+        <tr>
+          <th>取引先名</th>
+          <th>都道府県</th>
+          <th>ブランド数</th>
+          <th>直近ブランド構成</th>
+          <th>前3M売上</th>
+          <th>直近3M売上</th>
+          <th>成長率</th>
+          <th>最終発注</th>
+        </tr>
+      </thead>
+      <tbody id="tbody-multi"></tbody>
+    </table>
+  </div>
+  <!-- CROSS TAB -->
+  <div id="tab-cross" class="tab-panel">
+    <table>
+      <thead>
+        <tr>
+          <th>取引先名</th>
+          <th>都道府県</th>
+          <th>VC売上</th>
+          <th>C+D売上</th>
+          <th>前3M売上</th>
+          <th>直近3M売上</th>
+          <th>成長率</th>
+          <th>最終発注</th>
+        </tr>
+      </thead>
+      <tbody id="tbody-cross"></tbody>
+    </table>
+  </div>
+  <!-- VC_ONLY TAB -->
+  <div id="tab-vc_only" class="tab-panel">
+    <table>
+      <thead>
+        <tr>
+          <th>取引先名</th>
+          <th>都道府県</th>
+          <th>直近ブランド</th>
+          <th>VC売上（直近3M）</th>
+          <th>前3M売上</th>
+          <th>直近3M売上</th>
+          <th>成長率</th>
+          <th>最終発注</th>
+        </tr>
+      </thead>
+      <tbody id="tbody-vc_only"></tbody>
+    </table>
+  </div>
+  <!-- NEW TAB -->
+  <div id="tab-new" class="tab-panel">
+    <table>
+      <thead>
+        <tr>
+          <th>取引先名</th>
+          <th>都道府県</th>
+          <th>ブランド数</th>
+          <th>直近ブランド構成</th>
+          <th>直近3M売上</th>
+          <th>最終発注</th>
+        </tr>
+      </thead>
+      <tbody id="tbody-new"></tbody>
+    </table>
+  </div>
+</div>
+
+<div class="footer">
+  <span>BQ prod_dwh_oci ｜ 税抜(行レベル税率) ｜ toB shop_id: 7,8,12,18,20,23,26,27,42,43 ｜ キャンセル・テスト/社販除外</span>
+  <span>comp_name JOIN: consignee_tel = bcart_customers.tel</span>
+</div>
+
+<script>
+const PARTNERS = [
+  {name:"株式会社アトリエはるか 商品流通チーム",pref:"愛知",seg:"multi_brand",brands:"CD,MI,VC",prior:2740000,recent:5785000,growth:111.1,last:"2026-03-12",rev_vc:2880000,rev_cd:2905000},
+  {name:"ユルットネス",pref:"大阪",seg:"multi_brand",brands:"CD,MI,VC",prior:5532000,recent:5586000,growth:1.0,last:"2026-04-06",rev_vc:5586000,rev_cd:0},
+  {name:"伝心天美薬店",pref:"大阪",seg:"multi_brand",brands:"CBD,CD,MI,VC",prior:3348000,recent:5145000,growth:53.7,last:"2026-04-07",rev_vc:4722000,rev_cd:0},
+  {name:"サンシャイン合同会社",pref:"東京",seg:"multi_brand",brands:"CBD,CCera,CD,MI,VC",prior:2676700,recent:5135500,growth:91.9,last:"2026-04-01",rev_vc:2436000,rev_cd:1660000},
+  {name:"脱毛、バストアップサロンRK",pref:"岐阜",seg:"multi_brand",brands:"CD,MI,VC",prior:3118000,recent:3855000,growth:23.6,last:"2026-04-09",rev_vc:3855000,rev_cd:0},
+  {name:"Brushing Gloom",pref:"大阪",seg:"vc_only",brands:"CD,VC",prior:2580000,recent:3630000,growth:40.7,last:"2026-03-31",rev_vc:3630000,rev_cd:0},
+  {name:"株式会社エール",pref:"奈良",seg:"multi_brand",brands:"CD,MI,VC",prior:91000,recent:3609000,growth:3865.9,last:"2026-04-03",rev_vc:3570000,rev_cd:0},
+  {name:"株式会社JaCath",pref:"東京",seg:"multi_brand",brands:"CBD,CCera,CD,CDK,MI,VC",prior:1119000,recent:3570800,growth:219.1,last:"2026-04-06",rev_vc:1818000,rev_cd:1116000},
+  {name:"治療室 あんりっしゅ",pref:"石川",seg:"multi_brand",brands:"CD,MI,VC",prior:2415000,recent:3570000,growth:47.8,last:"2026-04-07",rev_vc:3570000,rev_cd:0},
+  {name:"株式会社SUNS",pref:"東京",seg:"new",brands:"CBD,CCera,CD,CDK,MI,SB,VC",prior:0,recent:3283831,growth:null,last:"2026-04-08",rev_vc:631000,rev_cd:773722},
+  {name:"一般社団法人山崎記念",pref:"東京",seg:"multi_brand",brands:"CD,MI,SB,VC",prior:2584200,recent:3079200,growth:19.2,last:"2026-04-07",rev_vc:2820000,rev_cd:0},
+  {name:"フィールズ株式会社 トータル・ワークアウト六本木ヒルズ",pref:"東京",seg:"multi_brand",brands:"CD,CDK,MI,VC",prior:2564400,recent:2949600,growth:15.0,last:"2026-04-07",rev_vc:1116000,rev_cd:0},
+  {name:"Salon luna",pref:"愛知",seg:"vc_cd_cross",brands:"CD,VC",prior:2178000,recent:2630000,growth:20.8,last:"2026-04-02",rev_vc:1800000,rev_cd:830000},
+  {name:"株式会社ジェイアール東海高島屋",pref:"愛知",seg:"vc_cd_cross",brands:"CD,VC",prior:774555,recent:2609316,growth:236.9,last:"2026-04-03",rev_vc:1063066,rev_cd:1546250},
+  {name:"PRISM",pref:"大阪",seg:"multi_brand",brands:"CD,MI,SB,VC",prior:1394200,recent:2584200,growth:85.4,last:"2026-03-18",rev_vc:1080000,rev_cd:1245000},
+  {name:"株式会社かえで",pref:"愛知",seg:"multi_brand",brands:"CBD,CCera,CD,CDK,MI,SB,VC",prior:2562350,recent:2522171,growth:-1.6,last:"2026-03-19",rev_vc:240000,rev_cd:138000},
+  {name:"株式会社L.L.JACKY",pref:"東京",seg:"vc_only",brands:"VC",prior:5258000,recent:2520000,growth:-52.1,last:"2026-02-09",rev_vc:2520000,rev_cd:0},
+  {name:"下北沢西口クリニック",pref:"東京",seg:"multi_brand",brands:"CCera,CD,CDK,VC",prior:1854000,recent:2477000,growth:33.6,last:"2026-04-03",rev_vc:2352000,rev_cd:0},
+  {name:"VIO WAXING",pref:"愛媛",seg:"multi_brand",brands:"CD,MI,VC",prior:3400500,recent:2442000,growth:-28.2,last:"2026-03-09",rev_vc:2442000,rev_cd:0},
+  {name:"サンライト由美うさぎ",pref:"愛知",seg:"multi_brand",brands:"CD,MI,VC",prior:2406000,recent:2340000,growth:-2.7,last:"2026-04-03",rev_vc:2340000,rev_cd:0},
+  {name:"痩身サロン sourire.",pref:"兵庫",seg:"vc_cd_cross",brands:"CD,VC",prior:1135000,recent:2270000,growth:100.0,last:"2026-04-08",rev_vc:1440000,rev_cd:830000},
+  {name:"女医によるファミリークリニック",pref:"広島",seg:"multi_brand",brands:"CBD,CCera,CD,CDK,MI,SB,VC",prior:1459200,recent:2144800,growth:47.0,last:"2026-04-08",rev_vc:720000,rev_cd:415000},
+  {name:"ヘルスケアーサロン ドリアード",pref:"愛知",seg:"multi_brand",brands:"CBD,CCera,CD,CDK,MI,SB,VC",prior:1222044,recent:1999444,growth:63.6,last:"2026-04-08",rev_vc:638000,rev_cd:0},
+  {name:"株式会社L.R-Art",pref:"岐阜",seg:"vc_only",brands:"CD,VC",prior:2490000,recent:1992000,growth:-20.0,last:"2026-04-01",rev_vc:1992000,rev_cd:0},
+  {name:"医療法人医益会 SAMURAIクリニック",pref:"大阪",seg:"vc_only",brands:"SB,VC",prior:3514589,recent:1959200,growth:-44.3,last:"2026-04-01",rev_vc:1700000,rev_cd:0},
+  {name:"Grand Ciel",pref:"茨城",seg:"multi_brand",brands:"CBD,CCera,CD,CDK,MI,SB,VC",prior:1805034,recent:1950850,growth:8.1,last:"2026-04-03",rev_vc:480000,rev_cd:276000},
+  {name:"有限会社カネコ",pref:"滋賀",seg:"new",brands:"CCera,CD,MI,VC",prior:0,recent:1929100,growth:null,last:"2026-03-11",rev_vc:1458000,rev_cd:415000},
+  {name:"Liaison",pref:"長野",seg:"multi_brand",brands:"CBD,CCera,CD,CDK,MI,VC",prior:1720965,recent:1876323,growth:9.0,last:"2026-04-03",rev_vc:360000,rev_cd:161389},
+  {name:"株式会社武蔵野ウェルネス",pref:"東京",seg:"multi_brand",brands:"CCera,CD,CDK,MI,VC",prior:1684200,recent:1783200,growth:5.9,last:"2026-03-16",rev_vc:360000,rev_cd:415000},
+  {name:"ムーヴアクション株式会社",pref:"東京",seg:"multi_brand",brands:"CBD,CD,VC",prior:1566000,recent:1769000,growth:13.0,last:"2026-03-31",rev_vc:516000,rev_cd:830000},
+  {name:"東京月島クリニック",pref:"東京",seg:"multi_brand",brands:"CD,CDK,MI,VC",prior:1231096,recent:1748512,growth:42.0,last:"2026-03-25",rev_vc:1097401,rev_cd:651111},
+  {name:"株式会社Funtree",pref:"東京",seg:"multi_brand",brands:"CD,MI,VC",prior:1605000,recent:1663000,growth:3.6,last:"2026-03-21",rev_vc:720000,rev_cd:830000},
+  {name:"ヒーリング・エステ 369サロン",pref:"神奈川",seg:"multi_brand",brands:"CCera,CDK,VC",prior:3094200,recent:1631700,growth:-47.3,last:"2026-03-26",rev_vc:360000,rev_cd:0},
+  {name:"Aurora.",pref:"茨城",seg:"multi_brand",brands:"CBD,CCera,CD,CDK,MI,SB,VC",prior:1060635,recent:1628666,growth:53.6,last:"2026-04-03",rev_vc:698000,rev_cd:0},
+  {name:"TSIグループユニオン",pref:"東京",seg:"multi_brand",brands:"CCera,CD,SB,VC",prior:1453084,recent:1626303,growth:11.9,last:"2026-03-26",rev_vc:604778,rev_cd:697111},
+  {name:"合同会社Bothwin",pref:"長野",seg:"multi_brand",brands:"CBD,CD,CDK,MI,SB,VC",prior:933000,recent:1596120,growth:71.1,last:"2026-03-28",rev_vc:378000,rev_cd:0},
+  {name:"つくばすずらん皮膚科クリニック",pref:"茨城",seg:"vc_cd_cross",brands:"CD,VC",prior:759000,recent:1550000,growth:104.2,last:"2026-03-25",rev_vc:720000,rev_cd:830000},
+  {name:"ピンキーアトリエ",pref:"福島",seg:"multi_brand",brands:"CCera,CD,SB,VC",prior:766398,recent:1513200,growth:97.4,last:"2026-04-02",rev_vc:396000,rev_cd:0},
+  {name:"Mars -beauty salon-",pref:"福岡",seg:"vc_only",brands:"CD,VC",prior:535361,recent:1494000,growth:179.1,last:"2026-04-07",rev_vc:1494000,rev_cd:0},
+  {name:"BeautyStar合同会社",pref:"東京",seg:"multi_brand",brands:"CCera,CD,SB,VC",prior:858000,recent:1469800,growth:71.3,last:"2026-04-08",rev_vc:1170000,rev_cd:0},
+  {name:"輝楽リンパ整体院",pref:"長野",seg:"vc_only",brands:"VC",prior:1080000,recent:1440000,growth:33.3,last:"2026-04-02",rev_vc:1440000,rev_cd:0},
+  {name:"グラシーズ合同会社",pref:"千葉",seg:"vc_only",brands:"VC",prior:2658000,recent:1440000,growth:-45.8,last:"2026-02-25",rev_vc:1440000,rev_cd:0},
+  {name:"テティス横濱美容皮膚科",pref:"神奈川",seg:"vc_only",brands:"CCera,VC",prior:1080000,recent:1429500,growth:32.4,last:"2026-04-08",rev_vc:1080000,rev_cd:0},
+  {name:"医療法人山桃会 Y・H・C矢山クリニック",pref:"佐賀",seg:"multi_brand",brands:"CBD,CD,CDK,VC",prior:1947500,recent:1402500,growth:-28.0,last:"2026-04-01",rev_vc:912000,rev_cd:0},
+  {name:"(有) spic ヒグチ",pref:"三重",seg:"multi_brand",brands:"CBD,CD,SB,VC",prior:1853289,recent:1376495,growth:-25.7,last:"2026-03-25",rev_vc:240000,rev_cd:138000},
+  {name:"salon de clan",pref:"静岡",seg:"multi_brand",brands:"CBD,CCera,CDK,SB,VC",prior:747500,recent:1351380,growth:80.8,last:"2026-04-07",rev_vc:360000,rev_cd:0},
+  {name:"有限会社マリヤ美容室",pref:"三重",seg:"multi_brand",brands:"CD,MI,SB,VC",prior:1458859,recent:1342598,growth:-8.0,last:"2026-03-30",rev_vc:360000,rev_cd:415000},
+  {name:"ビューティーサロン ルアナ",pref:"福井",seg:"new",brands:"CD,VC",prior:0,recent:1273000,growth:null,last:"2026-04-02",rev_vc:858000,rev_cd:415000},
+  {name:"Isotope",pref:"愛知",seg:"multi_brand",brands:"CBD,CCera,CD,MI",prior:567520,recent:1208429,growth:112.9,last:"2026-04-08",rev_vc:0,rev_cd:292529},
+];
+
+const SEG_COLOR = {
+  multi_brand:'dot-multi',
+  new:'dot-new',
+  vc_cd_cross:'dot-cross',
+  vc_only:'dot-vconly',
+  cd_only:'dot-cdonly',
+  dormant:'dot-dormant',
+  other_mix:'dot-other'
+};
+const SEG_LABEL = {
+  multi_brand:'⭐ マルチ',
+  new:'🆕 新規',
+  vc_cd_cross:'🟢 VC+C+D',
+  vc_only:'🔵 VC単品',
+  cd_only:'🟡 C+D単品',
+  dormant:'🔴 休眠',
+  other_mix:'📦 その他'
+};
+
+function brandPills(brands) {
+  if (!brands) return '—';
+  const map = {VC:'bp-vc',CD:'bp-cd',CCera:'bp-ccera',SB:'bp-sb',MI:'bp-mi',CDK:'bp-cdk',CBD:'bp-cbd'};
+  return '<span class="brands-pill">' + brands.split(',').map(b => {
+    const cls = map[b] || '';
+    return `<span class="bp ${cls}">${b}</span>`;
+  }).join('') + '</span>';
+}
+
+function fmtRev(v) {
+  if (!v) return '<span class="gmuted">—</span>';
+  return '<span class="mono">' + (v/1000000).toFixed(2) + 'M</span>';
+}
+
+function fmtGrowth(g) {
+  if (g === null || g === undefined) return '<span class="gmuted">— 新規</span>';
+  const s = (g >= 0 ? '+' : '') + g.toFixed(1) + '%';
+  return `<span class="${g>=0?'gp':'gn'}">${s}</span>`;
+}
+
+function buildAll() {
+  const tbody = document.getElementById('tbody-all');
+  PARTNERS.slice(0,50).forEach(p => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td title="${p.name}"><span class="seg-dot ${SEG_COLOR[p.seg]||'dot-other'}"></span>${p.name}</td>
+      <td>${p.pref}</td>
+      <td style="font-size:11px">${SEG_LABEL[p.seg]||p.seg}</td>
+      <td>${brandPills(p.brands)}</td>
+      <td>${fmtRev(p.prior)}</td>
+      <td>${fmtRev(p.recent)}</td>
+      <td>${fmtGrowth(p.growth)}</td>
+      <td class="mono" style="font-size:11px;color:var(--muted)">${p.last}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function buildMulti() {
+  const tbody = document.getElementById('tbody-multi');
+  PARTNERS.filter(p=>p.seg==='multi_brand').sort((a,b)=>b.recent-a.recent).forEach(p => {
+    const cnt = p.brands ? p.brands.split(',').length : 0;
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td title="${p.name}"><span class="seg-dot dot-multi"></span>${p.name}</td>
+      <td>${p.pref}</td>
+      <td class="mono" style="color:var(--multi)">${cnt}</td>
+      <td>${brandPills(p.brands)}</td>
+      <td>${fmtRev(p.prior)}</td>
+      <td>${fmtRev(p.recent)}</td>
+      <td>${fmtGrowth(p.growth)}</td>
+      <td class="mono" style="font-size:11px;color:var(--muted)">${p.last}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function buildCross() {
+  const tbody = document.getElementById('tbody-cross');
+  PARTNERS.filter(p=>p.seg==='vc_cd_cross').sort((a,b)=>b.recent-a.recent).forEach(p => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td title="${p.name}"><span class="seg-dot dot-cross"></span>${p.name}</td>
+      <td>${p.pref}</td>
+      <td>${fmtRev(p.rev_vc)}</td>
+      <td>${fmtRev(p.rev_cd)}</td>
+      <td>${fmtRev(p.prior)}</td>
+      <td>${fmtRev(p.recent)}</td>
+      <td>${fmtGrowth(p.growth)}</td>
+      <td class="mono" style="font-size:11px;color:var(--muted)">${p.last}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function buildVcOnly() {
+  const tbody = document.getElementById('tbody-vc_only');
+  PARTNERS.filter(p=>p.seg==='vc_only').sort((a,b)=>b.recent-a.recent).forEach(p => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td title="${p.name}"><span class="seg-dot dot-vconly"></span>${p.name}</td>
+      <td>${p.pref}</td>
+      <td>${brandPills(p.brands)}</td>
+      <td>${fmtRev(p.rev_vc)}</td>
+      <td>${fmtRev(p.prior)}</td>
+      <td>${fmtRev(p.recent)}</td>
+      <td>${fmtGrowth(p.growth)}</td>
+      <td class="mono" style="font-size:11px;color:var(--muted)">${p.last}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function buildNew() {
+  const tbody = document.getElementById('tbody-new');
+  PARTNERS.filter(p=>p.seg==='new').sort((a,b)=>b.recent-a.recent).forEach(p => {
+    const cnt = p.brands ? p.brands.split(',').length : 0;
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td title="${p.name}"><span class="seg-dot dot-new"></span>${p.name}</td>
+      <td>${p.pref}</td>
+      <td class="mono" style="color:var(--new)">${cnt}</td>
+      <td>${brandPills(p.brands)}</td>
+      <td>${fmtRev(p.recent)}</td>
+      <td class="mono" style="font-size:11px;color:var(--muted)">${p.last}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function switchTab(id) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+buildAll(); buildMulti(); buildCross(); buildVcOnly(); buildNew();
+</script>
+</body>
+</html>
