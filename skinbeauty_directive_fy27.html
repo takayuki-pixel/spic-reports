@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lypo-C SKINBEAUTY｜FY2027予算達成指示書</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream: #faf8f4;
+  --warm-white: #f5f2ec;
+  --gold: #b8966e;
+  --gold-light: #d4b48e;
+  --dark: #1a1714;
+  --mid: #3d3630;
+  --muted: #8a7e74;
+  --border: #e2ddd6;
+  --red: #c0392b;
+  --green: #2d6a4f;
+  --amber: #b45309;
+  --blue: #1e40af;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Noto Sans JP', sans-serif;
+  background: var(--cream);
+  color: var(--dark);
+  line-height: 1.75;
+}
+
+/* ── COVER ── */
+.cover {
+  min-height: 100vh;
+  background: var(--dark);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 60px 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+.cover::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 30% 60%, rgba(184,150,110,0.12) 0%, transparent 60%),
+              radial-gradient(ellipse at 80% 20%, rgba(184,150,110,0.08) 0%, transparent 50%);
+}
+
+.cover-eyebrow {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 13px;
+  letter-spacing: 5px;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 32px;
+  position: relative;
+}
+
+.cover h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(36px, 6vw, 72px);
+  font-weight: 300;
+  color: #faf8f4;
+  letter-spacing: -1px;
+  line-height: 1.15;
+  margin-bottom: 8px;
+  position: relative;
+}
+
+.cover h1 em {
+  font-style: italic;
+  color: var(--gold-light);
+}
+
+.cover-sub {
+  font-size: 14px;
+  color: rgba(250,248,244,0.5);
+  letter-spacing: 2px;
+  margin-top: 24px;
+  position: relative;
+}
+
+.cover-meta {
+  position: absolute;
+  bottom: 40px;
+  right: 60px;
+  font-size: 11px;
+  color: rgba(250,248,244,0.3);
+  letter-spacing: 1px;
+  text-align: right;
+}
+
+/* ── LAYOUT ── */
+.page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 80px 40px;
+}
+
+.section {
+  margin-bottom: 80px;
+}
+
+/* ── SECTION HEADERS ── */
+.sec-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 11px;
+  letter-spacing: 4px;
+  color: var(--gold);
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.sec-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 32px;
+  font-weight: 400;
+  color: var(--dark);
+  line-height: 1.2;
+  margin-bottom: 32px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+/* ── ALERT BOX ── */
+.alert {
+  background: #fff;
+  border-left: 3px solid var(--red);
+  padding: 20px 24px;
+  margin-bottom: 24px;
+  border-radius: 0 6px 6px 0;
+}
+
+.alert.gold {
+  border-left-color: var(--gold);
+}
+
+.alert.green {
+  border-left-color: var(--green);
+}
+
+.alert-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+.alert-body {
+  font-size: 14px;
+  color: var(--mid);
+  line-height: 1.8;
+}
+
+.alert-body strong {
+  color: var(--dark);
+}
+
+/* ── STAT GRID ── */
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.stat-card {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px 18px;
+}
+
+.stat-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+.stat-value {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--dark);
+  letter-spacing: -0.5px;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.stat-note {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.stat-value.bad { color: var(--red); }
+.stat-value.good { color: var(--green); }
+.stat-value.warn { color: var(--amber); }
+
+/* ── BAR ── */
+.kpi-bar-wrap {
+  margin-bottom: 16px;
+}
+
+.kpi-bar-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  margin-bottom: 5px;
+  color: var(--mid);
+}
+
+.kpi-bar-label span:first-child { font-weight: 500; }
+
+.kpi-bar-track {
+  height: 8px;
+  background: var(--warm-white);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.kpi-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--gold-light), var(--gold));
+}
+
+.kpi-bar-fill.bad { background: linear-gradient(90deg, #f9a8a0, var(--red)); }
+.kpi-bar-fill.ok  { background: linear-gradient(90deg, #86efac, var(--green)); }
+
+/* ── TABLE ── */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+
+.data-table thead th {
+  background: var(--warm-white);
+  padding: 10px 14px;
+  text-align: right;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-bottom: 1px solid var(--border);
+}
+
+.data-table thead th:first-child { text-align: left; }
+
+.data-table tbody td {
+  padding: 9px 14px;
+  text-align: right;
+  border-bottom: 1px solid var(--warm-white);
+  color: var(--mid);
+}
+
+.data-table tbody td:first-child { text-align: left; font-weight: 500; color: var(--dark); }
+.data-table tbody tr:last-child td { border-bottom: none; }
+.data-table tr.total { background: var(--warm-white); font-weight: 700; }
+.data-table tr.total td { color: var(--dark); border-top: 1px solid var(--border); }
+
+.up { color: var(--green); font-weight: 600; }
+.dn { color: var(--red); font-weight: 600; }
+
+/* ── DIRECTIVE ITEMS ── */
+.directive-list {
+  counter-reset: directive;
+}
+
+.directive-item {
+  display: grid;
+  grid-template-columns: 56px 1fr;
+  gap: 24px;
+  margin-bottom: 32px;
+  padding-bottom: 32px;
+  border-bottom: 1px solid var(--border);
+}
+
+.directive-item:last-child { border-bottom: none; margin-bottom: 0; }
+
+.directive-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 48px;
+  font-weight: 300;
+  color: var(--gold-light);
+  line-height: 1;
+  padding-top: 4px;
+}
+
+.directive-content h3 {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--dark);
+  margin-bottom: 8px;
+}
+
+.directive-content .why {
+  font-size: 12px;
+  font-style: italic;
+  color: var(--muted);
+  margin-bottom: 10px;
+  padding: 8px 12px;
+  background: var(--warm-white);
+  border-radius: 4px;
+}
+
+.directive-content p, .directive-content ul {
+  font-size: 13px;
+  color: var(--mid);
+  line-height: 1.85;
+}
+
+.directive-content ul {
+  padding-left: 18px;
+  margin-top: 6px;
+}
+
+.directive-content ul li {
+  margin-bottom: 4px;
+}
+
+.tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-right: 4px;
+  margin-bottom: 4px;
+}
+
+.tag.urgent { background: #fee2e2; color: var(--red); }
+.tag.owner  { background: #dbeafe; color: var(--blue); }
+.tag.kpi    { background: #d1fae5; color: var(--green); }
+.tag.when   { background: #fef3c7; color: var(--amber); }
+
+/* ── MONTHLY PLAN ── */
+.monthly-plan {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.month-card {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 12px 14px;
+  text-align: center;
+}
+
+.month-name {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.month-target {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--dark);
+}
+
+.month-note {
+  font-size: 10px;
+  color: var(--muted);
+  margin-top: 4px;
+  line-height: 1.4;
+}
+
+.month-card.highlight {
+  border-color: var(--gold);
+  background: linear-gradient(135deg, #fff, #fdf9f4);
+}
+
+/* ── QUOTE ── */
+.quote-block {
+  border-left: 2px solid var(--gold);
+  padding: 16px 24px;
+  margin: 24px 0;
+  background: #fff;
+  border-radius: 0 6px 6px 0;
+}
+
+.quote-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px;
+  font-style: italic;
+  color: var(--mid);
+  line-height: 1.6;
+  margin-bottom: 8px;
+}
+
+.quote-source {
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 1px;
+}
+
+/* ── FOOTER ── */
+footer {
+  background: var(--dark);
+  color: rgba(250,248,244,0.4);
+  text-align: center;
+  padding: 40px;
+  font-size: 11px;
+  letter-spacing: 1px;
+}
+
+@media (max-width: 768px) {
+  .stat-grid { grid-template-columns: repeat(2, 1fr); }
+  .monthly-plan { grid-template-columns: repeat(3, 1fr); }
+  .directive-item { grid-template-columns: 1fr; gap: 8px; }
+  .directive-num { font-size: 32px; }
+}
+
+/* Animation */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.cover > * { animation: fadeUp 0.8s ease forwards; }
+.cover-eyebrow { animation-delay: 0.1s; opacity: 0; }
+.cover h1      { animation-delay: 0.25s; opacity: 0; }
+.cover-sub     { animation-delay: 0.4s; opacity: 0; }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="cover-eyebrow">Brand Directive FY2027</div>
+  <h1>Lypo-C <em>SKINBEAUTY</em><br>予算達成指示書</h1>
+  <div class="cover-sub">小林加奈 / ブランドチーム 各位　｜　2026年4月</div>
+  <div class="cover-meta">
+    CONFIDENTIAL<br>
+    DATA: BQ prod_dwh_oci + Web Research
+  </div>
+</div>
+
+<!-- PAGE -->
+<div class="page">
+
+  <!-- 0. 現状診断 -->
+  <div class="section">
+    <span class="sec-num">Diagnosis — 00</span>
+    <h2 class="sec-title">まず、現実を直視する</h2>
+
+    <div class="alert">
+      <div class="alert-label">Critical Finding</div>
+      <div class="alert-body">
+        <strong>初回購入者の71.2%が2回目を買っていない。</strong>
+        これがSKINBEAUTYの根本課題だ。商品力はある。認知もある。ベスコス16冠を取り、先行予約は完売した。問題は「続けない」こと——正確には「続ける理由」が届いていないこと。
+      </div>
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-label">FY26 実績</div>
+        <div class="stat-value warn">¥116.8M</div>
+        <div class="stat-note">予算¥429Mの27%</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">FY27 統合目標</div>
+        <div class="stat-value">¥445M</div>
+        <div class="stat-note">SKINBEAUTY+LPB統合</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">1回限り購入者</div>
+        <div class="stat-value bad">71.2%</div>
+        <div class="stat-note">2,674人 / 3,756人</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">最高月売上</div>
+        <div class="stat-value good">¥18.6M</div>
+        <div class="stat-note">2025年12月</div>
+      </div>
+    </div>
+
+    <!-- 月次推移 -->
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>月</th>
+          <th>toB売上</th>
+          <th>toC売上</th>
+          <th>合計</th>
+          <th>toC顧客数</th>
+          <th>FY27予算</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>2025-08（発売前）</td><td>¥7.2M</td><td>¥3.4M</td><td>¥10.6M</td><td>308</td><td>¥36M</td></tr>
+        <tr><td>2025-09</td><td>¥10.0M</td><td>¥5.3M</td><td>¥15.3M</td><td>471</td><td>¥38M</td></tr>
+        <tr><td>2025-10（発売）</td><td>¥4.8M</td><td>¥8.1M</td><td>¥12.9M</td><td>965</td><td>¥40M</td></tr>
+        <tr><td>2025-11</td><td>¥5.7M</td><td>¥8.7M</td><td>¥14.4M</td><td>593</td><td>¥40M</td></tr>
+        <tr><td>2025-12</td><td>¥7.5M</td><td>¥11.2M</td><td>¥18.6M</td><td>853</td><td>¥48M</td></tr>
+        <tr><td>2026-01</td><td>¥4.1M</td><td>¥10.3M</td><td>¥14.4M</td><td>702</td><td>¥36M</td></tr>
+        <tr><td>2026-02</td><td>¥5.0M</td><td>¥10.1M</td><td>¥15.2M</td><td>750</td><td>¥30M</td></tr>
+        <tr><td>2026-03</td><td>¥5.0M</td><td>¥10.5M</td><td>¥15.5M</td><td>699</td><td>¥50M</td></tr>
+        <tr class="total"><td>FY26合計（8-3月）</td><td>¥49.3M</td><td>¥67.5M</td><td>¥116.8M</td><td>累計3,756</td><td>¥445M</td></tr>
+      </tbody>
+    </table>
+
+    <div class="alert gold">
+      <div class="alert-label">Good News</div>
+      <div class="alert-body">
+        toCは1月以降、月¥10M水準に定着。toB（¥5M/月）との合算で安定的に¥15M台に乗っている。これは「地盤」だ。ここから3倍（¥37M/月）を目指す。
+      </div>
+    </div>
+  </div>
+
+  <!-- 1. 顧客構造 -->
+  <div class="section">
+    <span class="sec-num">Customer Structure — 01</span>
+    <h2 class="sec-title">誰が買っていて、誰が止まっているか</h2>
+
+    <div class="kpi-bar-wrap">
+      <div class="kpi-bar-label"><span>VC+C+D両方ユーザー（最高LTV層）</span><span>42.7%　1,602人</span></div>
+      <div class="kpi-bar-track"><div class="kpi-bar-fill ok" style="width:42.7%"></div></div>
+    </div>
+    <div class="kpi-bar-wrap">
+      <div class="kpi-bar-label"><span>SKINBEAUTY単独（新規・非Lypo-C）</span><span>27.8%　1,046人</span></div>
+      <div class="kpi-bar-track"><div class="kpi-bar-fill" style="width:27.8%"></div></div>
+    </div>
+    <div class="kpi-bar-wrap">
+      <div class="kpi-bar-label"><span>VCのみユーザー（クロスセル余地大）</span><span>25.9%　971人</span></div>
+      <div class="kpi-bar-track"><div class="kpi-bar-fill" style="width:25.9%"></div></div>
+    </div>
+    <div class="kpi-bar-wrap">
+      <div class="kpi-bar-label"><span>C+Dのみユーザー</span><span>3.6%　137人</span></div>
+      <div class="kpi-bar-track"><div class="kpi-bar-fill" style="width:3.6%"></div></div>
+    </div>
+
+    <div class="alert gold" style="margin-top:24px">
+      <div class="alert-label">Implication</div>
+      <div class="alert-body">
+        現在のSKINBEAUTYユーザーの<strong>68.6%はすでにLypo-Cを飲んでいる</strong>。「飲む×塗る」のコンセプトは既に顧客に届いている。問題は「試してやめる」こと。特に単独ユーザー1,046人への継続施策が急務。VCのみユーザー971人は「次の一手」としてSKINBEAUTYを知っているが、定期化していない可能性が高い。
+      </div>
+    </div>
+
+    <table class="data-table">
+      <thead>
+        <tr><th>購入回数</th><th>顧客数</th><th>構成比</th><th>評価</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1回</td><td>2,674人</td><td>71.2%</td><td class="dn">要対策</td></tr>
+        <tr><td>2回</td><td>581人</td><td>15.5%</td><td>転換成功層</td></tr>
+        <tr><td>3回</td><td>236人</td><td>6.3%</td><td>ロイヤル化途上</td></tr>
+        <tr><td>4回以上</td><td>265人</td><td>7.0%</td><td class="up">コアファン</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 2. 市場評価 -->
+  <div class="section">
+    <span class="sec-num">Market Intelligence — 02</span>
+    <h2 class="sec-title">ネットは何を言っているか</h2>
+
+    <div class="quote-block">
+      <div class="quote-text">「サンプルが3包あり、1回目の使用で変化を感じました。翌朝の肌の調子が良かった」</div>
+      <div class="quote-source">LIPS ユーザーレビュー</div>
+    </div>
+
+    <div class="quote-block">
+      <div class="quote-text">「妻が愛用しているため使用しましたが、効果実感が経験したことないくらい良く、自分でも購入してしまいました。翌日の肌の調子が明らかに良い・毛穴が明らかに目立たなくなった」</div>
+      <div class="quote-source">アットコスメ @cosme クチコミ</div>
+    </div>
+
+    <div class="quote-block">
+      <div class="quote-text">「28個入りでこの値段はお高すぎる」</div>
+      <div class="quote-source">LIPS ユーザーレビュー（繰り返し出現するネガティブ）</div>
+    </div>
+
+    <div class="alert">
+      <div class="alert-label">Net Assessment</div>
+      <div class="alert-body">
+        <strong>体感は本物。価格への不満が唯一の離脱理由。</strong><br>
+        「効果がない」という声は皆無に近い。「高い」という声が反復する。しかし「高くても買い続ける」層は確実に存在し（4回以上購入者265人）、その層は口コミで拡散している。ということは、<strong>価格を下げるのではなく、価値を体感させる期間を延ばすことが解</strong>。最初の3包で離脱させないこと。
+        <br><br>
+        アットコスメ口コミ数：11件（発売5ヶ月時点）。競合コスメ製品と比べて極めて少ない。口コミ数の少なさは認知の天井を作っている。レビュー獲得施策が手つかず。
+        <br><br>
+        2025年下半期ベストコスメ16冠、美ST・VOCE・Harper's BAZAAR受賞。編集者の評価は高い。一般消費者への橋渡しが次の課題。
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. 指示事項 -->
+  <div class="section">
+    <span class="sec-num">Directives — 03</span>
+    <h2 class="sec-title">小林さん・チームへの6つの指示</h2>
+
+    <div class="directive-list">
+
+      <!-- 01 -->
+      <div class="directive-item">
+        <div class="directive-num">01</div>
+        <div class="directive-content">
+          <h3>「2回目を買わせる」を最優先KPIにする</h3>
+          <div class="why">データ根拠：初回購入者の71.2%が離脱。ここを50%に改善するだけで売上は約1.4倍になる。</div>
+          <span class="tag urgent">最優先</span>
+          <span class="tag owner">小林</span>
+          <span class="tag when">4月中に設計完了</span>
+          <ul>
+            <li>初回購入者向け「1ヶ月後フォローアップメール」を設計。「最初の28包を使い終えた頃ですね」という文脈で、体感レポートと次回購入の背中を押す</li>
+            <li>7包キット購入者は「試して終わり」になりやすい。7包購入後14日以内に28包購入誘導メールを送る（現在このシーケンスが存在するか確認し、なければ即構築）</li>
+            <li>「定期便転換率」を月次レポートに追加。現在この指標がBQレポートに存在しない——今月中に計測を開始</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 02 -->
+      <div class="directive-item">
+        <div class="directive-num">02</div>
+        <div class="directive-content">
+          <h3>VC/C+D定期購読者への「塗るLypo-C」提案を今月から始める</h3>
+          <div class="why">データ根拠：SKINBEAUTY購入者の68.6%はすでにVC/C+Dユーザー。つまり「飲む×塗る」のコンセプトはすでに刺さる土壌がある。未提案のVC定期ユーザーが最大の金鉱。</div>
+          <span class="tag urgent">今月実行</span>
+          <span class="tag owner">小林×坪井</span>
+          <span class="tag kpi">月+200人転換目標</span>
+          <ul>
+            <li>VC定期購読者向けに「飲んでいる方へ。今度は、塗るLypo-C。」というシンプルなメール1本を送る。長文不要、体感した人の声と7包キットの購入リンクだけ</li>
+            <li>VC/C+Dの同梱物にSKINBEAUTYサンプル（1包）を封入するオペレーションを検討。月間出荷数×0.1%だけでも数百人にリーチできる</li>
+            <li>LTV分析上、VC+SKINBEAUTY両購入者の定期継続率を計測し、VC単独との差を明確化。数字が出れば社内予算交渉の武器になる</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 03 -->
+      <div class="directive-item">
+        <div class="directive-num">03</div>
+        <div class="directive-content">
+          <h3>コスメキッチン（5月）を「認知→定期」のファネル入口として設計する</h3>
+          <div class="why">市場評価：先行予約完売・ベスコス16冠という実績があるのに、一般認知は未だ薄い（@cosmeクチコミ11件のみ）。コスメキッチンは年間最大の認知獲得機会。</div>
+          <span class="tag urgent">5月1日開始</span>
+          <span class="tag owner">小林</span>
+          <span class="tag when">4月末までに設計</span>
+          <ul>
+            <li><strong>棚で終わらせない。</strong>店頭での「試せる体験」を設計する。店頭スタッフに1包のサンプル提供権限を与え、「今日試した人が翌週リピートする」動線を作る</li>
+            <li>店頭でD2C定期購読に誘導するQRコードを設置。「コスメキッチンで出会った方限定、初回30%OFF定期便」などの入口を用意</li>
+            <li>コスメキッチン経由の売上をBQで追跡できるよう、shop_idまたはクーポンコードで流入経路を識別する仕組みを構築</li>
+            <li>SKINBEAUTYとVC11包の「ウェルネスリチュアルセット¥6,444」はコスメキッチン限定セットとして積極訴求。「飲む×塗るをセットで体験する」入口として最適</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 04 -->
+      <div class="directive-item">
+        <div class="directive-num">04</div>
+        <div class="directive-content">
+          <h3>toB（LPBサロン）をSKINBEAUTY Partnerとして今季中に転換する</h3>
+          <div class="why">データ根拠：LPBのtoB月売上¥1.5〜2M。これはBQ上の数字だが、実態はサロンへの卸。このチャネルをSKINBEAUTYに移行することで「サロン推薦→自宅継続」という最強のリテンション構造が作れる。</div>
+          <span class="tag owner">小林×片峰</span>
+          <span class="tag when">FY27 Q1中に移行完了</span>
+          <ul>
+            <li>LPBの取扱サロンリストをBCARTから抽出し（consignee_tel経由でcomp_name取得可能）、1件1件にSKINBEAUTY Partner移行案内を送る</li>
+            <li>「サロンで施術、家で継続」のモデルを設計。サロン客がSKINBEAUTYを試した後、D2C定期購読に移行した際にサロンへ紹介フィーが入る仕組みを検討</li>
+            <li>toB卸単価が今より有利でなければ意味がない。LPB卸価格とSKINBEAUTY卸価格を比較し、サロン経営者にとってメリットがある条件を設定</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 05 -->
+      <div class="directive-item">
+        <div class="directive-num">05</div>
+        <div class="directive-content">
+          <h3>口コミ数を3ヶ月で50件に増やす</h3>
+          <div class="why">市場評価：@cosmeのクチコミが11件。競合の同価格帯美容液は数百〜数千件。この数字の差が「ブランドとしての重力」の差になっている。ベスコス16冠は雑誌評価であり、生活者評価ではない。</div>
+          <span class="tag urgent">即時開始</span>
+          <span class="tag owner">小林</span>
+          <span class="tag kpi">@cosme 50件 / 3ヶ月</span>
+          <ul>
+            <li>購入後15日・30日にレビュー投稿依頼メールを自動送信。「あなたの体感を教えてください」という一文だけで良い。リンクはアットコスメ・LIPSの商品ページ直リンク</li>
+            <li>定期購読者の中から「体感が良かった人」をBQ経由で抽出（4回以上購入者265人が候補）し、アンバサダーとして口コミ投稿を依頼。インセンティブは次回1包プレゼントでよい</li>
+            <li>口コミに書かれたネガティブ（「高い」「もう少し量が欲しい」）は改善のヒント。放置せず、製品改善会議のインプットとして定期的に収集・整理する</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 06 -->
+      <div class="directive-item">
+        <div class="directive-num">06</div>
+        <div class="directive-content">
+          <h3>月次KPIを「売上」から「定期転換率×リテンション率」に変える</h3>
+          <div class="why">構造的課題：現在の売上は「新規獲得」依存。月¥15Mが天井に見えるのは、リピートが回っていないから。定期購読者が積み上がる構造を作れば、売上は月を重ねるごとに自然に上がる。</div>
+          <span class="tag owner">小林</span>
+          <span class="tag when">5月レポートから適用</span>
+          <ul>
+            <li><strong>追うべきKPI（優先順）：</strong></li>
+            <li>① 定期転換率（初回購入者 → 定期購読への転換率）　目標：20%→40%</li>
+            <li>② 2回目購入率（初回購入30日以内）　目標：28.8%→50%</li>
+            <li>③ VC顧客のSKINBEAUTYクロスセル率　目標：現状→15%</li>
+            <li>④ toB Partner数（LPB転換進捗）　目標：FY26末までに50サロン</li>
+            <li>⑤ @cosmeクチコミ数　目標：11→50（3ヶ月）</li>
+            <li>これらは月次の日次レポートとは別に「SKINBEAUTY KPIダッシュボード」として毎月末に提出すること</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 4. 月次予算 -->
+  <div class="section">
+    <span class="sec-num">Budget Plan — 04</span>
+    <h2 class="sec-title">FY2027 月次予算（SKINBEAUTY統合・¥445M）</h2>
+
+    <div class="monthly-plan">
+      <div class="month-card highlight">
+        <div class="month-name">4月</div>
+        <div class="month-target">¥25M</div>
+        <div class="month-note">移行準備期<br>コスメキッチン前月</div>
+      </div>
+      <div class="month-card highlight">
+        <div class="month-name">5月</div>
+        <div class="month-target">¥32M</div>
+        <div class="month-note">コスメキッチン<br>全店開始</div>
+      </div>
+      <div class="month-card">
+        <div class="month-name">6月</div>
+        <div class="month-target">¥34M</div>
+        <div class="month-note">定着・認知拡大</div>
+      </div>
+      <div class="month-card">
+        <div class="month-name">7月</div>
+        <div class="month-target">¥36M</div>
+        <div class="month-note">夏季・UV需要</div>
+      </div>
+      <div class="month-card">
+        <div class="month-name">8月</div>
+        <div class="month-target">¥36M</div>
+        <div class="month-note">前年比+240%<br>2年目立ち上がり</div>
+      </div>
+      <div class="month-card">
+        <div class="month-name">9月</div>
+        <div class="month-target">¥38M</div>
+        <div class="month-note">秋始まり需要</div>
+      </div>
+      <div class="month-card">
+        <div class="month-name">10月</div>
+        <div class="month-target">¥40M</div>
+        <div class="month-note">発売1周年<br>記念施策</div>
+      </div>
+      <div class="month-card">
+        <div class="month-name">11月</div>
+        <div class="month-target">¥40M</div>
+        <div class="month-note">年末商戦前</div>
+      </div>
+      <div class="month-card highlight">
+        <div class="month-name">12月</div>
+        <div class="month-target">¥48M</div>
+        <div class="month-note">年末ギフト需要<br>最大山場</div>
+      </div>
+      <div class="month-card">
+        <div class="month-name">1月</div>
+        <div class="month-target">¥36M</div>
+        <div class="month-note">年始スキンケア需要</div>
+      </div>
+      <div class="month-card">
+        <div class="month-name">2月</div>
+        <div class="month-target">¥30M</div>
+        <div class="month-note">バレンタイン<br>ギフト訴求</div>
+      </div>
+      <div class="month-card highlight">
+        <div class="month-name">3月</div>
+        <div class="month-target">¥50M</div>
+        <div class="month-note">toB期末発注<br>LPBサロン継承</div>
+      </div>
+    </div>
+
+    <div class="alert">
+      <div class="alert-label">達成の前提条件</div>
+      <div class="alert-body">
+        この予算は以下が揃ったときに成立する。<br>
+        ① VC定期ユーザーへのクロスセルが5月以降本格稼働<br>
+        ② コスメキッチン経由のD2C転換が月100件以上<br>
+        ③ LPBサロン50拠点以上がSKINBEAUTY Partner転換完了（8月目標）<br>
+        ④ 定期転換率が現状から40%へ改善<br><br>
+        いずれか2つが欠けた場合、¥380M水準に留まる可能性がある。その場合は8月時点でリカバリー協議を行う。
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. 最後に -->
+  <div class="section">
+    <span class="sec-num">Closing — 05</span>
+    <h2 class="sec-title">小林さんへ</h2>
+
+    <p style="font-size:14px; color:var(--mid); line-height:2; margin-bottom:24px;">
+      2025年下半期ベストコスメ16冠は、プレスリリースの言葉を借りれば「諦めずにこだわり続けた」結果だ。商品は本物だ。体感を語るユーザーは確実に存在し、夫婦でリピートするほど熱量のある顧客もいる。
+    </p>
+
+    <p style="font-size:14px; color:var(--mid); line-height:2; margin-bottom:24px;">
+      問題は「届いていない人」の数ではなく、「届いたのに続かなかった人」の数だ。71.2%が2回目を買わないという事実は、体験の問題ではなく「体験を継続させる設計」の問題だ。これは改善できる。
+    </p>
+
+    <div class="quote-block">
+      <div class="quote-text">「肌が本来持つ力を引き出し、未来の美しさを育てる"寄り添うケア"」</div>
+      <div class="quote-source">Lypo-C SKINBEAUTY 公式コンセプト</div>
+    </div>
+
+    <p style="font-size:14px; color:var(--mid); line-height:2;">
+      この言葉通りなら、ブランドもユーザーに「寄り添い続ける」必要がある。初回購入で終わることは、寄り添いの放棄だ。2回目を届けることが、ブランドの思想の実行だ。
+    </p>
+  </div>
+
+</div>
+
+<footer>
+  CONFIDENTIAL — SPIC 内部資料 ｜ BQ prod_dwh_oci・Web Research 2026年4月 ｜ 税抜・キャンセル除外・テスト社販除外
+</footer>
+
+</body>
+</html>
